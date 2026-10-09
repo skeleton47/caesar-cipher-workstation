@@ -3,66 +3,7 @@
    Bespoke micro-interactions, magnetic cursor physics & smooth studio routing
    ========================================================================== */
 
-/* ── 1. Custom Magnetic Fluid Cursor ────────────────────────────────────── */
-.bento-cursor-dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  background-color: #181818;
-  border-radius: 9999px;
-  pointer-events: none;
-  z-index: 999999;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.2s ease, transform 0.06s ease-out;
-}
-
-.bento-cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 32px;
-  height: 32px;
-  border: 1.5px solid rgba(24, 24, 24, 0.35);
-  border-radius: 9999px;
-  pointer-events: none;
-  z-index: 999998;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.22s ease,
-              border-color 0.22s ease,
-              opacity 0.2s ease,
-              transform 0.12s ease-out;
-}
-
-/* Hovering over any interactive element */
-.bento-cursor-ring.cursor-hover {
-  width: 52px;
-  height: 52px;
-  border-color: #181818;
-  background-color: rgba(216, 238, 72, 0.38);
-  backdrop-filter: blur(1px);
-}
-
-/* Active click press */
-.bento-cursor-ring.cursor-active {
-  transform: translate(-50%, -50%) scale(0.82);
-  background-color: rgba(216, 238, 72, 0.65);
-}
-
-/* Hide custom cursor on touch screens */
-@media (pointer: coarse) {
-  .bento-cursor-dot,
-  .bento-cursor-ring {
-    display: none !important;
-  }
-}
-
-/* ── 2. Universal Neo-Brutalist Hover Interactions ──────────────────────── */
+/* ── Universal Neo-Brutalist Hover Interactions ──────────────────────────── */
 /* Standard transition baseline for buttons, chips, and interactive cards */
 button,
 a.nav-tab,

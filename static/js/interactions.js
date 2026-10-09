@@ -6,97 +6,22 @@
 (function () {
   'use strict';
 
-  // ── 1. Create & Manage Custom Fluid Magnetic Cursor ──────────────────────
-  let mouseX = -100;
-  let mouseY = -100;
-  let ringX = -100;
-  let ringY = -100;
-  let isCursorVisible = false;
+  // ── 1. Interactive Hover Sound Feedback ──────────────────────────────────
+  const interactiveSelector = `
+    a, button, input, textarea, select, label,
+    .nav-tab, .preset-chip, .action-btn, .apply-shift-btn,
+    #cracker-cards-grid > div, .freq-bar-col, .tabula-cell,
+    [role="button"], [data-interactive="true"]
+  `;
 
-  const isTouchDevice = () => window.matchMedia('(pointer: coarse)').matches;
-
-  function initMagneticCursor() {
-    if (isTouchDevice()) return;
-
-    const dot = document.createElement('div');
-    dot.className = 'bento-cursor-dot';
-    document.body.appendChild(dot);
-
-    const ring = document.createElement('div');
-    ring.className = 'bento-cursor-ring';
-    document.body.appendChild(ring);
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      if (!isCursorVisible) {
-        isCursorVisible = true;
-        dot.style.opacity = '1';
-        ring.style.opacity = '1';
-        ringX = mouseX;
-        ringY = mouseY;
+  document.addEventListener('mouseover', (e) => {
+    const target = e.target.closest(interactiveSelector);
+    if (target) {
+      if (window.CyberSFX && typeof CyberSFX.hover === 'function') {
+        CyberSFX.hover();
       }
-
-      dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-    });
-
-    document.addEventListener('mouseleave', () => {
-      isCursorVisible = false;
-      dot.style.opacity = '0';
-      ring.style.opacity = '0';
-    });
-
-    document.addEventListener('mouseenter', () => {
-      isCursorVisible = true;
-      dot.style.opacity = '1';
-      ring.style.opacity = '1';
-    });
-
-    document.addEventListener('mousedown', () => {
-      ring.classList.add('cursor-active');
-    });
-
-    document.addEventListener('mouseup', () => {
-      ring.classList.remove('cursor-active');
-    });
-
-    // Fluid trailing animation loop (lerp)
-    function renderCursor() {
-      if (isCursorVisible) {
-        ringX += (mouseX - ringX) * 0.22;
-        ringY += (mouseY - ringY) * 0.22;
-        ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
-      }
-      requestAnimationFrame(renderCursor);
     }
-    requestAnimationFrame(renderCursor);
-
-    // Dynamic Hover Detection on Interactive Elements
-    const interactiveSelector = `
-      a, button, input, textarea, select, label,
-      .nav-tab, .preset-chip, .action-btn, .apply-shift-btn,
-      #cracker-cards-grid > div, .freq-bar-col, .tabula-cell,
-      [role="button"], [data-interactive="true"]
-    `;
-
-    document.addEventListener('mouseover', (e) => {
-      const target = e.target.closest(interactiveSelector);
-      if (target) {
-        ring.classList.add('cursor-hover');
-        if (window.CyberSFX && typeof CyberSFX.hover === 'function') {
-          CyberSFX.hover();
-        }
-      }
-    });
-
-    document.addEventListener('mouseout', (e) => {
-      const target = e.target.closest(interactiveSelector);
-      if (target) {
-        ring.classList.remove('cursor-hover');
-      }
-    });
-  }
+  });
 
   // ── 2. Warm Bento Studio Transition Curtain ──────────────────────────────
   let curtainEl = null;
@@ -235,7 +160,6 @@
 
   // ── 5. Initialize Everything on DOM Ready ────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    initMagneticCursor();
     createTransitionCurtain();
     setupNavigationTransitions();
     initPageEntrance();
