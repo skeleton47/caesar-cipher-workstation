@@ -65,12 +65,8 @@
                 <a class="nav-tab px-5 py-1.5 rounded-full bg-black text-white text-xs font-semibold tracking-wide transition shadow-sm cursor-default" href="frequency.html">Frequency</a>
             </nav>
             
-            <!-- Right Header Actions (SFX Toggle & Reset) -->
+            <!-- Right Header Actions (Reset) -->
             <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
-                <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black text-xs font-mono font-semibold text-black shadow-sm hover:bg-cream transition" id="sfx-toggle-btn" title="Toggle Typing Bubble Sound">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block" id="sfx-dot"></span>
-                    <span>SFX</span>
-                </button>
                 <button class="px-5 py-1.5 rounded-full border border-black bg-white hover:bg-cream text-xs font-bold text-black transition active:scale-95 shadow-brutal-sm" id="reset-all-btn">
                     Reset
                 </button>
@@ -78,16 +74,8 @@
         </header>
 
         <!-- 2. TITLE AREA -->
-        <div class="flex flex-col gap-1.5">
-            <div class="flex items-center gap-3 flex-wrap">
-                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-black">Frequency Analysis</h1>
-                <span class="bg-[#d4f870] border border-black rounded-full px-3 py-0.5 text-xs font-mono font-medium text-black shadow-sm">
-                    Monogram Cryptanalysis
-                </span>
-            </div>
-            <p class="text-xs sm:text-sm text-black/70">
-                Statistical letter frequency distribution, chi-squared fitness test, and cryptanalysis detection.
-            </p>
+        <div class="flex flex-col gap-1 pb-1">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-black">Frequency Analysis</h1>
         </div>
 
         <!-- 3. MAIN WORKSPACE / BENTO GRID -->
@@ -252,11 +240,6 @@
             </div>
         </main>
 
-        <!-- 4. FOOTER -->
-        <footer class="border-t border-black/15 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-black/60 font-mono">
-            <span>• Frequency Cryptanalysis Engine • Statistical N-Gram Modulo 26</span>
-            <span>Chi-Squared Goodness of Fit</span>
-        </footer>
     </div>
 
     <!-- Web Audio Synthesizer (Bubble Pop Typing SFX) -->

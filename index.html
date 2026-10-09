@@ -88,15 +88,8 @@
                 <a href="frequency.html" class="nav-tab px-5 py-2 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Frequency</a>
             </nav>
             
-            <!-- Right Header Actions (SFX Toggle, ⌘K and Reset) -->
+            <!-- Right Header Actions (Reset) -->
             <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
-                <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-panel border border-charcoal text-xs font-mono font-semibold text-charcoal shadow-sm hover:bg-cream transition" id="sfx-toggle-btn" title="Toggle Typing Bubble Sound">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block" id="sfx-dot"></span>
-                    <span id="sfx-label">SFX</span>
-                </button>
-                <div class="hidden sm:flex items-center px-3 py-1.5 rounded-full bg-panel border border-charcoal text-xs font-mono font-semibold text-charcoal shadow-sm">
-                    ⌘K
-                </div>
                 <button class="px-5 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm" id="quick-reset-btn">
                     Reset
                 </button>
@@ -104,16 +97,8 @@
         </header>
 
         <!-- 2. TITLE AREA -->
-        <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-3 flex-wrap">
-                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Caesar Cipher</h1>
-                <span class="px-3 py-0.5 rounded-full bg-accent border border-charcoal text-[11px] font-mono font-bold text-charcoal shadow-sm">
-                    ROT-N Modulo 26
-                </span>
-            </div>
-            <p class="text-xs sm:text-sm text-charcoal/70">
-                Monoalphabetic modular shift transformation and automated cryptanalysis
-            </p>
+        <div class="flex flex-col gap-1 pb-1">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Caesar Cipher</h1>
         </div>
 
         <!-- 3. WORKSPACE / CORE BENTO CARDS -->
@@ -279,12 +264,6 @@
                 <!-- Javascript dynamically injects top 3 candidates here -->
             </div>
         </section>
-
-        <!-- 5. FOOTER -->
-        <footer class="border-t border-charcoal/15 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-charcoal/60 font-mono">
-            <span>Modulo 26 Ring Arithmetic · Discrete Cipher Engine</span>
-            <span>ROT(N) mod 26</span>
-        </footer>
     </div>
 
     <!-- Web Audio Synthesizer (Bubble Pop Typing SFX) -->

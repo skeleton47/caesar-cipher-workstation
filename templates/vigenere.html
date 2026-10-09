@@ -79,11 +79,7 @@
             
             <!-- Right Shortcut Pill & Reset -->
             <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
-                <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface neo-border text-xs font-mono font-semibold text-primary shadow-sm hover:bg-surface-container transition" id="sfx-toggle-btn" title="Toggle Typing Bubble Sound">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block" id="sfx-dot"></span>
-                    <span>SFX</span>
-                </button>
-                <button class="px-4 py-1.5 rounded-full bg-surface hover:bg-surface-container neo-border font-mono text-xs font-semibold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 shrink-0 whitespace-nowrap" id="nav-reset-btn">
+                <button class="px-5 py-1.5 rounded-full bg-surface hover:bg-surface-container neo-border font-mono text-xs font-bold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 shrink-0 whitespace-nowrap" id="nav-reset-btn">
                     <span class="material-symbols-outlined text-[15px]">refresh</span>
                     <span>Reset</span>
                 </button>
@@ -91,22 +87,8 @@
         </header>
 
         <!-- 2. TITLE AREA -->
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-1">
-            <div class="flex flex-col gap-1.5">
-                <div class="flex items-center gap-3 flex-wrap">
-                    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-primary">Vigenère Cipher</h1>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container neo-border font-mono text-xs font-bold text-on-secondary-fixed whitespace-nowrap">
-                        Polyalphabetic
-                    </span>
-                </div>
-                <p class="text-sm sm:text-base text-on-surface-variant font-normal">
-                    Periodic keystream substitution with interactive character mapping &amp; Kasiski cryptanalysis
-                </p>
-            </div>
-            <div class="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-surface-container-low neo-border text-xs font-mono text-on-surface-variant shrink-0">
-                <span class="w-2 h-2 rounded-full bg-secondary-container neo-border"></span>
-                <span class="whitespace-nowrap font-medium">Tabula Recta Modulo 26</span>
-            </div>
+        <div class="flex flex-col gap-1 pb-1">
+            <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-primary">Vigenère Cipher</h1>
         </div>
 
         <!-- 3. WORKSPACE GRID: 2 COLUMNS -->
@@ -300,11 +282,6 @@
             </section>
         </main>
 
-        <!-- 4. FOOTER -->
-        <footer class="border-t border-primary/15 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-on-surface-variant font-mono">
-            <span>Polyalphabetic Keystream Substitution • Tabula Recta Modulo 26</span>
-            <span>Kasiski Factor Examination</span>
-        </footer>
     </div>
 
     <!-- Web Audio Synthesizer (Bubble Pop Typing SFX) -->
