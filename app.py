@@ -1,6 +1,6 @@
 """
-Cipher Garden — Flask Backend
-Caesar Cipher: Encrypt, Decrypt, Crack (with frequency analysis)
+CIPHER LAB — Cryptographic Instrument Engine
+Caesar Cipher: Encrypt, Decrypt, Crack (with heuristic analysis)
 """
 
 from flask import Flask, render_template, request, jsonify
@@ -49,18 +49,16 @@ def caesar_shift(text: str, shift: int) -> str:
 
 def score_text(text: str) -> float:
     """
-    Score how "English-like" a piece of text is.
-    Combines letter-frequency correlation with common-word bonus.
+    Score how 'English-like' a candidate text is using letter frequencies
+    and common vocabulary hits.
     """
     lower = text.lower()
     letters = [ch for ch in lower if ch.isalpha()]
     if not letters:
         return 0.0
 
-    # Letter frequency score
     freq_score = sum(ENGLISH_FREQ.get(ch, 0) for ch in letters) / len(letters)
 
-    # Common-word bonus
     words = lower.split()
     word_hits = sum(1 for w in words if w.strip(string.punctuation) in COMMON_WORDS)
     word_bonus = (word_hits / max(len(words), 1)) * 15
@@ -91,7 +89,7 @@ def about():
 def api_encrypt():
     data = request.get_json(force=True)
     text = data.get('text', '')
-    shift = int(data.get('shift', 3))
+    shift = int(data.get('shift', 3)) % 26
     result = caesar_shift(text, shift)
     return jsonify({'result': result, 'shift': shift})
 
@@ -100,7 +98,7 @@ def api_encrypt():
 def api_decrypt():
     data = request.get_json(force=True)
     text = data.get('text', '')
-    shift = int(data.get('shift', 3))
+    shift = int(data.get('shift', 3)) % 26
     result = caesar_shift(text, -shift)
     return jsonify({'result': result, 'shift': shift})
 
@@ -110,19 +108,24 @@ def api_crack():
     data = request.get_json(force=True)
     text = data.get('text', '')
 
-    results = []
-    for shift in range(1, 26):
+    all_shifts = []
+    for shift in range(0, 26):
         decrypted = caesar_shift(text, -shift)
         sc = score_text(decrypted)
-        results.append({'shift': shift, 'text': decrypted, 'score': round(sc, 2)})
+        all_shifts.append({
+            'shift': shift,
+            'text': decrypted,
+            'score': round(sc, 2)
+        })
 
-    results.sort(key=lambda x: x['score'], reverse=True)
-    return jsonify({'results': results})
+    # Sort descending by score for ranked best-match
+    ranked = sorted(all_shifts, key=lambda x: x['score'], reverse=True)
+    return jsonify({'results': ranked, 'all_shifts': all_shifts})
 
 
 # ─── Run ────────────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
-    print("\n  [*] Cipher Garden is running!")
-    print("  [>] Open http://localhost:5000 in your browser\n")
+    print("\n  [*] CIPHER LAB is active on http://localhost:5000\n")
     app.run(debug=True, host='0.0.0.0', port=5000)
+

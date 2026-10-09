@@ -1,45 +1,50 @@
-# ⚡ CAESAR CIPHER // TACTICAL CYBERNETIC WORKSTATION
+# ✦ CIPHER LAB
 
-An ultra-professional, defense-grade Caesar cipher workstation featuring symmetric encryption, modular vector decryption, Shannon entropy calculation, dynamic concentric SVG rotor simulation, and heuristic frequency cryptanalysis. Built with a Python Flask REST backend and procedural Web Audio API sound synthesis.
-
----
-
-## 🚀 Key Capabilities
-
-- **🔒 Real-Time Encryption & Decryption:** Modular $\mathbb{Z}_{26}$ cyclic substitution cipher with live vector tracking (`A [0x41] → D [0x44]`).
-- **⚙️ Interactive Concentric Caesar Rotor:** Hardware-accelerated SVG cipher wheel that animates and aligns inner & outer substitution alphabets in real-time as key $K$ changes.
-- **📊 Shannon Entropy & Index of Coincidence (IoC) Telemetry:** Live calculation of payload information entropy ($H$) and coincidence index ($I_c$).
-- **⚡ Heuristic Frequency Cryptanalysis Engine:** Automatically cracks intercepted ciphertexts using English letter frequency distributions (ETAOIN SHRDLU unigrams) and common-word pattern scoring.
-- **📈 Live Frequency Spectrum Analyzer:** Visual comparison histogram showing payload character frequencies vs standard English baseline.
-- **🎧 Procedural Web Audio API Synthesizer (Zero Assets / Zero Latency):**
-  - Tactile high-tech clicks and frequency sweeps.
-  - Laser warp execution sound on cipher trigger.
-  - Success chime on payload decrypt.
-  - **Bubble Pop Typing SFX:** Organic water-drop/bubble-pop chirping effect on every keystroke.
-  - Persistent SFX mute/unmute state.
-- **🛡️ Dystopian Cyber-Intel Aesthetics:**
-  - High-precision typography (`Chakra Petch`, `JetBrains Mono`).
-  - Animated 3D polygonal wireframe head with censor bar and laser radar scanner.
-  - Tactical hazard stripe banners and dual segmented status meters.
-  - Strictly hidden result drawer that blooms into view only upon payload execution.
-  - Quick action toolkit: `[📋 COPY]`, `[🔄 SWAP TO INPUT]`, and `[💾 EXPORT .TXT]`.
-- **🐍 Python Flask REST API:**
-  - `POST /api/encrypt`
-  - `POST /api/decrypt`
-  - `POST /api/crack`
+An elegant, interactive cryptography instrument and developer playground for exploring Caesar substitution mechanics, modular arithmetic, and heuristic cryptanalysis.
 
 ---
 
-## 🛠️ Tech Stack
+## ✦ Overview
 
-- **Backend:** Python 3.x, Flask
-- **Frontend:** HTML5, CSS3 (Obsidian Glassmorphism & Cyber Grid), Vanilla JavaScript ES6+
-- **Audio Engine:** HTML5 Web Audio API
-- **Typography:** Chakra Petch, JetBrains Mono, Share Tech Mono
+**CIPHER LAB** combines the rigor of classical cryptography with the responsiveness and refinement of contemporary developer tooling. All text encryption, decryption, and brute-force cracking execute client-side in real time with zero payload retention.
 
 ---
 
-## 💻 Quick Start
+## ✦ Key Features
+
+- **🔒 Real-Time Encryption & Decryption:**
+  - Full cyclic $\mathbb{Z}_{26}$ modular arithmetic transformation: $C \equiv (P + K) \pmod{26}$.
+  - Normalizes shifts from $0$ to $25$.
+  - Preserves letter casing, whitespace, punctuation, numbers, and symbols intact.
+- **⚡ Interactive Alphabet Mapping Visualizer:**
+  - Dual-track alphabet ribbon showing immediate character transformations ($A \to D, B \to E, C \to F \dots$).
+  - Dynamically updates as the shift slider and stepper change.
+  - Interactive letter highlighting synchronized with active input text.
+- **📊 Exhaustive 26-Shift Brute Force Crack:**
+  - Tests all 26 possible Caesar shifts ($K = 0 \dots 25$) simultaneously.
+  - Evaluates plaintext candidates using standard English unigram frequencies (ETAOIN SHRDLU) and common vocabulary matching.
+  - Scannable card grid with one-click shift application.
+- **🎧 Tactile Procedural Audio Engine:**
+  - Zero-latency Web Audio API synthesizer (no audio files or external network requests).
+  - Subtle bubble pop keystroke acoustics.
+  - Soft mechanical clicks and harmonic completion chimes.
+  - Persistent SFX toggle in the navigation header.
+- **🛡️ Modern Design System:**
+  - Midnight Navy (`#080C14` / `#0B0F19`), Luminous Cyan (`#00E5FF`), Mint (`#10B981`), and Warm Amber (`#F59E0B`).
+  - Fluid typography with `Plus Jakarta Sans` and `JetBrains Mono`.
+  - Accessible focus indicators and responsive layouts across desktop, tablet, and mobile.
+
+---
+
+## ✦ Architecture & Tech Stack
+
+- **Frontend:** Semantic HTML5, CSS3 Custom Properties (Design Tokens), Modern ES6+ JavaScript.
+- **Backend / Routing:** Python 3.x, Flask (with RESTful endpoints for `/api/encrypt`, `/api/decrypt`, `/api/crack`).
+- **Audio Synthesizer:** HTML5 Web Audio API.
+
+---
+
+## ✦ Quick Start
 
 ### 1. Clone the repository
 ```bash
@@ -52,7 +57,7 @@ cd caesar-cipher-workstation
 pip install -r requirements.txt
 ```
 
-### 3. Run the application
+### 3. Run the development server
 ```bash
 python app.py
 ```
@@ -61,8 +66,16 @@ Open your browser and navigate to:
 ```
 http://localhost:5000
 ```
+Or open `index.html` directly in any modern browser for standalone execution.
 
 ---
 
-## 📜 License
-MIT License. Open source and built for educational cryptanalysis research.
+## ✦ Educational Context
+
+The Caesar cipher is intended strictly for historical study and educational exploration. Because Latin alphabets yield only 25 non-trivial permutations, modern confidentiality requires authenticated symmetric ciphers such as **AES-256-GCM** (NIST FIPS 197) or **ChaCha20-Poly1305** (RFC 8439).
+
+---
+
+## ✦ License
+
+MIT License. Open source and built for educational cryptanalysis exploration.

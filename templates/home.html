@@ -1,230 +1,221 @@
 {% extends 'base.html' %}
 {% set active_page = 'home' %}
-{% block title %}CIPHER_OS // CAESAR WORKSTATION{% endblock %}
+{% block title %}CIPHER LAB — Letters Have Secrets{% endblock %}
 
 {% block content %}
-<div class="tactical-grid-layout">
-    <!-- ====================================================================
-         LEFT COLUMN: PRIMARY CRYPTOGRAPHIC WORKSTATION CONSOLE
-         ==================================================================== -->
-    <div class="column-left">
-        <!-- TOP BOX: PAYLOAD INPUT & MODE SELECTOR -->
-        <div class="card-login-style">
-            <div class="login-header-row">
-                <span class="login-label">PAYLOAD:</span>
-                <div class="login-field-box">
-                    <textarea id="message-input" placeholder="ENTER SECRET DATA..." maxlength="500" spellcheck="false">HELLO WORLD</textarea>
-                </div>
-            </div>
+<!-- HERO SECTION -->
+<section class="hero-section">
+    <span class="hero-tagline">Cryptographic Instrument</span>
+    <h1 class="hero-title">Letters have secrets.</h1>
+    <p class="hero-subtitle">
+        Encrypt, decrypt, and explore Caesar cipher substitution mechanics in an interactive, real-time playground.
+    </p>
+</section>
 
-            <!-- Presets Bar -->
-            <div class="preset-action-bar">
-                <button type="button" class="preset-btn" id="btn-sample-dispatch" title="Load sample military message">[⚡ SAMPLE]</button>
-                <button type="button" class="preset-btn" id="btn-preset-rot13" title="Quick set ROT-13 key">[ROT-13]</button>
-                <button type="button" class="preset-btn" id="btn-sample-crack" title="Load ciphertext test for auto-crack">[CRACK TEST]</button>
-                <button type="button" class="preset-btn btn-clear-buffer" id="btn-clear-input" title="Clear buffer">[✕ CLEAR]</button>
-            </div>
-
-            <!-- Armed State Notification -->
-            <div class="login-status-row">
-                <span class="status-access-denied" id="status-badge">CIPHER ARMED</span>
-            </div>
-
-            <!-- Mode Selector Segmented Tabs -->
-            <div class="login-actions-row">
-                <button type="button" class="btn-bracket-cmd active" data-mode="encrypt">[ENCRYPT]</button>
-                <button type="button" class="btn-bracket-cmd" data-mode="decrypt">[DECRYPT]</button>
-                <button type="button" class="btn-bracket-cmd" data-mode="crack">[CRACK]</button>
-            </div>
-        </div>
-
-        <!-- Telemetry Byte Counter Bar -->
-        <div class="hardware-meta-readout">
-            <span>MEMORY BLOCKED: <span id="char-count">11</span>/500 BYTES</span>
-            <span>CPU OVERLOADED: ROT-26_CYCLE</span>
-        </div>
-
-        <!-- MIDDLE BOX: SHELL CONSOLE & CIPHER ENGINE -->
-        <div class="card-shell-console">
-            <div class="shell-script-text">
-                <div class="shell-line shell-cmd">$ ./INIT_CIPHER <span class="param-red">--REBOOT</span></div>
-                <div class="shell-line">[ SYSTEM ] CAESAR MODULE LOADED</div>
-                <div class="shell-line">[ VECTOR ] <span id="vector-meta-val" class="vector-highlight">A [0x41] &rarr; D [0x44] (ROT-03)</span></div>
-                <div class="shell-line">[ ENTROPY ] <span id="entropy-tag">3.02 BPC</span> // <span id="ioc-tag">IoC: 0.073</span></div>
-                <div class="shell-line text-muted">&gt; TRACE_STREAM --PAYLOAD=LOADED</div>
-                <div class="shell-line text-muted">&gt; RESPONSE: <span class="param-red" id="param-hex-badge">0x00000003 (ROT-03)</span></div>
-            </div>
-
-            <!-- Shift Param Controls: Stepper + Precision Slider -->
-            <div class="shell-param-row" id="shift-control-block">
-                <div class="param-label-row">
-                    <span class="param-label">&gt; ROT_KEY [K]:</span>
-                    <span class="param-num-preview" id="param-num-preview">SHIFT: 3</span>
-                </div>
-                
-                <div class="param-controls-grid">
-                    <div class="param-stepper">
-                        <button type="button" id="shift-minus" class="step-btn" title="Decrease Shift">&minus;</button>
-                        <input type="number" id="shift-value" value="3" min="1" max="25">
-                        <button type="button" id="shift-plus" class="step-btn" title="Increase Shift">&#43;</button>
-                    </div>
-
-                    <div class="slider-wrapper">
-                        <input type="range" id="shift-slider" min="1" max="25" value="3" class="tactical-range">
-                        <div class="slider-ticks">
-                            <span>1</span>
-                            <span>5</span>
-                            <span>10</span>
-                            <span>13</span>
-                            <span>18</span>
-                            <span>25</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Execute Trigger Button with Diagonal Caution Stripes -->
-            <button type="button" id="action-btn" class="execute-trigger-btn">
-                <div class="hazard-stripes-wing"></div>
-                <span class="exec-btn-text" id="btn-caption-text">EXECUTE CIPHER PAYLOAD</span>
-                <div class="hazard-stripes-wing"></div>
+<!-- MAIN CIPHER WORKSPACE -->
+<section class="workspace-card" id="workspace" aria-label="Cipher Workspace">
+    <!-- Top Workspace Header -->
+    <div class="workspace-header">
+        <!-- Mode Switcher -->
+        <div class="mode-segmented-control" role="tablist" aria-label="Operation Mode">
+            <button type="button" class="mode-tab-btn active" data-mode="encrypt" role="tab" aria-selected="true">
+                <span class="mode-tab-icon">🔒</span> Encrypt
             </button>
-
-            <!-- Result Field (Strictly Hidden until Execute Clicked!) -->
-            <div class="shell-result-container hidden" id="result-field-block">
-                <div class="result-telemetry-header">
-                    <span class="tele-title">&gt; INTERCEPTED OUTPUT:</span>
-                    <span class="tele-status" id="stream-status-badge">PAYLOAD_READY</span>
-                </div>
-
-                <div class="result-data-box">
-                    <div class="result-text" id="result-output" spellcheck="false"></div>
-                </div>
-
-                <div class="result-actions-strip">
-                    <button type="button" class="btn-bracket-copy" id="copy-btn">[COPY]</button>
-                    <button type="button" class="btn-bracket-copy" id="swap-btn">[USE AS INPUT]</button>
-                    <button type="button" class="btn-bracket-copy" id="download-btn">[EXPORT .TXT]</button>
-                </div>
-            </div>
-
-            <!-- Terminal Diagnostics Notes -->
-            <div class="shell-bottom-notes">
-                <span class="comment-line">// FATAL: PLAINTEXT CANNOT BE GUARANTEED</span>
-                <span class="comment-line">// SUGGESTION: REFORMAT CONSCIOUSNESS</span>
-                <span class="comment-line param-red">&gt; STATUS: EXECUTABLE</span>
-            </div>
+            <button type="button" class="mode-tab-btn" data-mode="decrypt" role="tab" aria-selected="false">
+                <span class="mode-tab-icon">🔓</span> Decrypt
+            </button>
+            <button type="button" class="mode-tab-btn" data-mode="crack" role="tab" aria-selected="false">
+                <span class="mode-tab-icon">⚡</span> Crack
+            </button>
         </div>
 
-        <!-- BOTTOM CONSOLE STREAM -->
-        <div class="stream-code-footer">
-            <div class="stream-code-line">&gt;&gt;&gt; IMPORT CIPHER</div>
-            <div class="stream-code-line">&gt;&gt;&gt; IMPORT SOUL</div>
-            <div class="stream-code-line">&gt;&gt;&gt; <span class="param-red">DATA SECURED</span></div>
-            <div class="stream-code-line">&gt;&gt;&gt; <span class="retrying-blink">_RETRYING...</span></div>
-            <div class="crosshair-divider">+</div>
+        <!-- Meta Tools & Presets -->
+        <div class="workspace-meta-tools">
+            <div class="algo-badge" title="Algorithm">
+                <span>Algorithm:</span> <strong>Caesar Cipher (ROT-N)</strong>
+            </div>
+            <button type="button" class="tool-action-btn" id="btn-load-sample" title="Load sample transmission">Sample Text</button>
+            <button type="button" class="tool-action-btn" id="btn-rot13" title="Quickly set shift to 13">ROT-13</button>
+            <button type="button" class="tool-action-btn" id="btn-clear" title="Clear all text">Clear</button>
         </div>
     </div>
 
-    <!-- ====================================================================
-         RIGHT COLUMN: NOT FOUND_404 & 3D WIREFRAME CYBERNETIC HEAD
-         ==================================================================== -->
-    <div class="column-right">
-        <!-- View Switcher Tabs -->
-        <div class="intel-nav-tabs">
-            <button type="button" class="intel-tab-btn active" id="tab-btn-dossier" data-tab="dossier">
-                [01 // TARGET_DOSSIER_404]
-            </button>
-            <button type="button" class="intel-tab-btn" id="tab-btn-spectrum" data-tab="spectrum">
-                [02 // FREQUENCY_SPECTRUM]
-            </button>
-        </div>
-
-        <!-- VIEW 1: TARGET DOSSIER_404 (DIRECTLY MATCHING USER POSTER) -->
-        <div class="intel-view-pane active" id="pane-dossier">
-            <div class="card-wireframe-display">
-                <!-- Top Diagonal Stripes -->
-                <div class="hazard-stripes-banner"></div>
-
-                <!-- Error 404 Title -->
-                <div class="card-404-title">NOT FOUND_404</div>
-
-                <!-- Stacked Warning Header -->
-                <h2 class="card-404-heading">
-                    ERROR: IDENTITY<br>
-                    COULD NOT<br>
-                    BE VERIFIED
-                </h2>
-
-                <!-- Second Diagonal Stripes Band -->
-                <div class="hazard-stripes-banner small"></div>
-
-                <!-- 3D WIREFRAME MESH HEAD ON HTML5 CANVAS -->
-                <div class="wireframe-head-container" id="wireframe-container">
-                    <canvas id="head-canvas" width="260" height="310"></canvas>
-                </div>
-
-                <!-- System Warning & Segmented Progress Bars -->
-                <div class="system-corrupted-row">
-                    SYSTEM: USER DATA CORRUPTED
-                </div>
-
-                <div class="dual-meter-bars">
-                    <div class="meter-bar filled">
-                        <div class="meter-inner-fill"></div>
-                    </div>
-                    <div class="meter-bar outline"></div>
-                </div>
-
-                <!-- Bottom Glyphs -->
-                <div class="wireframe-bottom-glyphs">
-                    <span class="crosshair-marker">+</span>
-                    <span class="diamond-group">&loz; &loz; &loz;</span>
-                </div>
+    <!-- Dual IO Grid: Plaintext & Ciphertext Panels -->
+    <div class="io-grid">
+        <!-- INPUT PANEL -->
+        <div class="io-panel">
+            <div class="io-panel-header">
+                <span class="io-panel-title" id="input-label-text">Plaintext Input</span>
+                <span class="io-panel-meta"><span id="input-char-count">0</span> chars</span>
+            </div>
+            <div class="input-textarea-wrapper">
+                <textarea 
+                    id="cipher-input" 
+                    class="cipher-textarea" 
+                    placeholder="Type or paste your message here..."
+                    spellcheck="false"
+                    aria-label="Cipher Input"
+                >ATTACK AT DAWN. RENDEZVOUS AT SECTOR SEVEN.</textarea>
             </div>
         </div>
 
-        <!-- VIEW 2: LIVE FREQUENCY SPECTRUM & CRACK TELEMETRY -->
-        <div class="intel-view-pane" id="pane-spectrum">
-            <div class="card-wireframe-display">
-                <div class="hazard-stripes-banner"></div>
-                <div class="card-404-title" style="color: var(--bone-white);">UNIGRAM SPECTRUM</div>
-
-                <h2 class="card-404-heading" style="font-size: 1.15rem;">
-                    FREQUENCY HEURISTIC:<br>
-                    CIPHERTEXT VS ENGLISH
-                </h2>
-
-                <div class="hazard-stripes-banner small"></div>
-
-                <!-- Frequency Histogram Grid -->
-                <div class="spectrum-chart-container">
-                    <div class="spectrum-chart-legend">
-                        <span class="legend-item"><span class="legend-box payload"></span> PAYLOAD</span>
-                        <span class="legend-item"><span class="legend-box english"></span> ENGLISH ETAOIN</span>
-                    </div>
-                    <div class="frequency-bars-grid" id="freq-bars-grid"></div>
+        <!-- OUTPUT PANEL -->
+        <div class="io-panel">
+            <div class="io-panel-header">
+                <span class="io-panel-title" id="output-label-text">Ciphertext Output</span>
+                <span class="io-panel-meta" id="output-meta-status">Ready</span>
+            </div>
+            <div class="output-display-wrapper" id="output-wrapper">
+                <div class="output-placeholder" id="output-empty-state">
+                    <span class="output-placeholder-icon">✦</span>
+                    <span>Enter text and press the action button below</span>
                 </div>
-
-                <!-- Crack Ranking Table -->
-                <div class="crack-ranking-container" id="crack-rankings-box">
-                    <div class="crack-rank-title">&gt; TOP CRACK CANDIDATES:</div>
-                    <div class="crack-candidates-list" id="crack-candidates-list">
-                        <div class="crack-empty-notice">EXECUTE CRACK TO POPULATE CANDIDATES</div>
-                    </div>
-                </div>
-
-                <div class="wireframe-bottom-glyphs">
-                    <span class="crosshair-marker">+</span>
-                    <span class="diamond-group">&loz; &loz; &loz;</span>
-                </div>
+                <div class="output-content" id="output-content-text" style="display: none;"></div>
+            </div>
+            <div class="output-actions-bar" id="output-actions-bar" style="visibility: hidden;">
+                <button type="button" class="output-btn" id="btn-copy-output" title="Copy result to clipboard">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Copy
+                </button>
+                <button type="button" class="output-btn" id="btn-swap-output" title="Use this result as input">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m7 16-4-4 4-4"/><path d="M3 12h18"/><path d="m17 8 4 4-4 4"/>
+                    </svg>
+                    Swap
+                </button>
+                <button type="button" class="output-btn" id="btn-download-output" title="Download as text file">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Export .txt
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- SIGNATURE VISUAL ELEMENT: ALPHABET SHIFT VISUALIZER STRIP -->
+    <div class="signature-visualizer-section" id="visualizer-section">
+        <div class="visualizer-header">
+            <span class="visualizer-title">Alphabet Mapping</span>
+            <span class="visualizer-preview-pill" id="visualizer-preview-pill">Shift +3: A &rarr; D</span>
+        </div>
+        <div class="alphabet-strip-container">
+            <div class="alphabet-strip" id="alphabet-strip">
+                <!-- Dynamically populated with 26 letter columns by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- WORKSPACE FOOTER CONTROLS: SHIFT SLIDER & PRIMARY ACTION BUTTON -->
+    <div class="workspace-controls-bar">
+        <!-- Shift Key Controller -->
+        <div class="shift-control-group" id="shift-controls-container">
+            <div class="shift-label-badge">
+                <span>Shift Key (K):</span>
+                <div class="shift-stepper-box">
+                    <button type="button" class="stepper-btn" id="btn-shift-minus" aria-label="Decrease shift">&minus;</button>
+                    <input type="number" id="shift-input" class="stepper-input" value="3" min="0" max="25" aria-label="Shift Value">
+                    <button type="button" class="stepper-btn" id="btn-shift-plus" aria-label="Increase shift">&#43;</button>
+                </div>
+            </div>
+
+            <div class="slider-container">
+                <input type="range" id="shift-range" class="shift-slider" min="0" max="25" value="3" aria-label="Shift slider">
+                <div class="slider-ticks-bar">
+                    <span>0</span>
+                    <span>5</span>
+                    <span>10</span>
+                    <span>13</span>
+                    <span>18</span>
+                    <span>25</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Primary Action Trigger -->
+        <button type="button" class="execute-action-btn" id="btn-execute">
+            <span id="execute-btn-icon">🔒</span>
+            <span id="execute-btn-label">Encrypt Message</span>
+        </button>
+    </div>
+</section>
+
+<!-- DEDICATED CRACK MODE SECTION (ALL 26 POSSIBLE SHIFTS) -->
+<section class="crack-section" id="crack-section" aria-label="Crack Mode Results">
+    <div class="crack-header">
+        <div class="crack-title-group">
+            <h2 class="crack-title">Exhaustive Brute Force Search</h2>
+            <p class="crack-subtitle">Testing all 26 possible Caesar alphabet shifts simultaneously with English frequency heuristics.</p>
+        </div>
+        <div class="crack-meta-pill" id="crack-meta-pill">26 Permutations</div>
+    </div>
+
+    <div class="crack-empty-state" id="crack-empty-notice">
+        <span class="crack-empty-icon">⚡</span>
+        <p>Enter encrypted text in the workspace above and click <strong>Crack Cipher</strong> to generate and score all 26 candidates.</p>
+    </div>
+
+    <div class="crack-grid" id="crack-results-grid" style="display: none;">
+        <!-- Populated dynamically with all 26 candidates -->
+    </div>
+</section>
+
+<!-- COMPACT EDUCATIONAL SECTION -->
+<section class="educational-section" id="learn" aria-label="Educational Guide">
+    <div class="edu-header">
+        <h2 class="edu-title">How the Caesar Cipher Works</h2>
+        <p class="edu-subtitle">The foundations of monoalphabetic substitution cryptography.</p>
+    </div>
+
+    <div class="edu-grid">
+        <div class="edu-card">
+            <div class="edu-card-icon">∑</div>
+            <h3 class="edu-card-title">Modular Arithmetic</h3>
+            <p class="edu-card-desc">
+                Each letter is mapped to an integer (A=0, B=1, ... Z=25). Encryption shifts every character forward along the cyclic group modulo 26:
+            </p>
+            <div class="edu-formula">C &equiv; (P + K) mod 26</div>
+        </div>
+
+        <div class="edu-card">
+            <div class="edu-card-icon">⚡</div>
+            <h3 class="edu-card-title">Trivial Key Space</h3>
+            <p class="edu-card-desc">
+                Because English has only 26 letters, there are only 25 non-trivial shifts. A modern computer can test every single key in less than a fraction of a millisecond.
+            </p>
+            <div class="edu-formula">|K| = 25 keys &approx; 4.64 bits</div>
+        </div>
+
+        <div class="edu-card">
+            <div class="edu-card-icon">📊</div>
+            <h3 class="edu-card-title">Frequency Invariance</h3>
+            <p class="edu-card-desc">
+                A simple shift preserves letter frequency distribution. The most common letter in English (E at ~12.7%) simply shifts to another position, making manual frequency attacks immediate.
+            </p>
+            <div class="edu-formula">ETAOIN SHRDLU Heuristic</div>
+        </div>
+
+        <div class="edu-card">
+            <div class="edu-card-icon">🛡️</div>
+            <h3 class="edu-card-title">Modern Cryptography</h3>
+            <p class="edu-card-desc">
+                Caesar is an educational foundation. Real-world systems use authenticated ciphers like AES-256-GCM or ChaCha20-Poly1305 with 256-bit entropy keys ($2^{256}$ states).
+            </p>
+            <div class="edu-formula">NIST FIPS 197 / RFC 8439</div>
+        </div>
+    </div>
+</section>
+
+<!-- Tactile Toast Feedback Element -->
+<div class="toast-notice" id="toast-notice" role="status" aria-live="polite">
+    <span class="toast-icon">✓</span>
+    <span id="toast-message">Copied to clipboard</span>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/head3d.js') }}"></script>
 <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
 {% endblock %}

@@ -1,7 +1,7 @@
 /* ==========================================================================
-   CIPHER_OS // PROCEDURAL AUDIO & TACTILE SFX ENGINE
-   Web Audio API Synthesis with Pure Waveforms (Zero Audio File Assets)
-   Acoustic Tuning: Organic Bubble Pop Typing, Tactical Clicks, Warp Execution
+   CIPHER LAB // PROCEDURAL AUDIO & TACTILE SFX ENGINE
+   Pure Web Audio API Waveform Synthesizer (Zero Audio File Assets)
+   Acoustic Tuning: Organic Bubble Pop Typing, Tactile Soft Clicks, Chimes
    ========================================================================== */
 
 const CyberSFX = {
@@ -24,13 +24,20 @@ const CyberSFX = {
     toggle() {
         this.enabled = !this.enabled;
         localStorage.setItem('cipher_sfx_enabled', this.enabled ? 'true' : 'false');
-        const btn = document.getElementById('sfx-toggle');
-        if (btn) {
-            btn.innerHTML = `<span class="sfx-state-dot"></span> [SFX: ${this.enabled ? 'ON' : 'OFF'}]`;
-            btn.classList.toggle('muted', !this.enabled);
-        }
+        this.syncUI();
         if (this.enabled) {
             this.click();
+        }
+    },
+
+    syncUI() {
+        const label = document.getElementById('sfx-label');
+        const btn = document.getElementById('sfx-toggle');
+        if (label) {
+            label.textContent = `SFX: ${this.enabled ? 'ON' : 'OFF'}`;
+        }
+        if (btn) {
+            btn.classList.toggle('muted', !this.enabled);
         }
     },
 
@@ -38,8 +45,8 @@ const CyberSFX = {
     bubblePop() {
         if (!this.enabled) return;
         const nowMs = Date.now();
-        // Rate-limit by 28ms to prevent audio buffer stacking/distortion on rapid typing
-        if (nowMs - this.lastBubbleTime < 28) return;
+        // Rate-limit by 30ms to prevent audio buffer stacking/distortion on rapid typing
+        if (nowMs - this.lastBubbleTime < 30) return;
         this.lastBubbleTime = nowMs;
 
         this.init();
@@ -50,28 +57,28 @@ const CyberSFX = {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
 
-            // Organic frequency sweep: 440Hz -> 1180Hz over 35ms creates authentic water droplet bloop
-            const baseFreq = 420 + Math.random() * 180;
-            const targetFreq = baseFreq * (2.2 + Math.random() * 0.3);
+            // Organic frequency sweep: 420Hz -> 1150Hz over 32ms creates authentic water droplet bloop
+            const baseFreq = 400 + Math.random() * 160;
+            const targetFreq = baseFreq * (2.1 + Math.random() * 0.25);
 
             osc.type = 'sine';
             osc.frequency.setValueAtTime(baseFreq, t);
-            osc.frequency.exponentialRampToValueAtTime(targetFreq, t + 0.026);
-            osc.frequency.exponentialRampToValueAtTime(targetFreq * 0.85, t + 0.042);
+            osc.frequency.exponentialRampToValueAtTime(targetFreq, t + 0.024);
+            osc.frequency.exponentialRampToValueAtTime(targetFreq * 0.82, t + 0.040);
 
-            // Fast exponential decay envelope
-            gain.gain.setValueAtTime(0.08, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.044);
+            // Fast exponential decay envelope with gentle volume
+            gain.gain.setValueAtTime(0.065, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.042);
 
             osc.connect(gain);
             gain.connect(this.ctx.destination);
 
             osc.start(t);
-            osc.stop(t + 0.044);
+            osc.stop(t + 0.042);
         } catch (e) {}
     },
 
-    // Tactical High-Tech Click (UI Buttons)
+    // Tactile Soft UI Click
     click() {
         if (!this.enabled) return;
         this.init();
@@ -83,21 +90,21 @@ const CyberSFX = {
             const gain = this.ctx.createGain();
 
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(920, t);
-            osc.frequency.exponentialRampToValueAtTime(320, t + 0.028);
+            osc.frequency.setValueAtTime(800, t);
+            osc.frequency.exponentialRampToValueAtTime(280, t + 0.024);
 
-            gain.gain.setValueAtTime(0.09, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.028);
+            gain.gain.setValueAtTime(0.06, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.024);
 
             osc.connect(gain);
             gain.connect(this.ctx.destination);
 
             osc.start(t);
-            osc.stop(t + 0.028);
+            osc.stop(t + 0.024);
         } catch (e) {}
     },
 
-    // Rotary Shift Click
+    // Rotary Shift Stepper Tick
     shift() {
         if (!this.enabled) return;
         this.init();
@@ -109,21 +116,21 @@ const CyberSFX = {
             const gain = this.ctx.createGain();
 
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(540, t);
-            osc.frequency.exponentialRampToValueAtTime(780, t + 0.035);
+            osc.frequency.setValueAtTime(520, t);
+            osc.frequency.exponentialRampToValueAtTime(740, t + 0.028);
 
-            gain.gain.setValueAtTime(0.07, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+            gain.gain.setValueAtTime(0.05, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.028);
 
             osc.connect(gain);
             gain.connect(this.ctx.destination);
 
             osc.start(t);
-            osc.stop(t + 0.035);
+            osc.stop(t + 0.028);
         } catch (e) {}
     },
 
-    // Authoritative Cyber Warp Execution Sweep
+    // Primary Action Trigger Sweep
     execute() {
         if (!this.enabled) return;
         this.init();
@@ -134,23 +141,23 @@ const CyberSFX = {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
 
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(140, t);
-            osc.frequency.exponentialRampToValueAtTime(880, t + 0.12);
-            osc.frequency.exponentialRampToValueAtTime(220, t + 0.24);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(180, t);
+            osc.frequency.exponentialRampToValueAtTime(720, t + 0.09);
+            osc.frequency.exponentialRampToValueAtTime(320, t + 0.18);
 
-            gain.gain.setValueAtTime(0.16, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.24);
+            gain.gain.setValueAtTime(0.12, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
 
             osc.connect(gain);
             gain.connect(this.ctx.destination);
 
             osc.start(t);
-            osc.stop(t + 0.24);
+            osc.stop(t + 0.18);
         } catch (e) {}
     },
 
-    // High-Tech Decryption Chime
+    // Success Reveal Harmonic Chime
     success() {
         if (!this.enabled) return;
         this.init();
@@ -158,23 +165,23 @@ const CyberSFX = {
 
         try {
             const t = this.ctx.currentTime;
-            const chord = [659.25, 987.77, 1318.51]; // E5, B5, E6
+            const chord = [523.25, 659.25, 783.99]; // C5, E5, G5
             chord.forEach((freq, idx) => {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
 
                 osc.type = 'sine';
-                const startT = t + idx * 0.05;
+                const startT = t + idx * 0.045;
                 osc.frequency.setValueAtTime(freq, startT);
 
-                gain.gain.setValueAtTime(0.12, startT);
-                gain.gain.exponentialRampToValueAtTime(0.001, startT + 0.20);
+                gain.gain.setValueAtTime(0.08, startT);
+                gain.gain.exponentialRampToValueAtTime(0.001, startT + 0.18);
 
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
 
                 osc.start(startT);
-                osc.stop(startT + 0.20);
+                osc.stop(startT + 0.18);
             });
         } catch (e) {}
     },
@@ -187,12 +194,12 @@ const CyberSFX = {
 
         try {
             const t = this.ctx.currentTime;
-            [880, 1320].forEach((freq, idx) => {
+            [659.25, 880].forEach((freq, idx) => {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
 
-                osc.type = 'square';
-                const startT = t + idx * 0.038;
+                osc.type = 'sine';
+                const startT = t + idx * 0.035;
                 osc.frequency.setValueAtTime(freq, startT);
 
                 gain.gain.setValueAtTime(0.05, startT);
@@ -205,80 +212,22 @@ const CyberSFX = {
                 osc.stop(startT + 0.04);
             });
         } catch (e) {}
-    },
-
-    // Page Transition Warp
-    transition() {
-        if (!this.enabled) return;
-        this.init();
-        if (!this.ctx) return;
-
-        try {
-            const t = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(280, t);
-            osc.frequency.exponentialRampToValueAtTime(1300, t + 0.14);
-
-            gain.gain.setValueAtTime(0.11, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
-
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-
-            osc.start(t);
-            osc.stop(t + 0.16);
-        } catch (e) {}
     }
 };
 
-// ─── Setup UI SFX Listeners on Page Ready ────────────────────────────────────
+// ─── Setup Listeners on DOM Ready ───────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    const curtain = document.getElementById('cyber-curtain');
-    const sfxBtn = document.getElementById('sfx-toggle');
+    CyberSFX.syncUI();
 
+    const sfxBtn = document.getElementById('sfx-toggle');
     if (sfxBtn) {
-        sfxBtn.innerHTML = `<span class="sfx-state-dot"></span> [SFX: ${CyberSFX.enabled ? 'ON' : 'OFF'}]`;
-        sfxBtn.classList.toggle('muted', !CyberSFX.enabled);
         sfxBtn.addEventListener('click', (e) => {
             e.preventDefault();
             CyberSFX.toggle();
         });
     }
 
-    // Smooth page curtain fade-in on load
-    if (curtain) {
-        curtain.classList.add('opening');
-        setTimeout(() => {
-            curtain.classList.remove('opening');
-            curtain.classList.add('idle');
-        }, 280);
-    }
-
-    // Intercept navigation links for smooth cyber transition
-    document.querySelectorAll('.nav-item, a[href^="/"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const targetUrl = link.getAttribute('href');
-            if (!targetUrl || targetUrl.startsWith('#') || targetUrl.startsWith('javascript:')) return;
-            if (link.getAttribute('target') === '_blank') return;
-
-            e.preventDefault();
-            CyberSFX.transition();
-
-            if (curtain) {
-                curtain.classList.remove('idle');
-                curtain.classList.add('closing');
-            }
-
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 220);
-        });
-    });
-
-    // Bubble pop sound on keyboard input
+    // Gentle bubble pop on typing in text areas
     document.addEventListener('keydown', (e) => {
         const target = e.target;
         if (target && (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT')) {
