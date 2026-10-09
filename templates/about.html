@@ -1,64 +1,142 @@
 {% extends 'base.html' %}
 {% set active_page = 'about' %}
-{% block title %}CIPHER_OS // THREAT_DOSSIER{% endblock %}
+{% block title %}CIPHER_OS // CRYPTOGRAPHIC INTEL SPEC{% endblock %}
 
 {% block content %}
 <div class="tactical-grid-layout">
     <div class="column-left">
+        <!-- TOP CARD: DOSSIER CLASSIFICATION -->
         <div class="card-login-style">
-            <div class="login-header-row">
-                <span class="login-label">DOSSIER:</span>
-                <span class="status-access-denied" style="font-size: 1.1rem; letter-spacing: 2px;">CAESAR ROT-26 SPEC</span>
+            <div class="card-top-status-bar">
+                <div class="card-top-title">
+                    <span class="hud-corner-marker">⌜</span>
+                    <span>INTEL_SPEC // ALGORITHMIC_DOSSIER</span>
+                </div>
+                <div class="card-top-metrics">
+                    <span class="metric-pill" style="border-color: #ff2e4d; color: #ff2e4d;">RISK: CRITICAL</span>
+                    <span class="metric-pill">CLASS: DECLASSIFIED</span>
+                </div>
             </div>
+
+            <div class="login-header-row" style="margin-top: 10px;">
+                <span class="login-label">SPEC:</span>
+                <span class="status-access-denied" style="font-size: 1.25rem; letter-spacing: 2px;">
+                    CAESAR ROT-26 FORMAL SPECIFICATION
+                </span>
+            </div>
+
             <div class="login-actions-row">
-                <span class="btn-bracket-cmd active">[HISTORICAL]</span>
-                <span class="btn-bracket-cmd">[MATHEMATICAL]</span>
-                <span class="btn-bracket-cmd">[VULNERABILITY]</span>
+                <button type="button" class="btn-bracket-cmd active" id="tab-dossier-math">[01 // MATHEMATICS]</button>
+                <button type="button" class="btn-bracket-cmd" id="tab-dossier-crypto">[02 // CRYPTANALYSIS]</button>
+                <button type="button" class="btn-bracket-cmd" id="tab-dossier-defense">[03 // DEFENSE_SYSTEMS]</button>
             </div>
         </div>
 
+        <!-- MIDDLE CARD: TECHNICAL BRIEFING -->
         <div class="card-shell-console">
+            <div class="shell-console-top-badge">
+                <span class="shell-dot"></span>
+                <span>CRYPTOGRAPHIC AUDIT & FORMAL ANALYSIS</span>
+            </div>
+
             <div class="shell-script-text">
-                <div class="shell-line shell-cmd">$ ./INSPECT_ALGORITHM <span class="param-red">--ANALYSIS</span></div>
-                <div class="shell-line">[ ORIGIN ] JULIUS CAESAR (58 BCE) // ROMAN LEGIONS</div>
-                <div class="shell-line">[ ENCRYPTION ] C &equiv; (P + K) mod 26</div>
-                <div class="shell-line">[ DECRYPTION ] P &equiv; (C - K) mod 26</div>
-                <div class="shell-line param-red">[ ENTROPY ] 25 DISCRETE KEYS &approx; 4.6 BITS</div>
-                <div class="shell-line">[ VULNERABILITY ] EXHAUSTIVE KEYS SEARCH IN &lt; 0.001 MS</div>
+                <div class="shell-line shell-cmd">$ ./INSPECT_ALGORITHM <span class="param-red">--DEEP-AUDIT --VERBOSE</span></div>
+                <div class="shell-line">[ ORIGIN ] JULIUS CAESAR (58 BCE) // GALLIC CAMPAIGN DISPATCHES</div>
+                <div class="shell-line">[ ALGEBRAIC FIELD ] FINITE RING &Zopf; / 26&Zopf; (ADDITIVE GROUP)</div>
+                <div class="shell-line">[ ENCRYPTION ] <span class="vector-highlight">C &equiv; (P + K) mod 26</span> (WHERE K &isin; [1, 25])</div>
+                <div class="shell-line">[ DECRYPTION ] <span class="vector-highlight">P &equiv; (C - K) mod 26</span></div>
+                <div class="shell-line param-red">[ ENTROPY CEILING ] log&sub2;(25) &approx; 4.643 BITS (TRIVIAL KEYSPACE)</div>
+            </div>
+
+            <div class="spec-detail-box">
+                <div class="spec-section-header">&gt; CRYPTANALYTIC VULNERABILITY AUDIT:</div>
+                <div class="spec-kv-grid">
+                    <div class="kv-card">
+                        <span class="kv-key">BRUTE FORCE KEYS:</span>
+                        <span class="kv-val">25 TOTAL CANDIDATES (&lt; 0.0001 MS)</span>
+                    </div>
+                    <div class="kv-card">
+                        <span class="kv-key">STATISTICAL DISTANCE:</span>
+                        <span class="kv-val">CHI-SQUARE TEST (&chi;&sup2; ATTACK SUCCESS &gt; 99.8%)</span>
+                    </div>
+                    <div class="kv-card">
+                        <span class="kv-key">INDEX OF COINCIDENCE:</span>
+                        <span class="kv-val">I&subc; = 0.0667 (ENGLISH UNIFORM PRESERVED)</span>
+                    </div>
+                    <div class="kv-card">
+                        <span class="kv-key">CIPHER CATEGORY:</span>
+                        <span class="kv-val">MONOALPHABETIC SUBSTITUTION CIPHER</span>
+                    </div>
+                </div>
             </div>
 
             <div class="shell-bottom-notes">
-                <span class="comment-line">// FREQUENCY ATTACK: UNIGRAM E (12.7%), T (9.1%), A (8.2%)</span>
-                <span class="comment-line">// ADVISORY: NEVER DEPLOY FOR SENSITIVE MODERN DATA</span>
-                <span class="comment-line param-red">&gt; RECOMMENDATION: AES-256-GCM / CHACHA20</span>
+                <span class="comment-line">// HEURISTIC: LETTER FREQUENCIES IN CIPHERTEXT MAP 1:1 TO STANDARD ENGLISH</span>
+                <span class="comment-line">// ADVISORY: CAESAR CIPHER PROVIDES ZERO CONFIDENTIALITY IN PRODUCTION</span>
+                <span class="comment-line param-red">&gt; MODERN ALTERNATIVES: AES-256-GCM (FIPS 197), CHACHA20-POLY1305 (RFC 8439)</span>
             </div>
         </div>
 
+        <!-- FOOTER STREAM -->
         <div class="stream-code-footer">
-            <div class="stream-code-line">&gt;&gt;&gt; IMPORT SPECS</div>
-            <div class="stream-code-line">&gt;&gt;&gt; AUDIT COMPLETE</div>
+            <div class="stream-code-line">&gt;&gt;&gt; INTEGRITY HASH: SHA-256 // VERIFIED</div>
+            <div class="stream-code-line">&gt;&gt;&gt; AUDIT REPORT CONCLUDED</div>
             <div class="crosshair-divider">+</div>
         </div>
     </div>
 
+    <!-- RIGHT COLUMN: INTEL SPEC WIREFRAME -->
     <div class="column-right">
         <div class="card-wireframe-display">
             <div class="hazard-stripes-banner"></div>
-            <div class="card-404-title">INTELLIGENCE_SPEC</div>
+
+            <div class="card-404-title-row">
+                <span class="card-404-title">DEFENSE_REPORT</span>
+                <span class="card-badge-critical">[HIGH RISK]</span>
+            </div>
+
             <h2 class="card-404-heading">
                 SYSTEM AUDIT:<br>
                 CRYPTOGRAPHIC<br>
-                RISK CRITICAL
+                EXPOSURE: 100%
             </h2>
+
             <div class="hazard-stripes-banner small"></div>
 
-            <div class="system-corrupted-row" style="margin-top: 20px;">
-                ATTACK VECTOR: UNIGRAM FREQUENCY
+            <!-- Modern Security Recommendation Matrix -->
+            <div class="security-radar-box">
+                <div class="radar-title">&gt; CIPHER COMPARISON MATRIX:</div>
+                <div class="cipher-matrix-list">
+                    <div class="matrix-row alert">
+                        <span class="m-cipher">CAESAR ROT-26</span>
+                        <span class="m-key">4.6 BITS</span>
+                        <span class="m-status">BROKEN</span>
+                    </div>
+                    <div class="matrix-row alert">
+                        <span class="m-cipher">VIGENERE POLY</span>
+                        <span class="m-key">KASISKI</span>
+                        <span class="m-status">VULNERABLE</span>
+                    </div>
+                    <div class="matrix-row secure">
+                        <span class="m-cipher">AES-256-GCM</span>
+                        <span class="m-key">256 BITS</span>
+                        <span class="m-status">SECURE</span>
+                    </div>
+                    <div class="matrix-row secure">
+                        <span class="m-cipher">CHACHA20-POLY</span>
+                        <span class="m-key">256 BITS</span>
+                        <span class="m-status">QUANTUM-SAFE</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="system-corrupted-row" style="margin-top: 14px;">
+                ATTACK VECTOR: MONOALPHABETIC FREQ ANALYSIS
             </div>
 
             <div class="dual-meter-bars">
                 <div class="meter-bar filled">
-                    <div class="meter-inner-fill" style="width: 100%; background: var(--crimson-red);"></div>
+                    <div class="meter-inner-fill" style="width: 100%; background: #ff2e4d;"></div>
                 </div>
                 <div class="meter-bar outline"></div>
             </div>
@@ -71,3 +149,8 @@
     </div>
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/about.js') }}"></script>
+{% endblock %}
+

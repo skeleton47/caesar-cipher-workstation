@@ -3,45 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CIPHER_OS // ACCESS_TERMINAL{% endblock %}</title>
+    <title>{% block title %}CIPHER_OS // CAESAR WORKSTATION{% endblock %}</title>
+    
+    <!-- Ultra-Sharp Defense & Tactical Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <!-- Grunge CRT Grain & Coordinate Crosshairs Overlay -->
-    <div class="grunge-grain-overlay"></div>
+    <!-- Subtle Background Overlays: Tactical Grid & Scanlines -->
+    <div class="tactical-grid-bg"></div>
     <div class="crt-scanlines"></div>
+    <div class="ambient-vignette"></div>
 
-    <!-- Cyber Transition Overlay -->
+    <!-- Cyber Transition Curtain -->
     <div class="cyber-transition-curtain" id="cyber-curtain">
-        <div class="curtain-line"></div>
-        <div class="curtain-glitch-text">AUTHENTICATING CIPHER SUBSYSTEM...</div>
+        <div class="curtain-scanner-line"></div>
+        <div class="curtain-meta-box">
+            <span class="curtain-status-icon">❖</span>
+            <span class="curtain-glitch-text">AUTHENTICATING CIPHER SUBSYSTEM...</span>
+            <span class="curtain-sub-metric">[ROT-26 / KERNEL_INIT]</span>
+        </div>
     </div>
 
     <div class="terminal-container">
-        <!-- TOP TELEMETRY HUD -->
+        <!-- ====================================================================
+             TOP TELEMETRY HUD HEADER
+             ==================================================================== -->
         <header class="tactical-hud-header">
             <div class="hud-left-meta">
                 <div class="source-block">
-                    <span class="source-label">SOURCE: CIPHER_SYS</span>
+                    <div class="source-top-row">
+                        <span class="pulse-indicator"></span>
+                        <span class="source-label">NODE: CIPHER_SYS-01</span>
+                    </div>
                     <div class="grid-brackets">
                         <span>┌ ┐ ┌ ┐</span>
                         <span>└ ┘ └ ┘</span>
                     </div>
                 </div>
+                
                 <div class="uplink-block">
-                    <span class="uplink-status">[UPLINK ESTABLISHED]</span>
-                    <span class="uplink-sub">[ROT-26 SUBSYSTEM]</span>
+                    <div class="uplink-status-row">
+                        <span class="uplink-status">[UPLINK: ACTIVE]</span>
+                        <span class="uplink-sec-tag">SEC_LVL: ALPHA</span>
+                    </div>
+                    <span class="uplink-sub" id="live-utc-clock">UTC 00:00:00.000</span>
                 </div>
             </div>
 
             <!-- Mini Nav Bar + Sound Toggle -->
             <nav class="hud-nav-bar">
-                <a href="/" class="nav-item {{ 'active' if active_page == 'home' }}">[TERMINAL]</a>
-                <a href="/about" class="nav-item {{ 'active' if active_page == 'about' }}">[INTEL_SPEC]</a>
-                <button class="sfx-toggle-btn" id="sfx-toggle" title="Toggle Sound">[SFX: ON]</button>
+                <a href="/" class="nav-item {{ 'active' if active_page == 'home' }}">
+                    <span class="nav-icon">◈</span> [WORKSTATION]
+                </a>
+                <a href="/about" class="nav-item {{ 'active' if active_page == 'about' }}">
+                    <span class="nav-icon">▣</span> [INTEL_SPEC]
+                </a>
+                <button class="sfx-toggle-btn" id="sfx-toggle" title="Toggle Audio Synthesizer">
+                    <span class="sfx-state-dot"></span> [SFX: ON]
+                </button>
             </nav>
         </header>
 
@@ -52,9 +75,13 @@
 
         <!-- FOOTER STATUS -->
         <footer class="tactical-footer">
-            <div class="footer-prompt">
+            <div class="footer-left">
                 <span class="prompt-sym">&gt;&gt;&gt;</span>
-                <span class="prompt-text">_SYSTEM_READY...</span>
+                <span class="prompt-text">_SYSTEM_READY // DUAL_ROTOR_ONLINE</span>
+            </div>
+            <div class="footer-center">
+                <span class="footer-spec-tag">MIL-SPEC CR-26.4</span>
+                <span class="footer-spec-tag">SHANNON_ENTROPY_V2</span>
             </div>
             <div class="footer-glyphs">
                 <span class="crosshair-marker">+</span>
@@ -63,6 +90,7 @@
         </footer>
     </div>
 
+    <!-- SFX Synthesizer Engine -->
     <script src="{{ url_for('static', filename='js/sfx.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>

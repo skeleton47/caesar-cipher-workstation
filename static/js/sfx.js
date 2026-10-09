@@ -1,11 +1,11 @@
 /* ==========================================================================
-   CYBER SFX & PAGE TRANSITION ENGINE
-   Zero-dependency Web Audio API Synthesizer + Smooth Cyber Glitch Wipe
+   CYBER SFX & PAGE TRANSITION SYNTHESIZER ENGINE
+   Zero-dependency Web Audio API Synthesis + Cyber Glitch Wipe + Bubble Pop SFX
    ========================================================================== */
 
 const CyberSFX = {
     ctx: null,
-    enabled: true,
+    enabled: localStorage.getItem('cipher_sfx_enabled') !== 'false',
 
     init() {
         if (!this.ctx) {
@@ -21,9 +21,10 @@ const CyberSFX = {
 
     toggle() {
         this.enabled = !this.enabled;
+        localStorage.setItem('cipher_sfx_enabled', this.enabled ? 'true' : 'false');
         const btn = document.getElementById('sfx-toggle');
         if (btn) {
-            btn.textContent = this.enabled ? '[SFX: ON]' : '[SFX: OFF]';
+            btn.innerHTML = `<span class="sfx-state-dot"></span> [SFX: ${this.enabled ? 'ON' : 'OFF'}]`;
             btn.classList.toggle('muted', !this.enabled);
         }
         if (this.enabled) {
@@ -41,14 +42,14 @@ const CyberSFX = {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(950, now);
-            osc.frequency.exponentialRampToValueAtTime(320, now + 0.035);
+            osc.frequency.setValueAtTime(1020, now);
+            osc.frequency.exponentialRampToValueAtTime(340, now + 0.032);
             gain.gain.setValueAtTime(0.12, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.032);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.035);
+            osc.stop(now + 0.032);
         } catch (e) {}
     },
 
@@ -62,15 +63,15 @@ const CyberSFX = {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(140, now);
-            osc.frequency.exponentialRampToValueAtTime(920, now + 0.14);
-            osc.frequency.exponentialRampToValueAtTime(260, now + 0.28);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+            osc.frequency.setValueAtTime(160, now);
+            osc.frequency.exponentialRampToValueAtTime(980, now + 0.12);
+            osc.frequency.exponentialRampToValueAtTime(240, now + 0.26);
+            gain.gain.setValueAtTime(0.22, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.26);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.28);
+            osc.stop(now + 0.26);
         } catch (e) {}
     },
 
@@ -81,19 +82,19 @@ const CyberSFX = {
         if (!this.ctx) return;
         try {
             const now = this.ctx.currentTime;
-            const freqs = [659.25, 987.77, 1318.51]; // E5, B5, E6 futuristic chime
+            const freqs = [659.25, 987.77, 1318.51]; // E5, B5, E6 harmonic chord
             freqs.forEach((freq, idx) => {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
                 osc.type = 'sine';
-                const startTime = now + idx * 0.06;
+                const startTime = now + idx * 0.055;
                 osc.frequency.setValueAtTime(freq, startTime);
-                gain.gain.setValueAtTime(0.15, startTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.2);
+                gain.gain.setValueAtTime(0.16, startTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.22);
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
                 osc.start(startTime);
-                osc.stop(startTime + 0.2);
+                osc.stop(startTime + 0.22);
             });
         } catch (e) {}
     },
@@ -108,14 +109,14 @@ const CyberSFX = {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(540, now);
-            osc.frequency.exponentialRampToValueAtTime(760, now + 0.045);
-            gain.gain.setValueAtTime(0.1, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+            osc.frequency.setValueAtTime(560, now);
+            osc.frequency.exponentialRampToValueAtTime(820, now + 0.04);
+            gain.gain.setValueAtTime(0.09, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.045);
+            osc.stop(now + 0.04);
         } catch (e) {}
     },
 
@@ -132,7 +133,7 @@ const CyberSFX = {
                 osc.type = 'square';
                 const t = now + idx * 0.04;
                 osc.frequency.setValueAtTime(freq, t);
-                gain.gain.setValueAtTime(0.07, t);
+                gain.gain.setValueAtTime(0.06, t);
                 gain.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
@@ -152,18 +153,18 @@ const CyberSFX = {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(1400, now + 0.18);
-            gain.gain.setValueAtTime(0.16, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.exponentialRampToValueAtTime(1450, now + 0.16);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.2);
+            osc.stop(now + 0.18);
         } catch (e) {}
     },
 
-    // Satisfying Bubble Pop Typing Sound (صوت ببل خفيف وسلس للكتابة)
+    // Satisfying Bubble Pop Typing Sound (صوت ببل ممتع وسلس للكتابة)
     bubblePop() {
         if (!this.enabled) return;
         this.init();
@@ -173,51 +174,52 @@ const CyberSFX = {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
 
-            // Organic frequency sweep: creates an authentic water drop / bubble pop chirp
-            const startFreq = 450 + Math.random() * 260;
-            const endFreq = startFreq * (1.8 + Math.random() * 0.35);
+            // Organic frequency sweep: authentic water drop / bubble pop chirp
+            const startFreq = 480 + Math.random() * 240;
+            const endFreq = startFreq * (1.75 + Math.random() * 0.3);
 
             osc.type = 'sine';
             osc.frequency.setValueAtTime(startFreq, now);
-            osc.frequency.exponentialRampToValueAtTime(endFreq, now + 0.038);
+            osc.frequency.exponentialRampToValueAtTime(endFreq, now + 0.035);
 
-            // Fast exponential decay envelope
             gain.gain.setValueAtTime(0.18, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.048);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.042);
 
             osc.connect(gain);
             gain.connect(this.ctx.destination);
 
             osc.start(now);
-            osc.stop(now + 0.048);
+            osc.stop(now + 0.042);
         } catch (e) {}
     }
 };
 
-// ─── Seamless Cyber Page Transitions & Event Bindings ────────────────────────
+// ─── Seamless Cyber Transitions & Keyboard SFX Listeners ────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     const curtain = document.getElementById('cyber-curtain');
-    const sfxBtn = document.getElementById('sfx-toggle');
+    const sfxBtn  = document.getElementById('sfx-toggle');
 
-    // SFX Toggle button event
+    // Restore saved toggle state
     if (sfxBtn) {
+        sfxBtn.innerHTML = `<span class="sfx-state-dot"></span> [SFX: ${CyberSFX.enabled ? 'ON' : 'OFF'}]`;
+        sfxBtn.classList.toggle('muted', !CyberSFX.enabled);
         sfxBtn.addEventListener('click', (e) => {
             e.preventDefault();
             CyberSFX.toggle();
         });
     }
 
-    // Open transition curtain on load
+    // Open transition curtain smoothly on load
     if (curtain) {
         curtain.classList.add('opening');
         setTimeout(() => {
             curtain.classList.remove('opening');
             curtain.classList.add('idle');
-        }, 360);
+        }, 320);
     }
 
     // Intercept navigation links for smooth cyber wipe transition
-    document.querySelectorAll('.nav-link, a[href^="/"]').forEach(link => {
+    document.querySelectorAll('.nav-item, a[href^="/"]').forEach(link => {
         link.addEventListener('click', (e) => {
             const targetUrl = link.getAttribute('href');
             if (!targetUrl || targetUrl.startsWith('#') || targetUrl.startsWith('javascript:')) return;
@@ -233,14 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 window.location.href = targetUrl;
-            }, 260);
-        });
-    });
-
-    // Sound binding for all interactive buttons
-    document.querySelectorAll('.tab-item, .chrome-btn, .shift-nav-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            CyberSFX.click();
+            }, 250);
         });
     });
 
