@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CIPHER_OS // CAESAR WORKSTATION</title>
     
-    <!-- Ultra-Sharp Defense & Tactical Fonts -->
+    <!-- Precision Cryptographic Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="static/css/style.css">
 </head>
@@ -16,15 +16,14 @@
     <!-- Subtle Background Overlays -->
     <div class="tactical-grid-bg"></div>
     <div class="crt-scanlines"></div>
-    <div class="ambient-vignette"></div>
 
     <!-- Cyber Transition Curtain -->
     <div class="cyber-transition-curtain" id="cyber-curtain">
         <div class="curtain-scanner-line"></div>
         <div class="curtain-meta-box">
             <span class="curtain-status-icon">❖</span>
-            <span class="curtain-glitch-text">AUTHENTICATING CIPHER SUBSYSTEM...</span>
-            <span class="curtain-sub-metric">[ROT-26 / STANDALONE_WORKSTATION]</span>
+            <span class="curtain-glitch-text">INITIALIZING CRYPTOGRAPHIC KERNEL...</span>
+            <span class="curtain-sub-metric">[ROT-26 / OK]</span>
         </div>
     </div>
 
@@ -33,10 +32,7 @@
         <header class="tactical-hud-header">
             <div class="hud-left-meta">
                 <div class="source-block">
-                    <div class="source-top-row">
-                        <span class="pulse-indicator"></span>
-                        <span class="source-label">NODE: CIPHER_SYS-01</span>
-                    </div>
+                    <span class="source-label">SOURCE: CIPHER_SYS</span>
                     <div class="grid-brackets">
                         <span>┌ ┐ ┌ ┐</span>
                         <span>└ ┘ └ ┘</span>
@@ -46,18 +42,16 @@
                 <div class="uplink-block">
                     <div class="uplink-status-row">
                         <span class="uplink-status">[UPLINK: ACTIVE]</span>
-                        <span class="uplink-sec-tag">SEC_LVL: ALPHA</span>
+                        <span class="uplink-sub">[ROT-26 SUBSYSTEM]</span>
                     </div>
-                    <span class="uplink-sub" id="live-utc-clock">UTC 00:00:00.000</span>
+                    <span class="clock-readout" id="live-utc-clock">UTC 00:00:00.000</span>
                 </div>
             </div>
 
             <!-- Mini Nav Bar + Sound Toggle -->
             <nav class="hud-nav-bar">
-                <a href="#" class="nav-item active">
-                    <span class="nav-icon">◈</span> [WORKSTATION]
-                </a>
-                <button class="sfx-toggle-btn" id="sfx-toggle" title="Toggle Audio Synthesizer">
+                <a href="index.html" class="nav-item active">[WORKSTATION]</a>
+                <button class="sfx-toggle-btn" id="sfx-toggle" title="Toggle Sound">
                     <span class="sfx-state-dot"></span> [SFX: ON]
                 </button>
             </nav>
@@ -66,104 +60,65 @@
         <!-- MAIN VIEWPORT -->
         <main class="tactical-main">
             <div class="tactical-grid-layout">
-                <!-- LEFT COLUMN -->
+                <!-- ========================================================
+                     LEFT COLUMN: PRIMARY WORKSTATION CONSOLE
+                     ======================================================== -->
                 <div class="column-left">
+                    <!-- TOP BOX: PAYLOAD INPUT & MODE SELECTOR -->
                     <div class="card-login-style">
-                        <div class="card-top-status-bar">
-                            <div class="card-top-title">
-                                <span class="hud-corner-marker">⌜</span>
-                                <span>BUFFER // INPUT_VECTOR</span>
-                            </div>
-                            <div class="card-top-metrics">
-                                <span class="metric-pill" id="entropy-tag">ENTROPY: 0.00 BPC</span>
-                                <span class="metric-pill" id="ioc-tag">IoC: 0.000</span>
+                        <div class="login-header-row">
+                            <span class="login-label">PAYLOAD:</span>
+                            <div class="login-field-box">
+                                <textarea id="message-input" placeholder="ENTER SECRET DATA..." maxlength="500" spellcheck="false">HELLO WORLD</textarea>
                             </div>
                         </div>
 
-                        <div class="login-field-box">
-                            <textarea id="message-input" placeholder="ENTER SECRET PAYLOAD..." maxlength="500" spellcheck="false">ATTACK AT DAWN. RENDEZVOUS AT SECTOR SEVEN.</textarea>
-                        </div>
-
+                        <!-- Presets Bar -->
                         <div class="preset-action-bar">
-                            <button type="button" class="preset-btn" id="btn-sample-dispatch">[⚡ LOAD DISPATCH]</button>
-                            <button type="button" class="preset-btn" id="btn-preset-rot13">[ROT-13]</button>
-                            <button type="button" class="preset-btn" id="btn-sample-crack">[CRACK SAMPLE]</button>
-                            <button type="button" class="preset-btn btn-clear-buffer" id="btn-clear-input">[✕ CLEAR]</button>
+                            <button type="button" class="preset-btn" id="btn-sample-dispatch" title="Load sample military message">[⚡ SAMPLE]</button>
+                            <button type="button" class="preset-btn" id="btn-preset-rot13" title="Quick set ROT-13 key">[ROT-13]</button>
+                            <button type="button" class="preset-btn" id="btn-sample-crack" title="Load ciphertext test for auto-crack">[CRACK TEST]</button>
+                            <button type="button" class="preset-btn btn-clear-buffer" id="btn-clear-input" title="Clear buffer">[✕ CLEAR]</button>
                         </div>
 
+                        <!-- Armed State Notification -->
                         <div class="login-status-row">
-                            <div class="status-warning-line">
-                                <span class="status-pulse-dot"></span>
-                                <span class="status-access-denied" id="status-badge">CIPHER ARMED</span>
-                            </div>
+                            <span class="status-access-denied" id="status-badge">CIPHER ARMED</span>
                         </div>
 
+                        <!-- Mode Selector Segmented Tabs -->
                         <div class="login-actions-row">
-                            <button type="button" class="btn-bracket-cmd active" data-mode="encrypt">
-                                <span class="btn-mode-indicator">■</span> [ENCRYPT]
-                            </button>
-                            <button type="button" class="btn-bracket-cmd" data-mode="decrypt">
-                                <span class="btn-mode-indicator">■</span> [DECRYPT]
-                            </button>
-                            <button type="button" class="btn-bracket-cmd" data-mode="crack">
-                                <span class="btn-mode-indicator">■</span> [AUTO-CRACK]
-                            </button>
+                            <button type="button" class="btn-bracket-cmd active" data-mode="encrypt">[ENCRYPT]</button>
+                            <button type="button" class="btn-bracket-cmd" data-mode="decrypt">[DECRYPT]</button>
+                            <button type="button" class="btn-bracket-cmd" data-mode="crack">[CRACK]</button>
                         </div>
                     </div>
 
+                    <!-- Telemetry Byte Counter Bar -->
                     <div class="hardware-meta-readout">
-                        <div class="hw-meta-item">
-                            <span class="meta-label">BUFFER_ALLOCATION:</span>
-                            <span class="meta-val"><span id="char-count">42</span> / 500 BYTES</span>
-                        </div>
-                        <div class="hw-meta-item">
-                            <span class="meta-label">KERNEL_CYCLE:</span>
-                            <span class="meta-val">ROT-26_PARALLEL</span>
-                        </div>
+                        <span>MEMORY BLOCKED: <span id="char-count">11</span>/500 BYTES</span>
+                        <span>CPU OVERLOADED: ROT-26_CYCLE</span>
                     </div>
 
-                    <!-- SHELL CONSOLE & ROTOR -->
+                    <!-- MIDDLE BOX: SHELL CONSOLE & CIPHER ENGINE -->
                     <div class="card-shell-console">
-                        <div class="shell-console-top-badge">
-                            <span class="shell-dot"></span>
-                            <span>CRYPTOGRAPHIC ROTOR SUBSYSTEM</span>
-                        </div>
-
                         <div class="shell-script-text">
-                            <div class="shell-line shell-cmd">$ ./INIT_CIPHER <span class="param-red">--ENGINE=ROT26 --STRICT</span></div>
-                            <div class="shell-line">[ SYSTEM ] CAESAR SUBSYSTEM OPERATIONAL</div>
+                            <div class="shell-line shell-cmd">$ ./INIT_CIPHER <span class="param-red">--REBOOT</span></div>
+                            <div class="shell-line">[ SYSTEM ] CAESAR MODULE LOADED</div>
                             <div class="shell-line">[ VECTOR ] <span id="vector-meta-val" class="vector-highlight">A [0x41] &rarr; D [0x44] (ROT-03)</span></div>
-                            <div class="shell-line text-muted">&gt; PIPELINE: 256-BIT BUS // MODULO-26 ARITHMETIC</div>
+                            <div class="shell-line">[ ENTROPY ] <span id="entropy-tag">3.02 BPC</span> // <span id="ioc-tag">IoC: 0.073</span></div>
+                            <div class="shell-line text-muted">&gt; TRACE_STREAM --PAYLOAD=LOADED</div>
+                            <div class="shell-line text-muted">&gt; RESPONSE: <span class="param-red" id="param-hex-badge">0x00000003 (ROT-03)</span></div>
                         </div>
 
-                        <!-- INTERACTIVE CAESAR ROTOR DISK DISPLAY -->
-                        <div class="caesar-disk-wrapper" id="caesar-rotor-stage" title="Interactive Caesar Shift Rotor">
-                            <div class="disk-meta-labels">
-                                <span class="disk-label outer">[OUTER: PLAINTEXT A-Z]</span>
-                                <span class="disk-label inner">[INNER: CIPHERTEXT ROT]</span>
-                            </div>
-                            <div class="rotor-svg-container">
-                                <svg class="rotor-svg" id="rotor-svg" viewBox="0 0 320 320" width="100%" height="220">
-                                    <circle cx="160" cy="160" r="148" class="rotor-ring-outer" />
-                                    <circle cx="160" cy="160" r="98" class="rotor-ring-inner-track" />
-                                    <line x1="160" y1="12" x2="160" y2="308" class="rotor-crosshair" />
-                                    <line x1="12" y1="160" x2="308" y2="160" class="rotor-crosshair" />
-                                    <circle cx="160" cy="160" r="42" class="rotor-center-hub" />
-                                    <text x="160" y="164" class="rotor-center-text" id="rotor-center-display">K=03</text>
-                                    <g id="outer-alphabet-group" class="rotor-text-outer"></g>
-                                    <g id="inner-alphabet-group" class="rotor-text-inner"></g>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <!-- Shift Param Controls -->
+                        <!-- Shift Param Controls: Stepper + Precision Slider -->
                         <div class="shell-param-row" id="shift-control-block">
-                            <div class="param-title-group">
+                            <div class="param-label-row">
                                 <span class="param-label">&gt; ROT_KEY [K]:</span>
-                                <span class="param-hex-preview" id="param-hex-badge">HEX: 0x03</span>
+                                <span class="param-num-preview" id="param-num-preview">SHIFT: 3</span>
                             </div>
                             
-                            <div class="param-controls-unified">
+                            <div class="param-controls-grid">
                                 <div class="param-stepper">
                                     <button type="button" id="shift-minus" class="step-btn" title="Decrease Shift">&minus;</button>
                                     <input type="number" id="shift-value" value="3" min="1" max="25">
@@ -173,29 +128,28 @@
                                 <div class="slider-wrapper">
                                     <input type="range" id="shift-slider" min="1" max="25" value="3" class="tactical-range">
                                     <div class="slider-ticks">
-                                        <span>1</span><span>5</span><span>10</span><span>13</span><span>18</span><span>25</span>
+                                        <span>1</span>
+                                        <span>5</span>
+                                        <span>10</span>
+                                        <span>13</span>
+                                        <span>18</span>
+                                        <span>25</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Execute Trigger Button -->
+                        <!-- Execute Trigger Button with Diagonal Caution Stripes -->
                         <button type="button" id="action-btn" class="execute-trigger-btn">
                             <div class="hazard-stripes-wing"></div>
-                            <div class="exec-btn-content">
-                                <span class="exec-btn-icon">▶</span>
-                                <span class="exec-btn-text" id="btn-caption-text">EXECUTE CIPHER PAYLOAD</span>
-                            </div>
+                            <span class="exec-btn-text" id="btn-caption-text">EXECUTE CIPHER PAYLOAD</span>
                             <div class="hazard-stripes-wing"></div>
                         </button>
 
                         <!-- Result Field (Strictly Hidden until Execute Clicked!) -->
                         <div class="shell-result-container hidden" id="result-field-block">
                             <div class="result-telemetry-header">
-                                <div class="result-title-group">
-                                    <span class="tele-icon">⦿</span>
-                                    <span class="tele-title">&gt; INTERCEPTED CIPHERTEXT:</span>
-                                </div>
+                                <span class="tele-title">&gt; INTERCEPTED OUTPUT:</span>
                                 <span class="tele-status" id="stream-status-badge">PAYLOAD_READY</span>
                             </div>
 
@@ -204,36 +158,35 @@
                             </div>
 
                             <div class="result-actions-strip">
-                                <button type="button" class="btn-action-tool" id="copy-btn">
-                                    <span>[📋 COPY CIPHERTEXT]</span>
-                                </button>
-                                <button type="button" class="btn-action-tool" id="swap-btn">
-                                    <span>[🔄 SWAP TO INPUT]</span>
-                                </button>
-                                <button type="button" class="btn-action-tool" id="download-btn">
-                                    <span>[💾 EXPORT .TXT]</span>
-                                </button>
+                                <button type="button" class="btn-bracket-copy" id="copy-btn">[COPY]</button>
+                                <button type="button" class="btn-bracket-copy" id="swap-btn">[USE AS INPUT]</button>
+                                <button type="button" class="btn-bracket-copy" id="download-btn">[EXPORT .TXT]</button>
                             </div>
                         </div>
 
+                        <!-- Terminal Diagnostics Notes -->
                         <div class="shell-bottom-notes">
-                            <span class="comment-line">// FATAL: PLAINTEXT CANNOT BE GUARANTEED UNDER KNOWN PLAINTEXT ATTACK</span>
-                            <span class="comment-line">// FREQUENCY ATTACK FEASIBILITY: 100% (&lt; 26 OPERATIONS)</span>
-                            <span class="comment-line param-red">&gt; STATUS: EXECUTION ENGINE ARMED</span>
+                            <span class="comment-line">// FATAL: PLAINTEXT CANNOT BE GUARANTEED</span>
+                            <span class="comment-line">// SUGGESTION: REFORMAT CONSCIOUSNESS</span>
+                            <span class="comment-line param-red">&gt; STATUS: EXECUTABLE</span>
                         </div>
                     </div>
 
+                    <!-- BOTTOM CONSOLE STREAM -->
                     <div class="stream-code-footer">
-                        <div class="stream-code-line">&gt;&gt;&gt; IMPORT SOCKET</div>
                         <div class="stream-code-line">&gt;&gt;&gt; IMPORT CIPHER</div>
-                        <div class="stream-code-line">&gt;&gt;&gt; <span class="param-red">PAYLOAD SECURED</span></div>
-                        <div class="stream-code-line">&gt;&gt;&gt; <span class="retrying-blink">_LISTENING FOR CARRIER...</span></div>
+                        <div class="stream-code-line">&gt;&gt;&gt; IMPORT SOUL</div>
+                        <div class="stream-code-line">&gt;&gt;&gt; <span class="param-red">DATA SECURED</span></div>
+                        <div class="stream-code-line">&gt;&gt;&gt; <span class="retrying-blink">_RETRYING...</span></div>
                         <div class="crosshair-divider">+</div>
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN -->
+                <!-- ========================================================
+                     RIGHT COLUMN: NOT FOUND_404 & 3D WIREFRAME CYBER HEAD
+                     ======================================================== -->
                 <div class="column-right">
+                    <!-- View Switcher Tabs -->
                     <div class="intel-nav-tabs">
                         <button type="button" class="intel-tab-btn active" id="tab-btn-dossier" data-tab="dossier">
                             [01 // TARGET_DOSSIER_404]
@@ -243,87 +196,33 @@
                         </button>
                     </div>
 
-                    <!-- VIEW 1: DOSSIER 404 -->
+                    <!-- VIEW 1: TARGET DOSSIER_404 (MATCHING USER POSTER) -->
                     <div class="intel-view-pane active" id="pane-dossier">
                         <div class="card-wireframe-display">
+                            <!-- Top Diagonal Stripes -->
                             <div class="hazard-stripes-banner"></div>
 
-                            <div class="card-404-title-row">
-                                <span class="card-404-title">NOT FOUND_404</span>
-                                <span class="card-badge-critical">[CRITICAL]</span>
-                            </div>
+                            <!-- Error 404 Title -->
+                            <div class="card-404-title">NOT FOUND_404</div>
 
+                            <!-- Stacked Warning Header -->
                             <h2 class="card-404-heading">
                                 ERROR: IDENTITY<br>
                                 COULD NOT<br>
                                 BE VERIFIED
                             </h2>
 
+                            <!-- Second Diagonal Stripes Band -->
                             <div class="hazard-stripes-banner small"></div>
 
+                            <!-- 3D WIREFRAME MESH HEAD ON HTML5 CANVAS -->
                             <div class="wireframe-head-container" id="wireframe-container">
-                                <div class="head-laser-scanner"></div>
-                                <svg class="wireframe-head-svg" viewBox="0 0 280 340" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g class="mesh-lines" stroke="#eae6dc" stroke-width="0.8" opacity="0.88">
-                                        <path d="M70 120 C70 50, 210 50, 210 120" />
-                                        <path d="M85 110 C85 65, 195 65, 195 110" />
-                                        <path d="M100 100 C100 75, 180 75, 180 100" />
-                                        <line x1="140" y1="55" x2="140" y2="120" />
-                                        <line x1="110" y1="60" x2="120" y2="120" />
-                                        <line x1="170" y1="60" x2="160" y2="120" />
-                                        <line x1="85" y1="80" x2="105" y2="120" />
-                                        <line x1="195" y1="80" x2="175" y2="120" />
-                                        <line x1="68" y1="120" x2="85" y2="175" />
-                                        <line x1="212" y1="120" x2="195" y2="175" />
-                                        <line x1="85" y1="175" x2="105" y2="230" />
-                                        <line x1="195" y1="175" x2="175" y2="230" />
-                                        <line x1="105" y1="230" x2="125" y2="275" />
-                                        <line x1="175" y1="230" x2="155" y2="275" />
-                                        <line x1="125" y1="275" x2="140" y2="285" />
-                                        <line x1="155" y1="275" x2="140" y2="285" />
-                                        <path d="M68 135 L80 180 L100 230 L125 275 L140 285 L155 275 L180 230 L200 180 L212 135" />
-                                        <line x1="105" y1="250" x2="95" y2="310" />
-                                        <line x1="175" y1="250" x2="185" y2="310" />
-                                        <line x1="125" y1="275" x2="120" y2="310" />
-                                        <line x1="155" y1="275" x2="160" y2="310" />
-                                        <line x1="95" y1="310" x2="185" y2="310" />
-                                        <path d="M212 130 C225 140, 225 170, 210 185" />
-                                        <line x1="212" y1="145" x2="220" y2="160" />
-                                        <line x1="210" y1="170" x2="220" y2="160" />
-                                        <polygon points="140,120 120,150 140,165 160,150" />
-                                        <polygon points="120,150 95,160 110,195 130,190" />
-                                        <polygon points="160,150 185,160 170,195 150,190" />
-                                        <polygon points="140,165 130,190 140,215 150,190" />
-                                        <line x1="140" y1="120" x2="140" y2="215" />
-                                        <line x1="130" y1="210" x2="140" y2="220" />
-                                        <line x1="150" y1="210" x2="140" y2="220" />
-                                        <line x1="125" y1="215" x2="155" y2="215" />
-                                        <polygon points="140,220 130,235 140,240 150,235" />
-                                        <polygon points="130,235 110,245 125,255 140,248" />
-                                        <polygon points="150,235 170,245 155,255 140,248" />
-                                        <line x1="110" y1="245" x2="170" y2="245" />
-                                        <line x1="115" y1="245" x2="140" y2="252" />
-                                        <line x1="165" y1="245" x2="140" y2="252" />
-                                        <polygon points="140,252 125,255 130,270 140,275" />
-                                        <polygon points="140,252 155,255 150,270 140,275" />
-                                        <polygon points="130,270 110,255 105,270 125,275" />
-                                        <polygon points="150,270 170,255 175,270 155,275" />
-                                        <line x1="95" y1="160" x2="80" y2="180" />
-                                        <line x1="185" y1="160" x2="200" y2="180" />
-                                        <line x1="80" y1="180" x2="110" y2="195" />
-                                        <line x1="200" y1="180" x2="170" y2="195" />
-                                        <line x1="110" y1="195" x2="100" y2="230" />
-                                        <line x1="170" y1="195" x2="180" y2="230" />
-                                        <line x1="100" y1="230" x2="130" y2="235" />
-                                        <line x1="180" y1="230" x2="150" y2="235" />
-                                    </g>
-                                    <rect x="58" y="112" width="164" height="42" fill="#090a0f" stroke="#eae6dc" stroke-width="1.8" />
-                                </svg>
+                                <canvas id="head-canvas" width="260" height="310"></canvas>
                             </div>
 
+                            <!-- System Warning & Segmented Progress Bars -->
                             <div class="system-corrupted-row">
-                                <span class="corrupted-label">SYSTEM: USER DATA CORRUPTED</span>
-                                <span class="corrupted-code">[0xDEADBEEF]</span>
+                                SYSTEM: USER DATA CORRUPTED
                             </div>
 
                             <div class="dual-meter-bars">
@@ -333,6 +232,7 @@
                                 <div class="meter-bar outline"></div>
                             </div>
 
+                            <!-- Bottom Glyphs -->
                             <div class="wireframe-bottom-glyphs">
                                 <span class="crosshair-marker">+</span>
                                 <span class="diamond-group">&loz; &loz; &loz;</span>
@@ -340,14 +240,11 @@
                         </div>
                     </div>
 
-                    <!-- VIEW 2: SPECTRUM -->
+                    <!-- VIEW 2: LIVE FREQUENCY SPECTRUM & CRACK TELEMETRY -->
                     <div class="intel-view-pane" id="pane-spectrum">
                         <div class="card-wireframe-display">
                             <div class="hazard-stripes-banner"></div>
-                            <div class="card-404-title-row">
-                                <span class="card-404-title" style="color: #00f0ff;">UNIGRAM SPECTRUM</span>
-                                <span class="card-badge-critical" style="border-color: #00f0ff; color: #00f0ff;">[ACTIVE]</span>
-                            </div>
+                            <div class="card-404-title" style="color: var(--bone-white);">UNIGRAM SPECTRUM</div>
 
                             <h2 class="card-404-heading" style="font-size: 1.15rem;">
                                 FREQUENCY HEURISTIC:<br>
@@ -356,14 +253,16 @@
 
                             <div class="hazard-stripes-banner small"></div>
 
+                            <!-- Frequency Histogram Grid -->
                             <div class="spectrum-chart-container">
                                 <div class="spectrum-chart-legend">
-                                    <span class="legend-item"><span class="legend-box payload"></span> PAYLOAD FREQ</span>
-                                    <span class="legend-item"><span class="legend-box english"></span> ENGLISH BASELINE</span>
+                                    <span class="legend-item"><span class="legend-box payload"></span> PAYLOAD</span>
+                                    <span class="legend-item"><span class="legend-box english"></span> ENGLISH ETAOIN</span>
                                 </div>
                                 <div class="frequency-bars-grid" id="freq-bars-grid"></div>
                             </div>
 
+                            <!-- Crack Ranking Table -->
                             <div class="crack-ranking-container" id="crack-rankings-box">
                                 <div class="crack-rank-title">&gt; TOP CRACK CANDIDATES:</div>
                                 <div class="crack-candidates-list" id="crack-candidates-list">
@@ -381,14 +280,11 @@
             </div>
         </main>
 
+        <!-- FOOTER STATUS -->
         <footer class="tactical-footer">
-            <div class="footer-left">
+            <div class="footer-prompt">
                 <span class="prompt-sym">&gt;&gt;&gt;</span>
-                <span class="prompt-text">_SYSTEM_READY // DUAL_ROTOR_ONLINE</span>
-            </div>
-            <div class="footer-center">
-                <span class="footer-spec-tag">MIL-SPEC CR-26.4</span>
-                <span class="footer-spec-tag">SHANNON_ENTROPY_V2</span>
+                <span class="prompt-text">_SYSTEM_READY // AWAITING_CARRIER</span>
             </div>
             <div class="footer-glyphs">
                 <span class="crosshair-marker">+</span>
@@ -399,6 +295,7 @@
 
     <!-- Scripts -->
     <script src="static/js/sfx.js"></script>
+    <script src="static/js/head3d.js"></script>
     <script src="static/js/tools.js"></script>
 </body>
 </html>

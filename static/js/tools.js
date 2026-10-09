@@ -1,6 +1,6 @@
 /* ==========================================================================
    CIPHER_OS // CAESAR WORKSTATION TACTICAL CORE ENGINE
-   Dynamic SVG Rotor, Entropy Telemetry, Frequency Spectrum, Hidden Reveal, SFX
+   Entropy Telemetry, Frequency Spectrum, Hidden Result Drawer, SFX Dispatch
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusBadge       = document.getElementById('status-badge');
     const vectorMetaVal     = document.getElementById('vector-meta-val');
     const paramHexBadge     = document.getElementById('param-hex-badge');
+    const paramNumPreview   = document.getElementById('param-num-preview');
     const copyBtn           = document.getElementById('copy-btn');
     const swapBtn           = document.getElementById('swap-btn');
     const downloadBtn       = document.getElementById('download-btn');
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSampleCrack    = document.getElementById('btn-sample-crack');
     const btnClearInput     = document.getElementById('btn-clear-input');
 
-    // Right Column View Switching
+    // Right Column View Switcher
     const tabBtnDossier     = document.getElementById('tab-btn-dossier');
     const tabBtnSpectrum    = document.getElementById('tab-btn-spectrum');
     const paneDossier       = document.getElementById('pane-dossier');
@@ -40,15 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const crackRankingsBox  = document.getElementById('crack-rankings-box');
     const crackCandidatesList = document.getElementById('crack-candidates-list');
 
-    // Telemetry Pills
+    // Telemetry Tags
     const entropyTag        = document.getElementById('entropy-tag');
     const iocTag            = document.getElementById('ioc-tag');
     const liveUtcClock      = document.getElementById('live-utc-clock');
-
-    // Rotor SVG Elements
-    const outerAlphabetGroup = document.getElementById('outer-alphabet-group');
-    const innerAlphabetGroup = document.getElementById('inner-alphabet-group');
-    const rotorCenterDisplay = document.getElementById('rotor-center-display');
 
     let currentMode = 'encrypt';
     let isResultRevealed = false;
@@ -67,13 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!liveUtcClock) return;
         const now = new Date();
         const pad = (n, l = 2) => String(n).padStart(l, '0');
-        const str = `UTC ${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${pad(now.getUTCDate())} ${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}.${pad(Math.floor(now.getUTCMilliseconds() / 10), 2)}`;
-        liveUtcClock.textContent = str;
+        liveUtcClock.textContent = `UTC ${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${pad(now.getUTCDate())} ${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}.${pad(Math.floor(now.getUTCMilliseconds() / 10), 2)}`;
     }
     setInterval(updateClock, 100);
     updateClock();
 
-    // ─── Tactical Toast ───────────────────────────────────────────────────────
+    // ─── Tactical Toast Notification ─────────────────────────────────────────
     function showToast(text) {
         let toast = document.querySelector('.toast');
         if (!toast) {
@@ -81,64 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.className = 'toast';
             document.body.appendChild(toast);
         }
-        toast.innerHTML = `<span style="color:#ff2e4d;font-weight:bold;">[TACTICAL_SYS]</span> &gt;&gt; ${text}`;
+        toast.innerHTML = `<span style="color:#e6323e;font-weight:bold;">[TACTICAL_SYS]</span> &gt;&gt; ${text}`;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2400);
-    }
-
-    // ─── Dynamic Interactive Caesar Rotor Wheel ──────────────────────────────
-    function initCaesarRotor() {
-        if (!outerAlphabetGroup || !innerAlphabetGroup) return;
-
-        outerAlphabetGroup.innerHTML = '';
-        innerAlphabetGroup.innerHTML = '';
-
-        const cx = 160;
-        const cy = 160;
-        const rOuter = 130;
-        const rInner = 86;
-
-        for (let i = 0; i < 26; i++) {
-            const letter = String.fromCharCode(65 + i);
-            const angleDeg = (i * 360 / 26) - 90;
-            const angleRad = (angleDeg * Math.PI) / 180;
-
-            // Outer ring letters (Plaintext A-Z)
-            const xOut = cx + rOuter * Math.cos(angleRad);
-            const yOut = cy + rOuter * Math.sin(angleRad) + 4; // slight baseline adjust
-            const textOut = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            textOut.setAttribute('x', xOut.toFixed(1));
-            textOut.setAttribute('y', yOut.toFixed(1));
-            textOut.setAttribute('text-anchor', 'middle');
-            textOut.setAttribute('class', 'rotor-char outer-char');
-            textOut.textContent = letter;
-            outerAlphabetGroup.appendChild(textOut);
-
-            // Inner ring letters (Ciphertext A-Z)
-            const xIn = cx + rInner * Math.cos(angleRad);
-            const yIn = cy + rInner * Math.sin(angleRad) + 4;
-            const textIn = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            textIn.setAttribute('x', xIn.toFixed(1));
-            textIn.setAttribute('y', yIn.toFixed(1));
-            textIn.setAttribute('text-anchor', 'middle');
-            textIn.setAttribute('class', 'rotor-char inner-char');
-            textIn.textContent = letter;
-            innerAlphabetGroup.appendChild(textIn);
-        }
-    }
-
-    function updateRotorRotation(shift) {
-        if (!innerAlphabetGroup) return;
-        const s = ((shift % 26) + 26) % 26;
-        // Each step rotates by 360/26 degrees
-        const rotationAngle = (s * (360 / 26));
-        innerAlphabetGroup.style.transformOrigin = '160px 160px';
-        innerAlphabetGroup.style.transform = `rotate(-${rotationAngle}deg)`;
-        innerAlphabetGroup.style.transition = 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.1)';
-
-        if (rotorCenterDisplay) {
-            rotorCenterDisplay.textContent = `K=${String(s).padStart(2, '0')}`;
-        }
+        setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
     // ─── Shannon Entropy & Index of Coincidence (IoC) Telemetry ──────────────
@@ -147,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const len = clean.length;
 
         if (len === 0) {
-            if (entropyTag) entropyTag.textContent = 'ENTROPY: 0.00 BPC';
+            if (entropyTag) entropyTag.textContent = '0.00 BPC';
             if (iocTag) iocTag.textContent = 'IoC: 0.000';
             return;
         }
@@ -171,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let ioc = len > 1 ? (sumFreqSq / (len * (len - 1))) : 0;
 
         if (entropyTag) {
-            entropyTag.textContent = `ENTROPY: ${entropy.toFixed(2)} BPC`;
+            entropyTag.textContent = `${entropy.toFixed(2)} BPC`;
         }
         if (iocTag) {
             iocTag.textContent = `IoC: ${ioc.toFixed(3)}`;
@@ -239,7 +179,10 @@ document.addEventListener('DOMContentLoaded', () => {
             vectorMetaVal.innerHTML = `A [${hexFrom}] &rarr; ${targetChar} [${hexTo}] (ROT-${String(s).padStart(2, '0')})`;
         }
         if (paramHexBadge) {
-            paramHexBadge.textContent = `HEX: 0x${s.toString(16).toUpperCase().padStart(2, '0')}`;
+            paramHexBadge.textContent = `0x${s.toString(16).toUpperCase().padStart(8, '0')} (ROT-${String(s).padStart(2, '0')})`;
+        }
+        if (paramNumPreview) {
+            paramNumPreview.textContent = `SHIFT: ${s}`;
         }
 
         if (shiftSlider && shiftSlider.value != s) {
@@ -248,11 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shiftInput && shiftInput.value != s) {
             shiftInput.value = s;
         }
-
-        updateRotorRotation(s);
     }
 
-    // ─── Shift Synchronizer (Input + Slider + Steppers) ───────────────────────
+    // ─── Shift Synchronizer ──────────────────────────────────────────────────
     function setShift(val) {
         let s = parseInt(val) || 3;
         if (s < 1) s = 25;
@@ -264,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateVectorHUD();
         if (window.CyberSFX) CyberSFX.shift();
 
-        // If result was already revealed by user click, keep it up to date
+        // Keep result live if already revealed
         if (isResultRevealed) {
             triggerProcessing(false);
         }
@@ -311,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ─── Mode Switching (ENCRYPT / DECRYPT / AUTO-CRACK) ─────────────────────
+    // ─── Mode Switching (ENCRYPT / DECRYPT / CRACK) ──────────────────────────
     modeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             modeBtns.forEach(b => b.classList.remove('active'));
@@ -367,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateFrequencyChart(msgInput.value);
             }
             if (window.CyberSFX) CyberSFX.click();
-            showToast('LOADED SAMPLE MILITARY DISPATCH');
+            showToast('LOADED SAMPLE DISPATCH');
             hideResult();
         });
     }
@@ -375,13 +316,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnRot13) {
         btnRot13.addEventListener('click', () => {
             setShift(13);
-            showToast('ROT-13 CONVERGENCE KEY LOADED');
+            showToast('SET KEY TO ROT-13');
         });
     }
 
     if (btnSampleCrack) {
         btnSampleCrack.addEventListener('click', () => {
-            // Sample Caesar ciphertext (shifted by 3)
             const sample = 'WKLV LV D VHFUHW PHVVDJH HQFUBSWHG ZLWK FDHVDU FLSKHU';
             if (msgInput) {
                 msgInput.value = sample;
@@ -389,10 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 computeTelemetry(msgInput.value);
                 updateFrequencyChart(msgInput.value);
             }
-            // Switch to crack mode
             const crackBtn = document.querySelector('.btn-bracket-cmd[data-mode="crack"]');
             if (crackBtn) crackBtn.click();
-            // Automatically switch right panel to spectrum
             if (tabBtnSpectrum) tabBtnSpectrum.click();
             showToast('LOADED CIPHERTEXT TEST // READY TO CRACK');
         });
@@ -408,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             hideResult();
             if (window.CyberSFX) CyberSFX.click();
-            showToast('BUFFER PURGED // READY FOR NEW STREAM');
+            showToast('BUFFER CLEARED');
         });
     }
 
@@ -450,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const shift = parseInt(shiftInput ? shiftInput.value : 3) || 3;
 
         if (!text) {
-            showToast('BUFFER EMPTY // SPECIFY PAYLOAD');
+            showToast('PAYLOAD EMPTY // ENTER DATA');
             if (msgInput) msgInput.focus();
             return;
         }
@@ -466,10 +404,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.results && data.results.length > 0) {
                     const best = data.results[0];
                     if (resultOutput) {
-                        resultOutput.textContent = `[KEY K=${best.shift}] ${best.text}`;
+                        resultOutput.textContent = `[SHIFT ${best.shift}] ${best.text}`;
                     }
                     if (streamStatusBadge) {
-                        streamStatusBadge.textContent = `KEY K=${best.shift} IDENTIFIED (SCORE: ${best.score})`;
+                        streamStatusBadge.textContent = `KEY K=${best.shift} CRACKED`;
                     }
                     setShift(best.shift);
 
@@ -488,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             `;
                             item.addEventListener('click', () => {
                                 setShift(cand.shift);
-                                if (resultOutput) resultOutput.textContent = `[KEY K=${cand.shift}] ${cand.text}`;
+                                if (resultOutput) resultOutput.textContent = `[SHIFT ${cand.shift}] ${cand.text}`;
                                 if (window.CyberSFX) CyberSFX.click();
                             });
                             crackCandidatesList.appendChild(item);
@@ -508,8 +446,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (streamStatusBadge) {
                     streamStatusBadge.textContent = currentMode === 'encrypt' 
-                        ? 'ENCRYPTION_COMPLETE // CIPHERTEXT_READY' 
-                        : 'DECRYPTION_COMPLETE // PLAINTEXT_RECOVERED';
+                        ? 'ENCRYPTED' 
+                        : 'DECRYPTED';
                 }
             }
 
@@ -521,13 +459,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // Local mathematical fallback
             if (currentMode === 'encrypt') {
                 if (resultOutput) resultOutput.textContent = caesarLocal(text, shift);
-                if (streamStatusBadge) streamStatusBadge.textContent = 'LOCAL_ENCRYPTION_COMPLETE';
+                if (streamStatusBadge) streamStatusBadge.textContent = 'ENCRYPTED';
             } else if (currentMode === 'decrypt') {
                 if (resultOutput) resultOutput.textContent = caesarLocal(text, -shift);
-                if (streamStatusBadge) streamStatusBadge.textContent = 'LOCAL_DECRYPTION_COMPLETE';
+                if (streamStatusBadge) streamStatusBadge.textContent = 'DECRYPTED';
             } else {
                 if (resultOutput) resultOutput.textContent = caesarLocal(text, -shift);
-                if (streamStatusBadge) streamStatusBadge.textContent = 'LOCAL_FALLBACK_COMPLETE';
+                if (streamStatusBadge) streamStatusBadge.textContent = 'LOCAL_FALLBACK';
             }
 
             if (reveal) {
@@ -537,12 +475,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ─── Action Button Trigger (REVEALS RESULT CONTAINER) ─────────────────────
+    // ─── Action Button Trigger (REVEALS RESULT CONTAINER!) ───────────────────
     if (actionBtn) {
         actionBtn.addEventListener('click', () => {
             if (window.CyberSFX) CyberSFX.execute();
             triggerProcessing(true);
-            showToast(`PAYLOAD EXECUTED // MODE: ${currentMode.toUpperCase()}`);
+            showToast(`EXECUTED // MODE: ${currentMode.toUpperCase()}`);
         });
     }
 
@@ -551,9 +489,8 @@ document.addEventListener('DOMContentLoaded', () => {
         swapBtn.addEventListener('click', () => {
             if (!resultOutput || !resultOutput.textContent) return;
             let val = resultOutput.textContent;
-            // Clean prefix if cracked
-            if (val.startsWith('[KEY K=')) {
-                val = val.replace(/^\[KEY K=\d+\]\s*/, '');
+            if (val.startsWith('[SHIFT ')) {
+                val = val.replace(/^\[SHIFT \d+\]\s*/, '');
             }
             if (msgInput) {
                 msgInput.value = val;
@@ -562,8 +499,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateFrequencyChart(val);
             }
             if (window.CyberSFX) CyberSFX.click();
-            showToast('OUTPUT SWAPPED TO INPUT BUFFER');
-            // Invert mode for convenience
+            showToast('OUTPUT SWAPPED TO INPUT');
+            // Toggle encrypt / decrypt
             if (currentMode === 'encrypt') {
                 const decBtn = document.querySelector('.btn-bracket-cmd[data-mode="decrypt"]');
                 if (decBtn) decBtn.click();
@@ -579,14 +516,14 @@ document.addEventListener('DOMContentLoaded', () => {
         copyBtn.addEventListener('click', () => {
             if (!resultOutput || !resultOutput.textContent) return;
             let val = resultOutput.textContent;
-            if (val.startsWith('[KEY K=')) {
-                val = val.replace(/^\[KEY K=\d+\]\s*/, '');
+            if (val.startsWith('[SHIFT ')) {
+                val = val.replace(/^\[SHIFT \d+\]\s*/, '');
             }
             navigator.clipboard.writeText(val).then(() => {
                 if (window.CyberSFX) CyberSFX.copy();
-                showToast('COPIED TO SYSTEM CLIPBOARD');
+                showToast('INTERCEPT COPIED TO CLIPBOARD');
             }).catch(() => {
-                showToast('CLIPBOARD ACCESS DENIED');
+                showToast('COPY FAILED');
             });
         });
     }
@@ -606,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             if (window.CyberSFX) CyberSFX.copy();
-            showToast('PAYLOAD EXPORTED AS .TXT');
+            showToast('EXPORTED .TXT PAYLOAD');
         });
     }
 
@@ -620,27 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ─── Interactive Mouse Parallax for 3D Wireframe Head ────────────────────
-    const wireframeContainer = document.getElementById('wireframe-container');
-    if (wireframeContainer) {
-        const headSvg = wireframeContainer.querySelector('.wireframe-head-svg');
-        wireframeContainer.addEventListener('mousemove', (e) => {
-            if (!headSvg) return;
-            const rect = wireframeContainer.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            headSvg.style.transform = `perspective(600px) rotateY(${x * 16}deg) rotateX(${-y * 14}deg) scale(1.02)`;
-        });
-
-        wireframeContainer.addEventListener('mouseleave', () => {
-            if (headSvg) {
-                headSvg.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)';
-            }
-        });
-    }
-
     // ─── Initial Startup Execution ───────────────────────────────────────────
-    initCaesarRotor();
     initFrequencyChart();
     updateVectorHUD();
 
