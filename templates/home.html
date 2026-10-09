@@ -1,206 +1,129 @@
 {% extends 'base.html' %}
 {% set active_page = 'home' %}
-{% block title %}CAESAR CIPHER // RESTRICTED CYBERNETIC WORKSTATION{% endblock %}
+{% block title %}ERROR_404 // IDENTITY_CIPHER_CORE{% endblock %}
 
 {% block content %}
-<!-- HUGE RETRO BANNER WITH DANGEROUS CYBER OVERLAY -->
-<section class="cipher-hero-banner">
-    <div class="threat-classification-banner">
-        <span class="threat-badge-red">[RESTRICTED_ACCESS]</span>
-        <span class="threat-text-sub">TACTICAL MONOALPHABETIC ATTACK &amp; ENCRYPTION TERMINAL</span>
-        <span class="threat-badge-red">[LEVEL-05_SEC]</span>
-    </div>
-
-    <h1 class="pixel-title-main glitch-hover" data-text="CAESAR CIPHER">CAESAR CIPHER</h1>
-    
-    <div class="vector-display-row">
-        <div class="vector-shift-huge danger-vector" id="hero-vector-display">
-            <span class="v-letter" id="v-from">A</span>
-            <span class="v-arrow-pulsing">&rarr;</span>
-            <span class="v-letter glow-intense" id="v-to">D</span>
-        </div>
-        <div class="vector-doc-icon">
-            <svg class="hero-doc-svg" width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="#ff0055" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="8" y1="12" x2="16" y2="12"></line>
-                <line x1="8" y1="15" x2="16" y2="15"></line>
-                <rect x="9" y="15" width="6" height="5" rx="1" fill="#ff0055" stroke="#ff0055"></rect>
-                <path d="M10.5 15V13.5a1.5 1.5 0 0 1 3 0V15"></path>
-            </svg>
-        </div>
-    </div>
-    <div class="vector-meta-tag">ROT-K VECTOR MAPPING: <span id="vector-meta-val">A [0x41] &rarr; D [0x44]</span></div>
-</section>
-
-<!-- MAIN WORKSTATION WINDOW -->
-<section class="cipher-main-window">
-    <div class="window-chrome">
-        <div class="window-session-tag">
-            <span class="terminal-dot"></span>
-            <span class="session-text">HOST: 127.0.0.1:5000 // TTY1 [ROOT_SHELL]</span>
-        </div>
-        <div class="window-title-bar">
-            <span class="chrome-btn min">&minus;</span>
-            <span class="chrome-btn max">&#9633;</span>
-            <span class="chrome-btn close">&times;</span>
-        </div>
-    </div>
-
-    <!-- TABS -->
-    <div class="cipher-tabs-bar">
-        <button class="tab-item active" data-mode="encrypt">
-            <svg class="tab-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
-                <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="3" fill="none"></path>
-            </svg>
-            <span class="tab-text">01 // ENCRYPT</span>
-        </button>
-        <button class="tab-item" data-mode="decrypt">
-            <svg class="tab-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor"></rect>
-                <path d="M8 11V7a4 4 0 0 1 8 0"></path>
-            </svg>
-            <span class="tab-text">02 // DECRYPT</span>
-        </button>
-        <button class="tab-item" data-mode="crack">
-            <svg class="tab-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="10.5" cy="10.5" r="7"></circle>
-                <line x1="21" y1="21" x2="15.5" y2="15.5"></line>
-            </svg>
-            <span class="tab-text">03 // BRUTE_CRACK</span>
-        </button>
-    </div>
-
-    <div class="window-interior">
-        <!-- MESSAGE INPUT -->
-        <div class="field-block">
-            <div class="field-header">
-                <div class="header-left-meta">
-                    <span class="pink-prompt">&gt;&gt;</span>
-                    <span class="field-label">INPUT_PAYLOAD // STDIN</span>
+<div class="poster-grid-layout">
+    <!-- ====================================================================
+         LEFT COLUMN: CIPHER DECK & BRUTALIST TERMINAL LOGS
+         ==================================================================== -->
+    <div class="col-left">
+        <!-- 01. LOGIN / INPUT DECK BOX -->
+        <div class="brutalist-card input-deck-card">
+            <div class="card-inner-pad">
+                <div class="deck-field-row">
+                    <label class="deck-label" for="message-input">LOGIN:</label>
+                    <div class="deck-input-wrap">
+                        <textarea id="message-input" placeholder="ENTER SECRET PAYLOAD..." maxlength="500">HELLO WORLD</textarea>
+                    </div>
                 </div>
-                <span class="buffer-tag">BUFFER_MAX: 500_BYTES</span>
-            </div>
-            <div class="textarea-wrapper">
-                <div class="textarea-terminal-prompt">root@cipher-core:~#</div>
-                <textarea id="message-input" placeholder="ENTER SECRET DATA OR INTERCEPTED CIPHERSTREAM..." maxlength="500">HELLO WORLD</textarea>
-                <div class="char-count-readout"><span id="char-count">11</span> / 500 BYTES</div>
-            </div>
-        </div>
 
-        <!-- SHIFT VALUE -->
-        <div class="field-block" id="shift-control-block">
-            <div class="field-header">
-                <div class="header-left-meta">
-                    <span class="pink-prompt">&gt;&gt;</span>
-                    <span class="field-label">ROTATION_KEY [OFFSET K &isin; 1..25]</span>
+                <!-- ACCESS DENIED ALERT -->
+                <div class="deck-alert-row" id="deck-status-alert">
+                    <span class="red-glitch-text">ACCESS DENIED</span>
                 </div>
-                <span class="buffer-tag">ALGORITHM: CYCLIC_MODULO_26</span>
-            </div>
-            <div class="shift-slider-box">
-                <button id="shift-minus" class="shift-nav-btn" title="Decrease Shift">&minus;</button>
-                <div class="shift-val-wrap">
+
+                <!-- BRUTALIST ACTION BUTTONS -->
+                <div class="deck-actions-cluster">
+                    <button class="bracket-action-btn active" id="btn-encrypt" data-mode="encrypt">[ENCRYPT]</button>
+                    <button class="bracket-action-btn" id="btn-decrypt" data-mode="decrypt">[DECRYPT]</button>
+                    <button class="bracket-action-btn" id="btn-crack" data-mode="crack">[CRACK]</button>
+                </div>
+
+                <!-- ROTATION KEY CONTROLS -->
+                <div class="deck-shift-ctrl">
+                    <span class="ctrl-tag">ROT_KEY:</span>
+                    <button id="shift-minus" class="shift-bracket-btn" title="Decrease">&minus;</button>
                     <input type="number" id="shift-value" value="3" min="1" max="25">
+                    <button id="shift-plus" class="shift-bracket-btn" title="Increase">&#43;</button>
+                    <span class="vector-preview" id="vector-preview-txt">A &rarr; D</span>
                 </div>
-                <button id="shift-plus" class="shift-nav-btn plus-btn" title="Increase Shift">&#43;</button>
+
+                <div class="deck-sub-meta">
+                    <span>MEMORY BLOCKED</span>
+                    <span>CPU OVERLOADED</span>
+                </div>
             </div>
         </div>
 
-        <!-- ACTION BUTTON -->
-        <button id="action-btn" class="big-pink-btn dangerous-action">
-            <div class="btn-hazard-pattern left"></div>
-            <svg class="btn-lock-svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
-                <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="3" fill="none"></path>
-            </svg>
-            <span class="btn-caption" id="btn-caption-text">EXECUTE ENCRYPTION PAYLOAD</span>
-            <span class="btn-chevron">&gt;&gt;</span>
-            <div class="btn-hazard-pattern right"></div>
-        </button>
-
-        <!-- RESULT OUTPUT (HIDDEN UNTIL EXECUTE CLICK) -->
-        <div class="field-block result-field-block hidden" id="result-field-block">
-            <div class="field-header">
-                <div class="header-left-meta">
-                    <span class="pink-prompt">&gt;&gt;</span>
-                    <span class="field-label">INTERCEPTED_STREAM // STDOUT</span>
+        <!-- 02. SYSTEM ERROR LOG TERMINAL BOX -->
+        <div class="brutalist-card terminal-logs-card">
+            <div class="chamfered-border-wrap">
+                <div class="terminal-log-content" id="terminal-log-stream">
+                    <div class="log-line command-line">$ ./INIT_SELF --REBOOT</div>
+                    <div class="log-line error-line">[ ERROR ] IDENTITY MODULE FAILED TO LOAD</div>
+                    <div class="log-line error-line">[ ERROR ] NO MATCHING USER CONFIGURATION FOUND</div>
+                    <div class="log-line warn-line">[ SYSTEM WARNING ] AUTHENTICATION LOOP EXCEEDED THRESHOLD</div>
+                    <div class="log-line prompt-line">&gt; TRACE_USER --ID=UNKNOWN</div>
+                    <div class="log-line dim-line">&gt; RESPONSE: 0x00000000 (NULL)</div>
+                    <div class="log-line error-line">[ FATAL ERROR ]</div>
+                    <div class="log-line dim-line">// SELF-RECOGNITION SUBROUTINE RETURNED VOID</div>
+                    <div class="log-line red-log">// SOUL REFERENCE NOT FOUND IN MEMORY</div>
+                    <div class="log-line dim-line">// EMOTIONAL CORE CHECKSUM INVALID</div>
+                    <div class="log-line prompt-line red-log">&gt; REBOOT --SOUL</div>
+                    <div class="log-line dim-line">&#9746; FAILED: SOUL PARTITION NOT MOUNTED</div>
+                    <div class="log-line dim-line">&#9746; SUGGESTION: REFORMAT CONSCIOUSNESS</div>
+                    <div class="log-line prompt-line">&gt; LOGOUT --PERMANENTLY</div>
+                    <div class="log-line dim-line">STATUS: OFFLINE</div>
+                    <div class="log-line dim-line">// END_OF_SELF</div>
                 </div>
-                <span class="status-stream-badge" id="stream-status-badge">PAYLOAD_GENERATED</span>
             </div>
-            <div class="result-box-container">
-                <div class="result-content-wrap">
-                    <span class="stdout-prompt">&gt;</span>
-                    <div class="result-content" id="result-output"></div>
-                    <span class="terminal-caret-blink">_</span>
+        </div>
+    </div>
+
+    <!-- ====================================================================
+         RIGHT COLUMN: 3D WIREFRAME HEAD CARD & DECRYPTED OUTPUT
+         ==================================================================== -->
+    <div class="col-right">
+        <div class="brutalist-card identity-mesh-card">
+            <!-- Top Diagonal Hazard Hash Stripes -->
+            <div class="diagonal-hazard-bar top-stripes"></div>
+
+            <!-- Card Header -->
+            <div class="mesh-card-header">
+                <span class="header-red-badge" id="mesh-header-badge">NOT FOUND_404</span>
+            </div>
+
+            <!-- Massive Title Text -->
+            <div class="mesh-title-block">
+                <h1 class="mesh-main-heading">ERROR: IDENTITY</h1>
+                <h2 class="mesh-main-heading">COULD NOT</h2>
+                <h2 class="mesh-main-heading">BE VERIFIED</h2>
+            </div>
+
+            <!-- Second Hazard Stripe Divider -->
+            <div class="diagonal-hazard-bar mid-stripes"></div>
+
+            <!-- 3D Humanoid Wireframe Canvas with Censor Bar -->
+            <div class="canvas-viewport-wrap">
+                <canvas id="wireframe-canvas"></canvas>
+            </div>
+
+            <!-- Intercepted Output Box (Hidden until execution) -->
+            <div class="result-payload-block hidden" id="result-field-block">
+                <div class="payload-header-row">
+                    <span class="payload-tag">[INTERCEPTED_PAYLOAD]</span>
+                    <button class="bracket-action-btn mini-btn" id="copy-btn" title="Copy Result">[COPY]</button>
                 </div>
-                <button class="copy-action-btn" id="copy-btn" title="Copy Intercepted Buffer">
-                    <svg class="copy-icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                    </svg>
-                    <span class="copy-text-label">COPY_BUFFER</span>
+                <div class="payload-text-box" id="result-output">
+                    <!-- Populated via user click -->
+                </div>
+            </div>
+
+            <!-- Execute Trigger Bar -->
+            <div class="execute-trigger-bar">
+                <button id="action-btn" class="big-execute-btn">
+                    <span class="ex-bracket">[</span>
+                    <span class="ex-text" id="action-btn-text">INITIALIZE CIPHER EXECUTION</span>
+                    <span class="ex-bracket">]</span>
                 </button>
             </div>
         </div>
     </div>
-</section>
-
-<!-- WARNING BANNER SECTION -->
-<section class="bottom-warning-section">
-
-    <!-- RIGHT CARD: CLASSICAL CIPHER WARNING -->
-    <div class="warning-cyber-card high-threat-card">
-        <div class="warning-corner tl"></div>
-        <div class="warning-corner tr"></div>
-        <div class="warning-corner bl"></div>
-        <div class="warning-corner br"></div>
-
-        <div class="warn-header-bar">
-            <span class="threat-level-tag">CRITICAL_WEAKNESS</span>
-            <span class="chrome-btn close">&times;</span>
-        </div>
-
-        <div class="warn-body-content">
-            <div class="warn-triangle-wrap">
-                <svg class="warn-triangle-svg pulse-danger" width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="#ff0055" stroke-width="2.2">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                    <line x1="12" y1="9" x2="12" y2="13"></line>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-            </div>
-
-            <h2 class="warn-title glitch-hover" data-text="CLASSICAL CIPHER">CLASSICAL CIPHER</h2>
-            <div class="warn-subtitle-pink">ZERO CRYPTOGRAPHIC CONFIDENTIALITY</div>
-
-            <div class="threat-metrics-box">
-                <div class="t-metric-row">
-                    <span>KEYSPACE ENTROPY:</span>
-                    <strong class="red-stat">log2(25) &approx; 4.6 BITS</strong>
-                </div>
-                <div class="t-metric-row">
-                    <span>BREAK LATENCY:</span>
-                    <strong class="red-stat">&lt; 0.001 MS (O(1))</strong>
-                </div>
-                <div class="t-metric-row">
-                    <span>FREQUENCY RESISTANCE:</span>
-                    <strong class="red-stat">0% (VULNERABLE)</strong>
-                </div>
-            </div>
-
-            <div class="warn-callout-bracket">
-                <span class="bracket-c tl"></span>
-                <span class="bracket-c tr"></span>
-                <span class="bracket-c bl"></span>
-                <span class="bracket-c br"></span>
-                <p class="callout-line">EASY TO BREAK // TRIVIAL EXPLOITATION.</p>
-                <p class="callout-line red-alert">DO NOT DEPLOY FOR SENSITIVE TRANSMISSIONS.</p>
-            </div>
-        </div>
-    </div>
-</section>
+</div>
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/wireframe.js') }}"></script>
 <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
 {% endblock %}

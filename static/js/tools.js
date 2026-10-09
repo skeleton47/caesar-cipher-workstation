@@ -1,31 +1,33 @@
 /* ==========================================================================
-   CAESAR CIPHER — RESTRICTED BLACKHAT CYBER ENGINE
-   Live Threat Vector HUD, Real-Time API Dispatcher, Hidden Result Reveal
+   BRUTALIST CIPHER CONTROLLER — ERROR_404
+   Handles Encrypt/Decrypt/Crack, Dynamic Terminal Logging, and Audio
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const tabs              = document.querySelectorAll('.tab-item');
     const msgInput          = document.getElementById('message-input');
-    const charCount         = document.getElementById('char-count');
     const shiftInput        = document.getElementById('shift-value');
     const shiftMinus        = document.getElementById('shift-minus');
     const shiftPlus         = document.getElementById('shift-plus');
+    const vectorPreview     = document.getElementById('vector-preview-txt');
     const actionBtn         = document.getElementById('action-btn');
-    const btnCaptionText    = document.getElementById('btn-caption-text');
+    const actionBtnText     = document.getElementById('action-btn-text');
     const resultFieldBlock  = document.getElementById('result-field-block');
     const resultOutput      = document.getElementById('result-output');
-    const streamStatusBadge = document.getElementById('stream-status-badge');
     const copyBtn           = document.getElementById('copy-btn');
-    const vTo               = document.getElementById('v-to');
-    const vectorMetaVal     = document.getElementById('vector-meta-val');
-    const hudShift          = document.getElementById('hud-shift-readout');
-    const hudStatus         = document.getElementById('hud-system-status');
+    const deckStatusAlert   = document.getElementById('deck-status-alert');
+    const terminalLogs      = document.getElementById('terminal-log-stream');
+    const meshBadge         = document.getElementById('mesh-header-badge');
+
+    const modeButtons = [
+        document.getElementById('btn-encrypt'),
+        document.getElementById('btn-decrypt'),
+        document.getElementById('btn-crack')
+    ].filter(Boolean);
 
     let currentMode = 'encrypt';
-    let isResultRevealed = false;
 
-    // ─── Tactical Toast System ───────────────────────────────────────────────
+    // ─── Tactical Toast ──────────────────────────────────────────────────────
     function showToast(text) {
         let toast = document.querySelector('.toast');
         if (!toast) {
@@ -33,32 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.className = 'toast';
             document.body.appendChild(toast);
         }
-        toast.textContent = `[THREAT_LOG] >> ${text}`;
+        toast.textContent = `[SYSTEM] >> ${text}`;
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
-    // ─── Live Dynamic Vector HUD (A -> D + Hex Telemetry) ────────────────────
-    function updateVectorHUD() {
-        let s = parseInt(shiftInput.value) || 3;
+    // ─── Update Vector Preview (A -> D) ──────────────────────────────────────
+    function updateVector() {
+        let s = parseInt(shiftInput ? shiftInput.value : 3) || 3;
         s = ((s % 26) + 26) % 26;
-        const targetChar = String.fromCharCode(65 + s);
-        const hexFrom = '0x41';
-        const hexTo = '0x' + (65 + s).toString(16).toUpperCase();
-
-        if (vTo) {
-            vTo.textContent = targetChar;
-            vTo.style.transform = 'scale(1.2)';
-            setTimeout(() => { vTo.style.transform = 'scale(1)'; }, 150);
-        }
-
-        if (vectorMetaVal) {
-            vectorMetaVal.innerHTML = `A [${hexFrom}] &rarr; ${targetChar} [${hexTo}] // ROT-${String(s).padStart(2, '0')}`;
-        }
-
-        const formattedShift = String(s).padStart(2, '0');
-        if (hudShift) {
-            hudShift.textContent = formattedShift;
+        const target = String.fromCharCode(65 + s);
+        if (vectorPreview) {
+            vectorPreview.textContent = `A \u2192 ${target}`;
         }
     }
 
@@ -67,9 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
         shiftMinus.addEventListener('click', () => {
             let v = parseInt(shiftInput.value) || 3;
             shiftInput.value = v > 1 ? v - 1 : 25;
-            updateVectorHUD();
+            updateVector();
             if (window.CyberSFX) CyberSFX.shift();
-            if (isResultRevealed) triggerProcessing(false);
+            logMessage(`> PARAM_UPDATE: SHIFT K=${shiftInput.value}`);
         });
     }
 
@@ -77,9 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
         shiftPlus.addEventListener('click', () => {
             let v = parseInt(shiftInput.value) || 3;
             shiftInput.value = v < 25 ? v + 1 : 1;
-            updateVectorHUD();
+            updateVector();
             if (window.CyberSFX) CyberSFX.shift();
-            if (isResultRevealed) triggerProcessing(false);
+            logMessage(`> PARAM_UPDATE: SHIFT K=${shiftInput.value}`);
         });
     }
 
@@ -89,50 +77,40 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isNaN(v)) {
                 if (v < 1) shiftInput.value = 1;
                 if (v > 25) shiftInput.value = 25;
-                updateVectorHUD();
-                if (isResultRevealed) triggerProcessing(false);
+                updateVector();
             }
         });
     }
 
-    // ─── Character Byte Counter ──────────────────────────────────────────────
-    if (msgInput) {
-        msgInput.addEventListener('input', () => {
-            if (msgInput.value.length > 500) {
-                msgInput.value = msgInput.value.substring(0, 500);
-            }
-            if (charCount) charCount.textContent = msgInput.value.length;
-            if (isResultRevealed) triggerProcessing(false);
-        });
-    }
-
-    // ─── Tab Switching ───────────────────────────────────────────────────────
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            currentMode = tab.dataset.mode;
+    // ─── Mode Switching ([ENCRYPT] / [DECRYPT] / [CRACK]) ────────────────────
+    modeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            modeButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentMode = btn.dataset.mode;
 
             if (currentMode === 'encrypt') {
-                btnCaptionText.textContent = 'EXECUTE ENCRYPTION PAYLOAD';
-                if (streamStatusBadge) streamStatusBadge.textContent = 'PAYLOAD_GENERATED';
+                if (actionBtnText) actionBtnText.textContent = 'INITIALIZE CIPHER EXECUTION';
+                if (deckStatusAlert) deckStatusAlert.innerHTML = '<span class="red-glitch-text">ACCESS DENIED</span>';
+                if (meshBadge) meshBadge.textContent = 'NOT FOUND_404';
             } else if (currentMode === 'decrypt') {
-                btnCaptionText.textContent = 'DECRYPT INTERCEPTED STREAM';
-                if (streamStatusBadge) streamStatusBadge.textContent = 'STREAM_DECRYPTED';
+                if (actionBtnText) actionBtnText.textContent = 'EXECUTE REVERSE DECRYPTION';
+                if (deckStatusAlert) deckStatusAlert.innerHTML = '<span class="red-glitch-text">DECRYPT_STREAM</span>';
+                if (meshBadge) meshBadge.textContent = 'DECRYPTED_200';
             } else if (currentMode === 'crack') {
-                btnCaptionText.textContent = 'LAUNCH BRUTE-FORCE INTRUSION';
-                if (streamStatusBadge) streamStatusBadge.textContent = 'KEYSPACE_COMPROMISED';
+                if (actionBtnText) actionBtnText.textContent = 'LAUNCH CONSCIOUSNESS BRUTE-FORCE';
+                if (deckStatusAlert) deckStatusAlert.innerHTML = '<span class="red-glitch-text">CRACK_ARMED</span>';
+                if (meshBadge) meshBadge.textContent = 'EXPLOIT_ACTIVE';
             }
 
             if (window.CyberSFX) CyberSFX.click();
-            // Hide result when switching tabs so user can execute for the new mode
+            logMessage(`$ ./SWITCH_MODE --OP=${currentMode.toUpperCase()}`);
             hideResult();
         });
     });
 
-    // ─── Result Hide / Reveal Helpers ────────────────────────────────────────
+    // ─── Hide / Show Result ──────────────────────────────────────────────────
     function hideResult() {
-        isResultRevealed = false;
         if (resultFieldBlock) {
             resultFieldBlock.classList.add('hidden');
             resultFieldBlock.classList.remove('revealed');
@@ -140,14 +118,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function revealResult() {
-        isResultRevealed = true;
         if (resultFieldBlock) {
             resultFieldBlock.classList.remove('hidden');
             resultFieldBlock.classList.add('revealed');
         }
     }
 
-    // ─── Local Caesar Math Fallback ──────────────────────────────────────────
+    // ─── Live Dynamic Logging to Terminal Box ────────────────────────────────
+    function logMessage(text, isRed = false) {
+        if (!terminalLogs) return;
+        const line = document.createElement('div');
+        line.className = 'log-line ' + (isRed ? 'red-log' : 'dim-line');
+        line.textContent = text;
+        terminalLogs.appendChild(line);
+        terminalLogs.scrollTop = terminalLogs.scrollHeight;
+    }
+
+    // ─── Local Math Fallback ─────────────────────────────────────────────────
     function shiftChar(char, shift) {
         const code = char.charCodeAt(0);
         if (code >= 65 && code <= 90) {
@@ -162,18 +149,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return str.split('').map(c => shiftChar(c, shift)).join('');
     }
 
-    // ─── Processing Engine (API Dispatcher) ──────────────────────────────────
-    async function triggerProcessing(reveal = true) {
+    // ─── Main Execution Handler ──────────────────────────────────────────────
+    async function executeOperation() {
         const text = msgInput ? msgInput.value.trim() : '';
         const shift = parseInt(shiftInput ? shiftInput.value : 3) || 3;
 
         if (!text) {
-            showToast('PAYLOAD BUFFER EMPTY // ENTER DATA');
+            showToast('MEMORY BLOCK EMPTY // ENTER DATA');
             if (msgInput) msgInput.focus();
             return;
         }
 
-        if (hudStatus) hudStatus.textContent = 'CALCULATING...';
+        logMessage(`$ ./EXEC_${currentMode.toUpperCase()} --LEN=${text.length}`);
 
         try {
             if (currentMode === 'crack') {
@@ -190,11 +177,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     if (shiftInput) {
                         shiftInput.value = best.shift;
-                        updateVectorHUD();
+                        updateVector();
                     }
-                    if (streamStatusBadge) {
-                        streamStatusBadge.textContent = `KEY K=${best.shift} COMPROMISED (SCORE: ${best.score})`;
-                    }
+                    logMessage(`[ SUCCESS ] KEY RECOVERED: K=${best.shift} (SCORE: ${best.score})`, true);
+                    logMessage(`> SOUL CONSCIOUSNESS RESTORED`);
                 }
             } else {
                 const endpoint = currentMode === 'encrypt' ? '/api/encrypt' : '/api/decrypt';
@@ -207,19 +193,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (resultOutput) {
                     resultOutput.textContent = data.result;
                 }
-                if (streamStatusBadge) {
-                    streamStatusBadge.textContent = currentMode === 'encrypt' 
-                        ? 'ENCRYPTED_STREAM_ARMED' 
-                        : 'PLAINTEXT_RECONSTRUCTED';
-                }
+                logMessage(`[ OK ] ROT-${shift} OPERATION RETURNED VALID STREAM`);
+                logMessage(`// PAYLOAD BUFFER LOADED TO MEMORY`);
             }
 
-            if (reveal) {
-                revealResult();
-                if (window.CyberSFX) CyberSFX.success();
-            }
-
-            if (hudStatus) hudStatus.textContent = 'ARMED // READY';
+            revealResult();
+            if (window.CyberSFX) CyberSFX.success();
+            showToast(`${currentMode.toUpperCase()} SUCCESSFUL`);
         } catch (err) {
             // Local fallback
             if (currentMode === 'encrypt') {
@@ -229,21 +209,16 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 if (resultOutput) resultOutput.textContent = caesarLocal(text, -shift);
             }
-
-            if (reveal) {
-                revealResult();
-                if (window.CyberSFX) CyberSFX.success();
-            }
-            if (hudStatus) hudStatus.textContent = 'STANDALONE_FALLBACK';
+            revealResult();
+            if (window.CyberSFX) CyberSFX.success();
+            logMessage(`[ STANDALONE_FALLBACK ] COMPUTATION COMPLETE`);
         }
     }
 
-    // ─── Action Button Click (ONLY NOW REVEAL RESULT!) ───────────────────────
     if (actionBtn) {
         actionBtn.addEventListener('click', () => {
             if (window.CyberSFX) CyberSFX.execute();
-            triggerProcessing(true);
-            showToast(`PAYLOAD EXECUTED // MODE: ${currentMode.toUpperCase()}`);
+            executeOperation();
         });
     }
 
@@ -253,9 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!resultOutput || !resultOutput.textContent) return;
             navigator.clipboard.writeText(resultOutput.textContent).then(() => {
                 if (window.CyberSFX) CyberSFX.copy();
-                showToast('INTERCEPTED BUFFER COPIED TO CLIPBOARD');
-            }).catch(() => {
-                showToast('CLIPBOARD ACCESS DENIED');
+                showToast('PAYLOAD COPIED TO CLIPBOARD');
+                logMessage(`> BUFFER_TRANSFER: CLIPBOARD SYNCED`);
             });
         });
     }
@@ -270,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ─── Initial Startup Execution ───────────────────────────────────────────
-    updateVectorHUD();
-    hideResult(); // Keep result HIDDEN initially until user clicks the button!
+    // Initial setup
+    updateVector();
+    hideResult();
 });
