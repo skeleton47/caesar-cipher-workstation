@@ -1,218 +1,312 @@
 {% extends 'base.html' %}
 {% set active_page = 'home' %}
-{% block title %}CIPHER LAB — Letters Have Secrets{% endblock %}
+{% block title %}CIPHER LAB — DevTools Cryptography Workbench{% endblock %}
 
 {% block content %}
-<!-- HERO SECTION -->
-<section class="hero-section">
-    <span class="hero-tagline">Cryptographic Instrument</span>
-    <h1 class="hero-title">Letters have secrets.</h1>
-    <p class="hero-subtitle">
-        Encrypt, decrypt, and explore Caesar cipher substitution mechanics in an interactive, real-time playground.
-    </p>
-</section>
-
-<!-- MAIN CIPHER WORKSPACE -->
-<section class="workspace-card" id="workspace" aria-label="Cipher Workspace">
-    <!-- Top Workspace Header -->
-    <div class="workspace-header">
-        <!-- Mode Switcher -->
-        <div class="mode-segmented-control" role="tablist" aria-label="Operation Mode">
-            <button type="button" class="mode-tab-btn active" data-mode="encrypt" role="tab" aria-selected="true">
-                <span class="mode-tab-icon">🔒</span> Encrypt
-            </button>
-            <button type="button" class="mode-tab-btn" data-mode="decrypt" role="tab" aria-selected="false">
-                <span class="mode-tab-icon">🔓</span> Decrypt
-            </button>
-            <button type="button" class="mode-tab-btn" data-mode="crack" role="tab" aria-selected="false">
-                <span class="mode-tab-icon">⚡</span> Crack
-            </button>
-        </div>
-
-        <!-- Meta Tools & Presets -->
-        <div class="workspace-meta-tools">
-            <div class="algo-badge" title="Algorithm">
-                <span>Algorithm:</span> <strong>Caesar Cipher (ROT-N)</strong>
-            </div>
-            <button type="button" class="tool-action-btn" id="btn-load-sample" title="Load sample transmission">Sample Text</button>
-            <button type="button" class="tool-action-btn" id="btn-rot13" title="Quickly set shift to 13">ROT-13</button>
-            <button type="button" class="tool-action-btn" id="btn-clear" title="Clear all text">Clear</button>
-        </div>
+<!-- WORKBENCH HERO & TOOLBAR -->
+<div class="workbench-hero-bar" id="workbench">
+    <div class="hero-text-block">
+        <h1>Letters have secrets.</h1>
+        <p>Interactive Caesar cipher substitution workbench, visualizer, and cryptanalysis engine.</p>
     </div>
+    <div class="hero-actions-block">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-load-sample" title="Load sample transmission">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Sample Text
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-rot13" title="Quickly set shift to 13 (ROT-13)">
+            ROT-13
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-clear" title="Clear input and reset output">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+            </svg>
+            Clear
+        </button>
+    </div>
+</div>
 
-    <!-- Dual IO Grid: Plaintext & Ciphertext Panels -->
-    <div class="io-grid">
-        <!-- INPUT PANEL -->
-        <div class="io-panel">
-            <div class="io-panel-header">
-                <span class="io-panel-title" id="input-label-text">Plaintext Input</span>
-                <span class="io-panel-meta"><span id="input-char-count">0</span> chars</span>
+<!-- DUAL-PANE WORKBENCH GRID -->
+<div class="workbench-grid">
+    <!-- PANE 1: TRANSFORMATION CONTROLS CARD -->
+    <div class="card" aria-label="Transformation Controls">
+        <div class="card-header">
+            <!-- Mode Segmented Tabs -->
+            <div class="tabs-list" role="tablist" aria-label="Operation Mode">
+                <button type="button" class="tabs-trigger mode-tab-btn active" data-mode="encrypt" role="tab" aria-selected="true">
+                    🔒 Encrypt
+                </button>
+                <button type="button" class="tabs-trigger mode-tab-btn" data-mode="decrypt" role="tab" aria-selected="false">
+                    🔓 Decrypt
+                </button>
+                <button type="button" class="tabs-trigger mode-tab-btn" data-mode="crack" role="tab" aria-selected="false">
+                    ⚡ Crack
+                </button>
             </div>
-            <div class="input-textarea-wrapper">
+
+            <div class="badge badge-secondary" title="Active Algorithm">
+                <span>Caesar (ROT-N)</span>
+            </div>
+        </div>
+
+        <div class="card-content">
+            <!-- Input Textarea Group -->
+            <div class="textarea-wrapper">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--foreground);" id="input-label-text">Plaintext Input</span>
+                    <span style="font-size: 0.75rem; color: var(--muted-foreground);"><span id="input-char-count">48</span> characters</span>
+                </div>
                 <textarea 
                     id="cipher-input" 
-                    class="cipher-textarea" 
-                    placeholder="Type or paste your message here..."
+                    class="textarea" 
+                    placeholder="Type or paste message payload here..." 
                     spellcheck="false"
                     aria-label="Cipher Input"
                 >ATTACK AT DAWN. RENDEZVOUS AT SECTOR SEVEN.</textarea>
             </div>
+
+            <!-- Shift Parameter Controller Box -->
+            <div class="shift-controller-box" id="shift-controls-container">
+                <div class="shift-header-row">
+                    <span class="shift-title">Shift Key Parameter (K)</span>
+                    <span class="badge badge-amber" id="shift-badge-val">K = 3</span>
+                </div>
+                <div class="shift-stepper-unified">
+                    <div class="stepper-widget">
+                        <button type="button" class="stepper-btn" id="btn-shift-minus" aria-label="Decrease shift key">&minus;</button>
+                        <input type="number" id="shift-input" class="stepper-input" value="3" min="0" max="25" aria-label="Shift Value">
+                        <button type="button" class="stepper-btn" id="btn-shift-plus" aria-label="Increase shift key">&#43;</button>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="shift-range" class="slider-track" min="0" max="25" value="3" aria-label="Shift slider">
+                        <div class="slider-ticks">
+                            <span>0</span>
+                            <span>5</span>
+                            <span>10</span>
+                            <span>13 (ROT)</span>
+                            <span>18</span>
+                            <span>25</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signature Alphabet Shift Visualizer Strip -->
+            <div class="visualizer-card-block" id="visualizer-section">
+                <div class="visualizer-bar-header">
+                    <span class="visualizer-label">Alphabet Mapping</span>
+                    <span class="badge badge-cyan" id="visualizer-preview-pill">Shift +3: A &rarr; D</span>
+                </div>
+                <div class="alphabet-ribbon-container">
+                    <div class="alphabet-ribbon" id="alphabet-strip">
+                        <!-- Populated dynamically by JavaScript -->
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- OUTPUT PANEL -->
-        <div class="io-panel">
-            <div class="io-panel-header">
-                <span class="io-panel-title" id="output-label-text">Ciphertext Output</span>
-                <span class="io-panel-meta" id="output-meta-status">Ready</span>
-            </div>
-            <div class="output-display-wrapper" id="output-wrapper">
-                <div class="output-placeholder" id="output-empty-state">
-                    <span class="output-placeholder-icon">✦</span>
-                    <span>Enter text and press the action button below</span>
+        <div class="card-footer">
+            <button type="button" class="btn btn-primary" id="btn-execute">
+                <span id="execute-btn-icon">🔒</span>
+                <span id="execute-btn-label">Encrypt Message</span>
+            </button>
+            <span style="font-size: 0.75rem; color: var(--muted-foreground);">
+                Enter to run · Shift+Enter newline
+            </span>
+        </div>
+    </div>
+
+    <!-- PANE 2: CIPHER INSPECTOR & TELEMETRY CARD -->
+    <div class="card" aria-label="Cipher Inspector">
+        <div class="card-header">
+            <div class="card-title-group">
+                <div class="card-title">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 17 10 11 4 5"></polyline>
+                        <line x1="12" y1="19" x2="20" y2="19"></line>
+                    </svg>
+                    <span id="output-label-text">Ciphertext Output</span>
                 </div>
-                <div class="output-content" id="output-content-text" style="display: none;"></div>
+                <span class="card-description" id="output-meta-status">Ready</span>
             </div>
-            <div class="output-actions-bar" id="output-actions-bar" style="visibility: hidden;">
-                <button type="button" class="output-btn" id="btn-copy-output" title="Copy result to clipboard">
+
+            <div style="display: flex; gap: 6px;" id="output-actions-bar">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-copy-output" title="Copy to clipboard">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                     </svg>
                     Copy
                 </button>
-                <button type="button" class="output-btn" id="btn-swap-output" title="Use this result as input">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-swap-output" title="Use result as input">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m7 16-4-4 4-4"/><path d="M3 12h18"/><path d="m17 8 4 4-4 4"/>
+                        <path d="m7 16-4-4 4-4"></path>
+                        <path d="M3 12h18"></path>
+                        <path d="m17 8 4 4-4 4"></path>
                     </svg>
                     Swap
                 </button>
-                <button type="button" class="output-btn" id="btn-download-output" title="Download as text file">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-download-output" title="Download text payload">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    Export .txt
+                    Export
                 </button>
             </div>
         </div>
-    </div>
 
-    <!-- SIGNATURE VISUAL ELEMENT: ALPHABET SHIFT VISUALIZER STRIP -->
-    <div class="signature-visualizer-section" id="visualizer-section">
-        <div class="visualizer-header">
-            <span class="visualizer-title">Alphabet Mapping</span>
-            <span class="visualizer-preview-pill" id="visualizer-preview-pill">Shift +3: A &rarr; D</span>
-        </div>
-        <div class="alphabet-strip-container">
-            <div class="alphabet-strip" id="alphabet-strip">
-                <!-- Dynamically populated with 26 letter columns by JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <!-- WORKSPACE FOOTER CONTROLS: SHIFT SLIDER & PRIMARY ACTION BUTTON -->
-    <div class="workspace-controls-bar">
-        <!-- Shift Key Controller -->
-        <div class="shift-control-group" id="shift-controls-container">
-            <div class="shift-label-badge">
-                <span>Shift Key (K):</span>
-                <div class="shift-stepper-box">
-                    <button type="button" class="stepper-btn" id="btn-shift-minus" aria-label="Decrease shift">&minus;</button>
-                    <input type="number" id="shift-input" class="stepper-input" value="3" min="0" max="25" aria-label="Shift Value">
-                    <button type="button" class="stepper-btn" id="btn-shift-plus" aria-label="Increase shift">&#43;</button>
+        <div class="card-content">
+            <!-- Output Display Box -->
+            <div class="output-display-box" id="output-wrapper">
+                <div class="output-placeholder" id="output-empty-state">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span>Enter text and execute transformation to inspect results</span>
                 </div>
+                <div class="output-text" id="output-content-text" style="display: none;"></div>
             </div>
 
-            <div class="slider-container">
-                <input type="range" id="shift-range" class="shift-slider" min="0" max="25" value="3" aria-label="Shift slider">
-                <div class="slider-ticks-bar">
-                    <span>0</span>
-                    <span>5</span>
-                    <span>10</span>
-                    <span>13</span>
-                    <span>18</span>
-                    <span>25</span>
+            <!-- Cryptographic Telemetry Grid -->
+            <div class="telemetry-stats-grid">
+                <div class="stat-item-box">
+                    <span class="stat-label">Payload Size</span>
+                    <span class="stat-value" id="stat-chars">48 bytes</span>
+                </div>
+                <div class="stat-item-box">
+                    <span class="stat-label">Active Key</span>
+                    <span class="stat-value" id="stat-shift">K = 3 (K⁻¹ = 23)</span>
+                </div>
+                <div class="stat-item-box">
+                    <span class="stat-label">English Fitness</span>
+                    <span class="stat-value" id="stat-score">—</span>
+                </div>
+                <div class="stat-item-box">
+                    <span class="stat-label">Entropy Space</span>
+                    <span class="stat-value" style="color: var(--amber-accent);">25 keys (4.64 b)</span>
                 </div>
             </div>
         </div>
 
-        <!-- Primary Action Trigger -->
-        <button type="button" class="execute-action-btn" id="btn-execute">
-            <span id="execute-btn-icon">🔒</span>
-            <span id="execute-btn-label">Encrypt Message</span>
-        </button>
-    </div>
-</section>
-
-<!-- DEDICATED CRACK MODE SECTION (ALL 26 POSSIBLE SHIFTS) -->
-<section class="crack-section" id="crack-section" aria-label="Crack Mode Results">
-    <div class="crack-header">
-        <div class="crack-title-group">
-            <h2 class="crack-title">Exhaustive Brute Force Search</h2>
-            <p class="crack-subtitle">Testing all 26 possible Caesar alphabet shifts simultaneously with English frequency heuristics.</p>
+        <div class="card-footer">
+            <span class="badge badge-outline" style="font-size: 0.72rem; color: var(--muted-foreground);">
+                Security: Trivial Brute-Force Vulnerability
+            </span>
+            <span style="font-size: 0.75rem; color: var(--muted-foreground);" id="output-timestamp">
+                Local Memory Only
+            </span>
         </div>
-        <div class="crack-meta-pill" id="crack-meta-pill">26 Permutations</div>
+    </div>
+</div>
+
+<!-- FULL 26-PERMUTATION CRACK INSPECTOR TABLE CARD -->
+<div class="card crack-inspector-card" id="crack-section" aria-label="Crack Permutations Table">
+    <div class="card-header">
+        <div class="card-title-group">
+            <div class="card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--amber-accent);">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+                <span>Exhaustive Key-Search Analysis</span>
+            </div>
+            <span class="card-description">
+                Tested all 26 possible Caesar cyclic shifts against standard English unigram frequencies.
+            </span>
+        </div>
+        <div class="badge badge-amber" id="crack-meta-pill">
+            26 Permutations
+        </div>
     </div>
 
-    <div class="crack-empty-state" id="crack-empty-notice">
-        <span class="crack-empty-icon">⚡</span>
-        <p>Enter encrypted text in the workspace above and click <strong>Crack Cipher</strong> to generate and score all 26 candidates.</p>
+    <div class="card-content">
+        <div class="output-placeholder" id="crack-empty-notice" style="padding: 24px 0;">
+            <p>Enter ciphertext and trigger <strong>Crack Cipher</strong> to generate and score all 26 candidate plaintexts.</p>
+        </div>
+
+        <div class="table-wrapper" id="crack-table-container" style="display: none;">
+            <table class="shadcn-table" id="crack-table">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">Rank</th>
+                        <th style="width: 120px;">Key (Shift)</th>
+                        <th>Decrypted Plaintext Candidate</th>
+                        <th style="width: 120px;">Fitness Score</th>
+                        <th style="width: 130px; text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="crack-table-body">
+                    <!-- Populated dynamically by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- EDUCATIONAL SPECIFICATIONS SECTION -->
+<div style="display: flex; flex-direction: column; gap: 14px; margin-top: 12px;" id="learn">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--foreground); letter-spacing: -0.01em;">Cryptographic Principles</h2>
+            <p style="font-size: 0.82rem; color: var(--muted-foreground); margin-top: 2px;">Mathematical vulnerabilities and theoretical foundations of monoalphabetic substitution.</p>
+        </div>
+        <a href="/about" class="btn btn-outline btn-sm">Full Technical Specifications &rarr;</a>
     </div>
 
-    <div class="crack-grid" id="crack-results-grid" style="display: none;">
-        <!-- Populated dynamically with all 26 candidates -->
-    </div>
-</section>
-
-<!-- COMPACT EDUCATIONAL SECTION -->
-<section class="educational-section" id="learn" aria-label="Educational Guide">
-    <div class="edu-header">
-        <h2 class="edu-title">How the Caesar Cipher Works</h2>
-        <p class="edu-subtitle">The foundations of monoalphabetic substitution cryptography.</p>
-    </div>
-
-    <div class="edu-grid">
-        <div class="edu-card">
-            <div class="edu-card-icon">∑</div>
+    <div class="edu-cards-grid">
+        <div class="edu-spec-card">
+            <div class="edu-card-icon-tag" style="color: var(--cyan-accent);">∑</div>
             <h3 class="edu-card-title">Modular Arithmetic</h3>
             <p class="edu-card-desc">
-                Each letter is mapped to an integer (A=0, B=1, ... Z=25). Encryption shifts every character forward along the cyclic group modulo 26:
+                Letters are integers modulo 26 ($A=0, \dots, Z=25$). The cipher adds shift key $K$ along cyclic group $\mathbb{Z}_{26}$.
             </p>
-            <div class="edu-formula">C &equiv; (P + K) mod 26</div>
+            <div class="edu-formula-pill">C &equiv; (P + K) mod 26</div>
         </div>
 
-        <div class="edu-card">
-            <div class="edu-card-icon">⚡</div>
+        <div class="edu-spec-card">
+            <div class="edu-card-icon-tag" style="color: var(--amber-accent);">⚡</div>
             <h3 class="edu-card-title">Trivial Key Space</h3>
             <p class="edu-card-desc">
-                Because English has only 26 letters, there are only 25 non-trivial shifts. A modern computer can test every single key in less than a fraction of a millisecond.
+                With only 25 non-zero shifts, exhaustive brute-force search explores 100% of the entire key space instantaneously.
             </p>
-            <div class="edu-formula">|K| = 25 keys &approx; 4.64 bits</div>
+            <div class="edu-formula-pill">|K| = 25 keys &approx; 4.64 bits</div>
         </div>
 
-        <div class="edu-card">
-            <div class="edu-card-icon">📊</div>
+        <div class="edu-spec-card">
+            <div class="edu-card-icon-tag" style="color: var(--emerald-accent);">📊</div>
             <h3 class="edu-card-title">Frequency Invariance</h3>
             <p class="edu-card-desc">
-                A simple shift preserves letter frequency distribution. The most common letter in English (E at ~12.7%) simply shifts to another position, making manual frequency attacks immediate.
+                Shifting letters does not alter character frequency distribution. The primary English peak ($E \approx 12.7\%$) merely offsets.
             </p>
-            <div class="edu-formula">ETAOIN SHRDLU Heuristic</div>
+            <div class="edu-formula-pill">&chi;&sup2; Distance Attack</div>
         </div>
 
-        <div class="edu-card">
-            <div class="edu-card-icon">🛡️</div>
+        <div class="edu-spec-card">
+            <div class="edu-card-icon-tag" style="color: var(--destructive-foreground);">🛡️</div>
             <h3 class="edu-card-title">Modern Cryptography</h3>
             <p class="edu-card-desc">
-                Caesar is an educational foundation. Real-world systems use authenticated ciphers like AES-256-GCM or ChaCha20-Poly1305 with 256-bit entropy keys ($2^{256}$ states).
+                Production confidentiality mandates authenticated symmetric primitives such as AES-256-GCM ($2^{256}$ keys).
             </p>
-            <div class="edu-formula">NIST FIPS 197 / RFC 8439</div>
+            <div class="edu-formula-pill">NIST FIPS 197 / RFC 8439</div>
         </div>
     </div>
-</section>
+</div>
 
-<!-- Tactile Toast Feedback Element -->
+<!-- TOAST NOTIFICATION -->
 <div class="toast-notice" id="toast-notice" role="status" aria-live="polite">
     <span class="toast-icon">✓</span>
-    <span id="toast-message">Copied to clipboard</span>
+    <span id="toast-message">Result copied to clipboard</span>
 </div>
 {% endblock %}
 

@@ -1,114 +1,140 @@
 {% extends 'base.html' %}
 {% set active_page = 'about' %}
-{% block title %}CIPHER LAB — Cryptography Reference & Specifications{% endblock %}
+{% block title %}CIPHER LAB — Cryptographic Specifications & Architecture{% endblock %}
 
 {% block content %}
-<section class="hero-section">
-    <span class="hero-tagline">Documentation & Intel</span>
-    <h1 class="hero-title">Technical Specifications</h1>
-    <p class="hero-subtitle">
-        Mathematical foundations, cryptanalytic vulnerability profiles, and modern cryptographic standards.
-    </p>
-</section>
+<!-- HEADER BAR -->
+<div class="workbench-hero-bar">
+    <div class="hero-text-block">
+        <h1>Cryptographic Specifications</h1>
+        <p>Formal mathematical model, cryptanalytic attack profiles, and cipher taxonomy.</p>
+    </div>
+    <div class="hero-actions-block">
+        <a href="/" class="btn btn-primary btn-sm">&larr; Return to Workbench</a>
+    </div>
+</div>
 
-<div class="educational-section" style="max-width: 920px; margin: 0 auto; width: 100%;">
-    <!-- Specification Card -->
-    <div class="workspace-card" style="padding: 28px; gap: 20px;">
-        <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
-            <span style="color: var(--accent-cyan);">§ 1.</span> Formal Mathematical Model
-        </h2>
-        <p style="color: var(--text-secondary); line-height: 1.7;">
-            The Caesar cipher is a monoalphabetic substitution cipher over the finite cyclic group $\mathbb{Z}_{26}$. Given an alphabet $\Sigma = \{A, B, \dots, Z\}$ indexed as integers $0 \dots 25$:
-        </p>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
-            <div style="background: var(--bg-inset); border: 1px solid var(--border-subtle); padding: 16px; border-radius: var(--radius-md);">
-                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Encryption Transformation</span>
-                <div style="font-family: var(--font-mono); font-size: 1.05rem; color: var(--accent-cyan); margin-top: 6px;">
-                    C &equiv; (P + K) mod 26
+<div style="display: flex; flex-direction: column; gap: 20px; max-width: 960px; margin: 0 auto; width: 100%;">
+    <!-- SECTION 1: FORMAL MATHEMATICAL MODEL -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title-group">
+                <div class="card-title">
+                    <span class="badge badge-cyan">§ 1</span>
+                    <span>Formal Mathematical Definition</span>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">Where $P$ is plaintext index and $K \in [0, 25]$ is the shift key.</p>
+                <span class="card-description">Cyclic monoalphabetic substitution over the finite ring $\mathbb{Z}_{26}$</span>
             </div>
+        </div>
+        <div class="card-content">
+            <p style="color: var(--muted-foreground); line-height: 1.6; font-size: 0.88rem;">
+                Let alphabet $\Sigma = \{A, B, \dots, Z\}$ be indexed as integer ring $\mathbb{Z}_{26} = \{0, 1, \dots, 25\}$. The Caesar cipher maps an arbitrary character $P_i \in \Sigma$ into ciphertext $C_i \in \Sigma$ parameterized by key $K \in \mathbb{Z}_{26}$:
+            </p>
 
-            <div style="background: var(--bg-inset); border: 1px solid var(--border-subtle); padding: 16px; border-radius: var(--radius-md);">
-                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Decryption Transformation</span>
-                <div style="font-family: var(--font-mono); font-size: 1.05rem; color: var(--accent-amber); margin-top: 6px;">
-                    P &equiv; (C - K) mod 26
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 10px;">
+                <div class="stat-item-box" style="padding: 16px;">
+                    <span class="stat-label">Encryption Transformation</span>
+                    <div style="font-family: var(--font-mono); font-size: 1.15rem; color: var(--cyan-accent); margin: 6px 0;">
+                        C &equiv; (P + K) mod 26
+                    </div>
+                    <span style="font-size: 0.78rem; color: var(--muted-foreground);">Shift forward by key $K$ positions.</span>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">Equivalent to adding $(26 - K) \pmod{26}$.</p>
+
+                <div class="stat-item-box" style="padding: 16px;">
+                    <span class="stat-label">Decryption Transformation</span>
+                    <div style="font-family: var(--font-mono); font-size: 1.15rem; color: var(--amber-accent); margin: 6px 0;">
+                        P &equiv; (C - K) mod 26
+                    </div>
+                    <span style="font-size: 0.78rem; color: var(--muted-foreground);">Equivalent to adding $(26 - K) \pmod{26}$.</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Cryptanalysis Card -->
-    <div class="workspace-card" style="padding: 28px; gap: 20px;">
-        <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
-            <span style="color: var(--accent-amber);">§ 2.</span> Cryptanalysis & Attack Vectors
-        </h2>
-        <p style="color: var(--text-secondary); line-height: 1.7;">
-            Caesar cipher provides <strong>zero real-world confidentiality</strong>. It is susceptible to two direct, instantaneous attack models:
-        </p>
-
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-            <div style="border-left: 3px solid var(--accent-amber); background: var(--bg-inset); padding: 14px 18px; border-radius: 0 var(--radius-md) var(--radius-md) 0;">
-                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">1. Exhaustive Key-Search Attack (Brute Force)</h3>
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
-                    With only 25 non-trivial keys ($K = 1 \dots 25$), an adversary can test all keys in $\mathcal{O}(1)$ time. An operator can scan all 26 outputs in seconds.
+    <!-- SECTION 2: CRYPTANALYTIC VULNERABILITY -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title-group">
+                <div class="card-title">
+                    <span class="badge badge-amber">§ 2</span>
+                    <span>Cryptanalytic Vulnerability Profiles</span>
+                </div>
+                <span class="card-description">Why Caesar offers zero confidentiality in modern threat models</span>
+            </div>
+        </div>
+        <div class="card-content" style="gap: 14px;">
+            <div style="border-left: 3px solid var(--amber-accent); background: var(--secondary); padding: 14px 18px; border-radius: 0 var(--radius-md) var(--radius-md) 0;">
+                <h4 style="font-size: 0.92rem; font-weight: 600; color: var(--foreground);">1. Exhaustive Key-Search Attack (Brute Force)</h4>
+                <p style="font-size: 0.82rem; color: var(--muted-foreground); margin-top: 4px; line-height: 1.5;">
+                    The effective key space consists of only 25 non-trivial shifts ($|K| = 25$). Entropy is bounded by $\log_2(25) \approx 4.64\text{ bits}$. Any modern CPU completes exhaustive search in under 5 microseconds.
                 </p>
             </div>
 
-            <div style="border-left: 3px solid var(--accent-coral); background: var(--bg-inset); padding: 14px 18px; border-radius: 0 var(--radius-md) var(--radius-md) 0;">
-                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">2. Frequency Analysis (Chi-Squared $\chi^2$ Attack)</h3>
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
-                    Monoalphabetic substitution preserves the unigram probability distribution. In English, the letter <strong>E</strong> appears with ~12.7% frequency, followed by <strong>T</strong> (~9.1%) and <strong>A</strong> (~8.2%). The highest peak in the ciphertext immediately exposes the shift.
+            <div style="border-left: 3px solid var(--destructive-foreground); background: var(--secondary); padding: 14px 18px; border-radius: 0 var(--radius-md) var(--radius-md) 0;">
+                <h4 style="font-size: 0.92rem; font-weight: 600; color: var(--foreground);">2. Unigram Frequency Invariance Attack</h4>
+                <p style="font-size: 0.82rem; color: var(--muted-foreground); margin-top: 4px; line-height: 1.5;">
+                    Because each character maps 1-to-1, natural language frequency distributions remain completely preserved. By locating the highest frequency character peak (in English, 'E' at ~12.7%), an analyst determines $K = (C_{\text{peak}} - 4) \pmod{26}$ instantly without testing other keys.
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Algorithm Comparison Table -->
-    <div class="workspace-card" style="padding: 28px; gap: 16px;">
-        <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
-            <span style="color: var(--accent-mint);">§ 3.</span> Cryptographic Paradigm Comparison
-        </h2>
-
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--border-medium); color: var(--text-muted);">
-                        <th style="padding: 10px 12px;">Cipher</th>
-                        <th style="padding: 10px 12px;">Type</th>
-                        <th style="padding: 10px 12px;">Keyspace</th>
-                        <th style="padding: 10px 12px;">Security Status</th>
-                    </tr>
-                </thead>
-                <tbody style="color: var(--text-secondary);">
-                    <tr style="border-bottom: 1px solid var(--border-subtle);">
-                        <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Caesar (ROT-N)</td>
-                        <td style="padding: 12px;">Monoalphabetic Substitution</td>
-                        <td style="padding: 12px; font-family: var(--font-mono);">25 keys (&approx; 4.6 bits)</td>
-                        <td style="padding: 12px;"><span style="color: var(--accent-coral); font-weight: 600;">Broken (Trivial)</span></td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid var(--border-subtle);">
-                        <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Vigenère</td>
-                        <td style="padding: 12px;">Polyalphabetic Substitution</td>
-                        <td style="padding: 12px; font-family: var(--font-mono);">26<sup>L</sup> keys</td>
-                        <td style="padding: 12px;"><span style="color: var(--accent-amber); font-weight: 600;">Vulnerable (Kasiski)</span></td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid var(--border-subtle);">
-                        <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">AES-256-GCM</td>
-                        <td style="padding: 12px;">Symmetric Block (Rijndael)</td>
-                        <td style="padding: 12px; font-family: var(--font-mono);">2<sup>256</sup> keys</td>
-                        <td style="padding: 12px;"><span style="color: var(--accent-mint); font-weight: 600;">Standard (Military-Grade)</span></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">ChaCha20-Poly1305</td>
-                        <td style="padding: 12px;">Symmetric Stream AEAD</td>
-                        <td style="padding: 12px; font-family: var(--font-mono);">2<sup>256</sup> keys</td>
-                        <td style="padding: 12px;"><span style="color: var(--accent-mint); font-weight: 600;">Standard (High-Performance)</span></td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- SECTION 3: PARADIGM COMPARISON TABLE -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title-group">
+                <div class="card-title">
+                    <span class="badge badge-emerald">§ 3</span>
+                    <span>Cryptographic Paradigm Comparison</span>
+                </div>
+                <span class="card-description">Historical substitution primitives vs. contemporary authenticated standards</span>
+            </div>
+        </div>
+        <div class="card-content" style="padding: 0;">
+            <div class="table-wrapper" style="border: none; border-radius: 0;">
+                <table class="shadcn-table">
+                    <thead>
+                        <tr>
+                            <th>Cipher Standard</th>
+                            <th>Family / Mechanism</th>
+                            <th>Effective Keyspace</th>
+                            <th>Cryptographic Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;">Caesar (ROT-N)</td>
+                            <td>Monoalphabetic Shift</td>
+                            <td style="font-family: var(--font-mono);">25 keys (~4.64 b)</td>
+                            <td><span class="badge" style="background: rgba(127, 29, 29, 0.3); color: #fca5a5;">Insecure · Educational</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">Vigenère</td>
+                            <td>Polyalphabetic Substitution</td>
+                            <td style="font-family: var(--font-mono);">26<sup>L</sup> keys</td>
+                            <td><span class="badge badge-amber">Broken · Kasiski Attack</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">DES (Data Encryption Std)</td>
+                            <td>Feistel Block Cipher (56-bit)</td>
+                            <td style="font-family: var(--font-mono);">2<sup>56</sup> keys</td>
+                            <td><span class="badge badge-amber">Deprecated · EFF Cracker</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">AES-256-GCM</td>
+                            <td>SPN Authenticated Block AEAD</td>
+                            <td style="font-family: var(--font-mono);">2<sup>256</sup> keys</td>
+                            <td><span class="badge badge-emerald">Standard · Post-Quantum Ready</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">ChaCha20-Poly1305</td>
+                            <td>Stream AEAD (RFC 8439)</td>
+                            <td style="font-family: var(--font-mono);">2<sup>256</sup> keys</td>
+                            <td><span class="badge badge-emerald">Standard · High Performance</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

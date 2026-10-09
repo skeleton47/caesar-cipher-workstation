@@ -1,6 +1,6 @@
 /* ==========================================================================
-   CIPHER LAB // CLIENT ENGINE & INTERACTIVE WORKSPACE
-   Cryptographic Transformations, Alphabet Visualizer, and Brute Force Engine
+   CIPHER LAB // DEVTOOLS CLIENT ENGINE & INTERACTIVE WORKSPACE
+   Cryptographic Transformations, Ribbon Visualizer, Telemetry & Brute-Force
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Controls
     const shiftInput        = document.getElementById('shift-input');
     const shiftRange        = document.getElementById('shift-range');
+    const shiftBadgeVal     = document.getElementById('shift-badge-val');
     const btnShiftMinus     = document.getElementById('btn-shift-minus');
     const btnShiftPlus      = document.getElementById('btn-shift-plus');
     const btnExecute        = document.getElementById('btn-execute');
@@ -42,10 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const alphabetStrip     = document.getElementById('alphabet-strip');
     const visualizerPreview = document.getElementById('visualizer-preview-pill');
 
+    // Telemetry Elements
+    const statChars         = document.getElementById('stat-chars');
+    const statShift         = document.getElementById('stat-shift');
+    const statScore         = document.getElementById('stat-score');
+
     // Crack Section
     const crackSection      = document.getElementById('crack-section');
-    const crackResultsGrid  = document.getElementById('crack-results-grid');
     const crackEmptyNotice  = document.getElementById('crack-empty-notice');
+    const crackTableContainer = document.getElementById('crack-table-container');
+    const crackTableBody    = document.getElementById('crack-table-body');
     const crackMetaPill     = document.getElementById('crack-meta-pill');
 
     // Toast
@@ -78,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first',
         'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these',
         'give', 'day', 'most', 'us', 'is', 'was', 'are', 'has', 'had',
-        'hello', 'world', 'secret', 'message', 'attack', 'defend', 'rendezvous'
+        'hello', 'world', 'secret', 'message', 'attack', 'defend', 'rendezvous', 'sector', 'dawn'
     ]);
 
     // ─── Toast Feedback System ───────────────────────────────────────────────
@@ -134,25 +141,25 @@ document.addEventListener('DOMContentLoaded', () => {
         return parseFloat((freqScore + wordBonus).toFixed(2));
     }
 
-    // ─── Signature Visual Element: Alphabet Shift Strip ──────────────────────
+    // ─── Signature Visual Element: Alphabet Shift Ribbon ─────────────────────
     function initAlphabetStrip() {
         if (!alphabetStrip) return;
         alphabetStrip.innerHTML = '';
 
         for (let i = 0; i < 26; i++) {
             const originalChar = String.fromCharCode(65 + i);
-            const col = document.createElement('div');
-            col.className = 'strip-column';
-            col.id = `strip-col-${originalChar}`;
-            col.dataset.letter = originalChar;
+            const cell = document.createElement('div');
+            cell.className = 'ribbon-cell';
+            cell.id = `ribbon-cell-${originalChar}`;
+            cell.dataset.letter = originalChar;
 
-            col.innerHTML = `
-                <span class="strip-char-original">${originalChar}</span>
-                <span class="strip-arrow">&darr;</span>
-                <span class="strip-char-shifted" id="strip-shifted-${originalChar}">?</span>
+            cell.innerHTML = `
+                <span class="ribbon-top">${originalChar}</span>
+                <span class="ribbon-arr">&darr;</span>
+                <span class="ribbon-bot" id="ribbon-bot-${originalChar}">?</span>
             `;
 
-            alphabetStrip.appendChild(col);
+            alphabetStrip.appendChild(cell);
         }
 
         updateAlphabetStrip();
@@ -164,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < 26; i++) {
             const orig = String.fromCharCode(65 + i);
             const shifted = String.fromCharCode(65 + ((i + s) % 26));
-            const shiftedEl = document.getElementById(`strip-shifted-${orig}`);
+            const shiftedEl = document.getElementById(`ribbon-bot-${orig}`);
             if (shiftedEl) {
                 shiftedEl.textContent = shifted;
             }
@@ -184,13 +191,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < 26; i++) {
             const letter = String.fromCharCode(65 + i);
-            const col = document.getElementById(`strip-col-${letter}`);
-            if (col) {
+            const cell = document.getElementById(`ribbon-cell-${letter}`);
+            if (cell) {
                 if (activeChars.has(letter)) {
-                    col.classList.add('highlighted');
+                    cell.classList.add('active-input-char');
                 } else {
-                    col.classList.remove('highlighted');
+                    cell.classList.remove('active-input-char');
                 }
+            }
+        }
+    }
+
+    // ─── Telemetry Updater ───────────────────────────────────────────────────
+    function updateTelemetry(outText) {
+        const text = cipherInput ? cipherInput.value : '';
+        if (statChars) {
+            statChars.textContent = `${text.length} chars (${new Blob([text]).size} B)`;
+        }
+        if (statShift) {
+            const s = currentShift;
+            const inv = (26 - s) % 26;
+            statShift.textContent = `K = ${s} (K⁻¹ = ${inv})`;
+        }
+        if (statScore) {
+            const target = outText || text;
+            if (target && target.trim().length > 0) {
+                const sc = scoreEnglishText(target);
+                statScore.textContent = `${sc} pts`;
+            } else {
+                statScore.textContent = '—';
             }
         }
     }
@@ -199,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function setShift(val) {
         let parsed = parseInt(val, 10);
         if (isNaN(parsed)) parsed = 0;
-        // Normalize between 0 and 25
         parsed = ((parsed % 26) + 26) % 26;
 
         currentShift = parsed;
@@ -209,8 +237,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shiftRange && parseInt(shiftRange.value, 10) !== currentShift) {
             shiftRange.value = currentShift;
         }
+        if (shiftBadgeVal) {
+            shiftBadgeVal.textContent = `K = ${currentShift}`;
+        }
 
         updateAlphabetStrip();
+        updateTelemetry();
         if (window.CyberSFX) CyberSFX.shift();
 
         // If in encrypt/decrypt mode and output is already visible, update live
@@ -247,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function setMode(mode) {
         currentMode = mode;
 
-        // Sync mode buttons
+        // Sync mode tab buttons
         modeTabBtns.forEach(btn => {
             const isActive = btn.dataset.mode === mode;
             btn.classList.toggle('active', isActive);
@@ -293,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navModeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             setMode(btn.dataset.navMode);
-            const ws = document.getElementById('workspace');
+            const ws = document.getElementById('workbench');
             if (ws) ws.scrollIntoView({ behavior: 'smooth' });
         });
     });
@@ -321,18 +353,16 @@ document.addEventListener('DOMContentLoaded', () => {
             outputContentText.textContent = result;
             outputContentText.style.display = 'block';
         }
-        if (outputActionsBar) outputActionsBar.style.visibility = 'visible';
         if (outputMetaStatus) {
             outputMetaStatus.textContent = currentMode === 'encrypt' ? 'Encrypted' : 'Decrypted';
         }
 
+        updateTelemetry(result);
         if (window.CyberSFX) CyberSFX.success();
     }
 
     // ─── Exhaustive 26-Shift Brute Force Crack ────────────────────────────────
     function performCrack(text) {
-        if (!crackResultsGrid) return;
-
         const candidates = [];
         for (let shift = 0; shift < 26; shift++) {
             const decrypted = caesarTransform(text, -shift);
@@ -354,51 +384,67 @@ document.addEventListener('DOMContentLoaded', () => {
             outputContentText.textContent = best.text;
             outputContentText.style.display = 'block';
         }
-        if (outputActionsBar) outputActionsBar.style.visibility = 'visible';
         if (outputMetaStatus) {
             outputMetaStatus.textContent = `Shift ${best.shift} (Score: ${best.score})`;
         }
 
-        // Render all 26 cards in crack grid
-        crackResultsGrid.innerHTML = '';
-        sorted.forEach((cand, idx) => {
-            const isBest = idx === 0;
-            const card = document.createElement('div');
-            card.className = `crack-card ${isBest ? 'best-match' : ''}`;
+        // Render all 26 rows into shadcn table
+        if (crackTableBody) {
+            crackTableBody.innerHTML = '';
+            sorted.forEach((cand, idx) => {
+                const isBest = idx === 0;
+                const tr = document.createElement('tr');
+                if (isBest) tr.className = 'top-candidate-row';
 
-            card.innerHTML = `
-                <div class="crack-card-header">
-                    <span class="crack-shift-badge">
-                        ${isBest ? '★ ' : ''}ROT-${String(cand.shift).padStart(2, '0')} (Shift ${cand.shift})
-                    </span>
-                    <span class="crack-score-pill">${isBest ? 'Likely Match · ' : ''}Score: ${cand.score}</span>
-                </div>
-                <div class="crack-card-text" title="${cand.text}">${cand.text}</div>
-                <div class="crack-card-footer">
-                    <button type="button" class="apply-shift-btn">Apply this shift &rarr;</button>
-                </div>
-            `;
+                tr.innerHTML = `
+                    <td style="font-family: var(--font-mono); font-weight: 600;">
+                        ${isBest ? '<span class="badge badge-emerald">#1 Best</span>' : `#${idx + 1}`}
+                    </td>
+                    <td>
+                        <span class="badge ${isBest ? 'badge-amber' : 'badge-secondary'}">
+                            ROT-${String(cand.shift).padStart(2, '0')} (Shift ${cand.shift})
+                        </span>
+                    </td>
+                    <td>
+                        <div class="candidate-preview-text" title="${cand.text}">
+                            ${cand.text}
+                        </div>
+                    </td>
+                    <td style="font-family: var(--font-mono); font-weight: 600; color: ${isBest ? 'var(--emerald-accent)' : 'var(--muted-foreground)'};">
+                        ${cand.score} pts
+                    </td>
+                    <td style="text-align: right;">
+                        <button type="button" class="btn btn-outline btn-sm apply-key-btn">
+                            Apply Key &rarr;
+                        </button>
+                    </td>
+                `;
 
-            card.addEventListener('click', () => {
-                setShift(cand.shift);
-                setMode('decrypt');
-                if (outputContentText) outputContentText.textContent = cand.text;
-                if (outputMetaStatus) outputMetaStatus.textContent = `Applied Shift ${cand.shift}`;
-                showToast(`Applied Shift ${cand.shift}`);
-                const ws = document.getElementById('workspace');
-                if (ws) ws.scrollIntoView({ behavior: 'smooth' });
-                if (window.CyberSFX) CyberSFX.click();
+                // Handle clicking row or apply button
+                tr.addEventListener('click', () => {
+                    setShift(cand.shift);
+                    setMode('decrypt');
+                    if (outputContentText) outputContentText.textContent = cand.text;
+                    if (outputMetaStatus) outputMetaStatus.textContent = `Applied Shift ${cand.shift}`;
+                    updateTelemetry(cand.text);
+                    showToast(`Applied Shift ${cand.shift}`);
+                    const ws = document.getElementById('workbench');
+                    if (ws) ws.scrollIntoView({ behavior: 'smooth' });
+                    if (window.CyberSFX) CyberSFX.click();
+                });
+
+                crackTableBody.appendChild(tr);
             });
-
-            crackResultsGrid.appendChild(card);
-        });
+        }
 
         if (crackEmptyNotice) crackEmptyNotice.style.display = 'none';
-        crackResultsGrid.style.display = 'grid';
-        if (crackMetaPill) crackMetaPill.textContent = `Best: Shift ${best.shift} (${best.score} pts)`;
+        if (crackTableContainer) crackTableContainer.style.display = 'block';
+        if (crackSection) crackSection.classList.add('active');
+        if (crackMetaPill) crackMetaPill.textContent = `Top Match: Shift ${best.shift} (${best.score} pts)`;
 
+        updateTelemetry(best.text);
         if (window.CyberSFX) CyberSFX.success();
-        showToast(`Tested 26 shifts. Best match: Shift ${best.shift}`);
+        showToast(`Analyzed 26 shifts. Top candidate: Shift ${best.shift}`);
     }
 
     if (btnExecute) {
@@ -413,6 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cipherInput.addEventListener('input', () => {
             if (inputCharCount) inputCharCount.textContent = cipherInput.value.length;
             highlightActiveLetters();
+            updateTelemetry();
         });
 
         // Enter key to execute (Shift+Enter for newline)
@@ -431,16 +478,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 cipherInput.value = 'THE EAGLE FLIES AT MIDNIGHT. RENDEZVOUS AT SECTOR SEVEN.';
                 if (inputCharCount) inputCharCount.textContent = cipherInput.value.length;
                 highlightActiveLetters();
+                updateTelemetry();
             }
             if (window.CyberSFX) CyberSFX.click();
-            showToast('Sample text loaded');
+            showToast('Sample transmission loaded');
         });
     }
 
     if (btnRot13) {
         btnRot13.addEventListener('click', () => {
             setShift(13);
-            showToast('Set key to ROT-13');
+            showToast('Shift set to ROT-13');
         });
     }
 
@@ -455,21 +503,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 outputContentText.style.display = 'none';
             }
             if (outputEmptyState) outputEmptyState.style.display = 'flex';
-            if (outputActionsBar) outputActionsBar.style.visibility = 'hidden';
             if (outputMetaStatus) outputMetaStatus.textContent = 'Ready';
             highlightActiveLetters();
+            updateTelemetry();
             if (window.CyberSFX) CyberSFX.click();
-            showToast('Workspace cleared');
+            showToast('Workspace reset');
         });
     }
 
     // Copy Result to Clipboard
     if (btnCopyOutput) {
         btnCopyOutput.addEventListener('click', () => {
-            if (!outputContentText || !outputContentText.textContent) return;
+            if (!outputContentText || !outputContentText.textContent) {
+                showToast('No output to copy');
+                return;
+            }
             navigator.clipboard.writeText(outputContentText.textContent).then(() => {
                 if (window.CyberSFX) CyberSFX.copy();
-                showToast('Result copied to clipboard');
+                showToast('Copied to clipboard');
             }).catch(() => {
                 showToast('Clipboard copy failed');
             });
@@ -479,7 +530,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Swap Output into Input
     if (btnSwapOutput) {
         btnSwapOutput.addEventListener('click', () => {
-            if (!outputContentText || !outputContentText.textContent) return;
+            if (!outputContentText || !outputContentText.textContent) {
+                showToast('No output to swap');
+                return;
+            }
             const currentOut = outputContentText.textContent;
             if (cipherInput) {
                 cipherInput.value = currentOut;
@@ -492,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (currentMode === 'decrypt') {
                 setMode('encrypt');
             }
+            updateTelemetry(currentOut);
             if (window.CyberSFX) CyberSFX.click();
             showToast('Output swapped into input');
         });
@@ -500,7 +555,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Download .txt Payload
     if (btnDownloadOutput) {
         btnDownloadOutput.addEventListener('click', () => {
-            if (!outputContentText || !outputContentText.textContent) return;
+            if (!outputContentText || !outputContentText.textContent) {
+                showToast('No output to export');
+                return;
+            }
             const blob = new Blob([outputContentText.textContent], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -521,5 +579,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cipherInput) {
         if (inputCharCount) inputCharCount.textContent = cipherInput.value.length;
         highlightActiveLetters();
+        updateTelemetry();
     }
 });
