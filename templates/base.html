@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CAESAR CIPHER // RESTRICTED CYBERNETIC WORKSTATION{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Press+Start+2P&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Tactical CRT Glitch & Grid Overlay -->
+    <div class="cyber-grid-bg"></div>
+    <div class="scanlines-fx"></div>
+    <div class="vignette-fx"></div>
+    <div class="glitch-accents">
+        <div class="glitch-slice s1"></div>
+        <div class="glitch-slice s2"></div>
+        <div class="glitch-slice s3"></div>
+        <div class="glitch-slice s4"></div>
+    </div>
+
+    <!-- Cyber Transition Overlay -->
+    <div class="cyber-transition-curtain" id="cyber-curtain">
+        <div class="curtain-line"></div>
+        <div class="curtain-glitch-text">INITIALIZING QUANTUM ENCRYPTION CHANNEL...</div>
+    </div>
+
+    <div class="terminal-wrapper">
+        <!-- TOP HUD SYSTEM BAR -->
+        <header class="hud-top-bar">
+            <div class="hud-left-group">
+                <div class="cyber-tag-box">
+                    <span class="prompt-symbol">&gt;_</span>
+                    <span class="tag-title">CIPHER TOOL // RESTRICTED_ONLINE</span>
+                    <span class="threat-dot"></span>
+                    <span class="tag-plus">+</span>
+                </div>
+                <div class="hud-warning-strip">
+                    <svg class="mini-warn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff0055" stroke-width="2.5">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <div class="hazard-text">
+                        <span class="hz-line1">TACTICAL CRYPTANALYSIS</span>
+                        <span class="hz-line2">THREAT: CRITICAL <span class="hz-stripes">//////</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mini Nav Bar for Pages + Audio Toggle -->
+            <nav class="hud-nav">
+                <a href="/" class="nav-link {{ 'active' if active_page == 'home' }}">[ &gt; TERMINAL_EXEC ]</a>
+                <a href="/about" class="nav-link {{ 'active' if active_page == 'about' }}">[ &gt; THREAT_INTEL ]</a>
+                <button class="sfx-toggle-btn" id="sfx-toggle" title="Toggle Cyber Audio">[SFX: ON]</button>
+            </nav>
+
+            <div class="hud-right-group">
+                <div class="hud-telemetry-box">
+                    <div class="telemetry-item">
+                        <span class="t-key">ALGORITHM:</span>
+                        <span class="t-val">CAESAR_ROT26</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="t-key">VECTOR_OFFSET:</span>
+                        <span class="t-val pink-glow" id="hud-shift-readout">03</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="t-key">SYSTEM STATUS:</span>
+                        <span class="t-val status-ready" id="hud-system-status">ARMED // READY</span>
+                    </div>
+                    <span class="corner-dot"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN VIEWPORT -->
+        <main class="hud-main">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- BOTTOM STATUS BAR -->
+        <footer class="hud-bottom-bar">
+            <div class="footer-left">
+                <span class="prompt-chevron">&gt; |</span>
+                <span class="exe-name">CIPHER_TOOL.EXE // ROOT_SHELL [PID: 0x1337]</span>
+                <span class="footer-line-decor"></span>
+            </div>
+            <div class="footer-right">
+                <span class="motto-text">EXPLOITATION ACTIVE &bull; NO LOGS KEPT</span>
+                <span class="plus-marker">++</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/sfx.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

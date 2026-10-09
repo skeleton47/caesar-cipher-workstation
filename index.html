@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Garden - Caesar Cipher</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <span>🔒</span> CIPHER GARDEN <span>🌸</span>
+        </div>
+        <nav>
+            <button class="nav-btn active">🏠 HOME</button>
+            <button class="nav-btn">🔧 TOOLS</button>
+            <button class="nav-btn">ℹ️ ABOUT</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <h1>CAESAR CIPHER</h1>
+                <p>Encrypt, decrypt, and crack<br>secret messages.</p>
+            </div>
+            <div class="hero-graphics">
+                <div class="pixel-computer">
+                    <div class="monitor">
+                        <div class="screen">
+                            <span class="face">^‿^</span>
+                        </div>
+                    </div>
+                    <div class="keyboard"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cipher-tool">
+            <div class="sparkle" style="top: -10px; left: 10%;"></div>
+            <div class="sparkle" style="top: 20%; right: -15px; animation-delay: 0.5s;"></div>
+            <div class="sparkle" style="bottom: 10%; left: -20px; animation-delay: 1s;"></div>
+            <div class="sparkle" style="bottom: -15px; right: 20%; animation-delay: 1.5s;"></div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-mode="encrypt">🔒 ENCRYPT</button>
+                <button class="tab-btn" data-mode="decrypt">🔓 DECRYPT</button>
+                <button class="tab-btn" data-mode="crack">🔍 CRACK</button>
+            </div>
+
+            <div class="tool-content">
+                <div class="input-group">
+                    <label>💬 MESSAGE</label>
+                    <textarea id="message-input" placeholder="Type your secret message here..."></textarea>
+                    <div class="char-count" id="char-count">0/500</div>
+                </div>
+
+                <div class="input-group" id="shift-group">
+                    <label>⇄ SHIFT VALUE</label>
+                    <div class="shift-control">
+                        <button id="shift-minus">-</button>
+                        <input type="number" id="shift-value" value="3" min="1" max="25">
+                        <button id="shift-plus">+</button>
+                    </div>
+                </div>
+
+                <button id="action-btn" class="primary-btn">🔒 ENCRYPT MESSAGE</button>
+                
+                <div class="result-area hidden" id="result-area">
+                    <label>✨ RESULT</label>
+                    <div class="result-box" id="result-output"></div>
+                    <button id="copy-btn" class="secondary-btn">📋 COPY TO CLIPBOARD</button>
+                </div>
+            </div>
+            
+            <div class="info-footer">
+                <p>ℹ️ The Caesar cipher shifts each letter by a fixed number of positions in the alphabet.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>🐱 Built for secret agents and pixel lovers. 💎</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

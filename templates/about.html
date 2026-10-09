@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% set active_page = 'about' %}
+{% block title %}INTEL_SPEC // CAESAR ROT-N DOSSIER{% endblock %}
+
+{% block content %}
+<section class="cipher-hero-banner compact">
+    <h1 class="pixel-title-main">INTEL SPECIFICATION</h1>
+    <div class="vector-display-row">
+        <div class="vector-shift-huge compact">
+            <span class="v-letter">ROT</span>
+            <span class="v-arrow">&rarr;</span>
+            <span class="v-letter">26</span>
+        </div>
+    </div>
+</section>
+
+<section class="about-dossier-wrapper">
+    <div class="dossier-panel">
+        <div class="window-chrome">
+            <div class="window-title-bar">
+                <span class="panel-tag">&gt;_ CRYPTOGRAPHIC_HISTORICAL_DATA</span>
+                <span class="chrome-btn close">&times;</span>
+            </div>
+        </div>
+        <div class="panel-inner">
+            <h2 class="dossier-heading">01 // HISTORICAL MILITARY ORIGIN</h2>
+            <p>The Caesar cipher is documented as one of the foundational monoalphabetic substitution ciphers in military history. Utilized circa 58 BCE by <strong>Julius Caesar</strong> across Roman legions with a standard rotational offset of <code>K = 3</code>.</p>
+        </div>
+    </div>
+
+    <div class="dossier-panel">
+        <div class="window-chrome">
+            <div class="window-title-bar">
+                <span class="panel-tag">&gt;_ MATHEMATICAL_ALGEBRA</span>
+                <span class="chrome-btn close">&times;</span>
+            </div>
+        </div>
+        <div class="panel-inner">
+            <h2 class="dossier-heading">02 // MODULAR FORMULATION</h2>
+            <div class="formula-box">
+                <div class="f-row">ENCRYPTION: <code>C &equiv; (P + K) mod 26</code></div>
+                <div class="f-row">DECRYPTION: <code>P &equiv; (C - K) mod 26</code></div>
+            </div>
+            <p>Every token in the alphabet vector is mapped to integers in $\mathbb{Z}_{26}$. Non-alphabetic symbols bypass modular translation.</p>
+        </div>
+    </div>
+
+    <div class="dossier-panel warn-highlight">
+        <div class="window-chrome">
+            <div class="window-title-bar">
+                <span class="panel-tag">&gt;_ VULNERABILITY_ASSESSMENT</span>
+                <span class="chrome-btn close">&times;</span>
+            </div>
+        </div>
+        <div class="panel-inner">
+            <h2 class="dossier-heading pink">03 // KEYS-SPACE EXHAUSTION &amp; FREQUENCY ANALYSIS</h2>
+            <p>With only 25 non-trivial rotations, any intercepted transmission can be cracked instantaneously via brute-force or unigram frequency correlation (specifically analyzing frequencies of <code>E (12.7%)</code>, <code>T (9.1%)</code>, <code>A (8.2%)</code>).</p>
+            <div class="notice-red">WARNING: CLASSICAL CIPHERS MUST NEVER BE DEPLOYED FOR SECURING SENSITIVE MODERN DATA.</div>
+        </div>
+    </div>
+</section>
+{% endblock %}
