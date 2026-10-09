@@ -1,66 +1,73 @@
 {% extends 'base.html' %}
 {% set active_page = 'about' %}
-{% block title %}О ПРОЕКТЕ // 404 ARCHIVE DOSSIER{% endblock %}
+{% block title %}CIPHER_OS // THREAT_DOSSIER{% endblock %}
 
 {% block content %}
-<section class="hero-glitch-poster" style="padding-bottom: 10px;">
-    <div class="top-crosshair-row">
-        <div class="square-cross-box">&#9747;</div>
-    </div>
-    <div class="hero-oshbka-row">
-        <h2 class="oshbka-title">АРХИВ</h2>
-        <span class="oshbka-x-box">&#9746;</span>
-    </div>
-    <div class="hero-sub-row" style="margin-top: 10px;">
-        <div class="sub-text-left">
-            <h3 class="motivation-white-text">ШИФР ЦЕЗАРЯ</h3>
-            <h3 class="ne-naydena-pink-text">ИСТОРИЯ И КРИПТОАНАЛИЗ</h3>
+<div class="tactical-grid-layout">
+    <div class="column-left">
+        <div class="card-login-style">
+            <div class="login-header-row">
+                <span class="login-label">DOSSIER:</span>
+                <span class="status-access-denied" style="font-size: 1.1rem; letter-spacing: 2px;">CAESAR ROT-26 SPEC</span>
+            </div>
+            <div class="login-actions-row">
+                <span class="btn-bracket-cmd active">[HISTORICAL]</span>
+                <span class="btn-bracket-cmd">[MATHEMATICAL]</span>
+                <span class="btn-bracket-cmd">[VULNERABILITY]</span>
+            </div>
         </div>
-        <div class="sub-triangle-right">&#9650;</div>
-    </div>
-</section>
 
-<section class="poster-windows-deck">
-    <div class="retro-window main-cipher-window">
-        <div class="window-title-bar">
-            <span class="w-title-text">ИСТОРИЧЕСКАЯ СПРАВКА ☒</span>
-            <span class="w-close-box">&#9746;</span>
+        <div class="card-shell-console">
+            <div class="shell-script-text">
+                <div class="shell-line shell-cmd">$ ./INSPECT_ALGORITHM <span class="param-red">--ANALYSIS</span></div>
+                <div class="shell-line">[ ORIGIN ] JULIUS CAESAR (58 BCE) // ROMAN LEGIONS</div>
+                <div class="shell-line">[ ENCRYPTION ] C &equiv; (P + K) mod 26</div>
+                <div class="shell-line">[ DECRYPTION ] P &equiv; (C - K) mod 26</div>
+                <div class="shell-line param-red">[ ENTROPY ] 25 DISCRETE KEYS &approx; 4.6 BITS</div>
+                <div class="shell-line">[ VULNERABILITY ] EXHAUSTIVE KEYS SEARCH IN &lt; 0.001 MS</div>
+            </div>
+
+            <div class="shell-bottom-notes">
+                <span class="comment-line">// FREQUENCY ATTACK: UNIGRAM E (12.7%), T (9.1%), A (8.2%)</span>
+                <span class="comment-line">// ADVISORY: NEVER DEPLOY FOR SENSITIVE MODERN DATA</span>
+                <span class="comment-line param-red">&gt; RECOMMENDATION: AES-256-GCM / CHACHA20</span>
+            </div>
         </div>
-        <div class="window-inner-content">
-            <div class="about-card-text">
-                <p>Шифр Цезаря — один из древнейших методов шифрования, названный в честь Юлия Цезаря (58 г. до н.э.), который использовал сдвиг на 3 символа для военной переписки.</p>
-                <div class="code-math-box">
-                    <span>ШИФРОВАНИЕ: C &equiv; (P + K) mod 26</span><br>
-                    <span>РАСШИФРОВАНИЕ: P &equiv; (C - K) mod 26</span>
+
+        <div class="stream-code-footer">
+            <div class="stream-code-line">&gt;&gt;&gt; IMPORT SPECS</div>
+            <div class="stream-code-line">&gt;&gt;&gt; AUDIT COMPLETE</div>
+            <div class="crosshair-divider">+</div>
+        </div>
+    </div>
+
+    <div class="column-right">
+        <div class="card-wireframe-display">
+            <div class="hazard-stripes-banner"></div>
+            <div class="card-404-title">INTELLIGENCE_SPEC</div>
+            <h2 class="card-404-heading">
+                SYSTEM AUDIT:<br>
+                CRYPTOGRAPHIC<br>
+                RISK CRITICAL
+            </h2>
+            <div class="hazard-stripes-banner small"></div>
+
+            <div class="system-corrupted-row" style="margin-top: 20px;">
+                ATTACK VECTOR: UNIGRAM FREQUENCY
+            </div>
+
+            <div class="dual-meter-bars">
+                <div class="meter-bar filled">
+                    <div class="meter-inner-fill" style="width: 100%; background: var(--crimson-red);"></div>
                 </div>
-                <p>Каждая буква алфавита сдвигается на фиксированное число позиций <strong>K &isin; [1..25]</strong>.</p>
+                <div class="meter-bar outline"></div>
             </div>
-        </div>
-    </div>
 
-    <div class="retro-window modal-popup-window">
-        <div class="window-title-bar">
-            <span class="w-title-text">ВЗЛОМ И БЕЗОПАСНОСТЬ ☒</span>
-            <span class="w-close-box">&#9746;</span>
-        </div>
-        <div class="modal-inner-content">
-            <div class="modal-warning-triangle">&#9888;</div>
-            <div class="modal-quote-block">
-                <p class="q-lead" style="color: #ff2a85;">ВНИМАНИЕ!</p>
-                <p class="q-line" style="font-size: 0.95rem; line-height: 1.4;">Шифр Цезаря тривиально взламывается методом <strong>частотного анализа</strong>.</p>
-            </div>
-            <div class="freq-token-list">
-                <span class="f-tag">E: 12.7%</span>
-                <span class="f-tag">T: 9.1%</span>
-                <span class="f-tag">A: 8.2%</span>
-                <span class="f-tag">O: 7.5%</span>
-            </div>
-            <div class="modal-action-row" style="margin-top: 15px;">
-                <a href="/" class="pink-ok-button" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                    <span>В КОНСОЛЬ</span>
-                </a>
+            <div class="wireframe-bottom-glyphs">
+                <span class="crosshair-marker">+</span>
+                <span class="diamond-group">&loz; &loz; &loz;</span>
             </div>
         </div>
     </div>
-</section>
+</div>
 {% endblock %}

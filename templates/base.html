@@ -3,123 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ERROR 404 // МОТИВАЦИЯ НЕ НАЙДЕНА{% endblock %}</title>
+    <title>{% block title %}CIPHER_OS // ACCESS_TERMINAL{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="glitch-404-theme">
-    <!-- Cyber Grid & Scanline Background Overlays -->
-    <div class="cyber-grid-overlay"></div>
-    <div class="screen-scanline"></div>
-    <div class="glitch-particles-bg"></div>
+<body>
+    <!-- Grunge CRT Grain & Coordinate Crosshairs Overlay -->
+    <div class="grunge-grain-overlay"></div>
+    <div class="crt-scanlines"></div>
 
-    <!-- Transition Curtain -->
+    <!-- Cyber Transition Overlay -->
     <div class="cyber-transition-curtain" id="cyber-curtain">
         <div class="curtain-line"></div>
-        <div class="curtain-glitch-text">&gt;&gt;&gt; RELOADING MOTIVATION.EXE...</div>
+        <div class="curtain-glitch-text">AUTHENTICATING CIPHER SUBSYSTEM...</div>
     </div>
 
-    <div class="poster-canvas-frame">
-        <!-- ====================================================================
-             POSTER TOP HEADER
-             ==================================================================== -->
-        <header class="poster-header-404">
-            <!-- Left: ERROR 404 / PAGE NOT FOUND -->
-            <div class="hdr-left">
-                <div class="hdr-error-tag">
-                    <span class="warning-triangle">&#9650;</span>
-                    <span class="err-text">ERROR 404</span>
+    <div class="terminal-container">
+        <!-- TOP TELEMETRY HUD -->
+        <header class="tactical-hud-header">
+            <div class="hud-left-meta">
+                <div class="source-block">
+                    <span class="source-label">SOURCE: CIPHER_SYS</span>
+                    <div class="grid-brackets">
+                        <span>┌ ┐ ┌ ┐</span>
+                        <span>└ ┘ └ ┘</span>
+                    </div>
                 </div>
-                <div class="hdr-sub-tag">PAGE NOT FOUND // CIPHER WORKSTATION</div>
-            </div>
-
-            <!-- Center: Pixel Art Dead File Icon [ X X :( ] -->
-            <div class="hdr-center-file">
-                <div class="pixel-dead-sheet">
-                    <div class="sheet-corner"></div>
-                    <div class="dead-eyes">X&nbsp;&nbsp;X</div>
-                    <div class="dead-mouth">^(</div>
-                    <div class="pink-glitch-flake g-flake-1"></div>
-                    <div class="pink-glitch-flake g-flake-2"></div>
+                <div class="uplink-block">
+                    <span class="uplink-status">[UPLINK ESTABLISHED]</span>
+                    <span class="uplink-sub">[ROT-26 SUBSYSTEM]</span>
                 </div>
             </div>
 
-            <!-- Right: SOMETHING WENT WRONG & CONTROLS -->
-            <div class="hdr-right">
-                <div class="hdr-wrong-row">
-                    <span>SOMETHING WENT WRONG</span>
-                    <span class="square-x">&#9746;</span>
-                </div>
-                <div class="hdr-time-meta">
-                    <span>TIME: 4:04 AM</span>
-                    <span>DATE: TODAY</span>
-                </div>
-                <div class="hdr-nav-row">
-                    <a href="/" class="glitch-nav-link {{ 'active' if active_page == 'home' }}">[CONSOLE]</a>
-                    <a href="/about" class="glitch-nav-link {{ 'active' if active_page == 'about' }}">[ABOUT]</a>
-                    <button class="sfx-toggle-btn" id="sfx-toggle" title="Toggle Audio">[SFX: ON]</button>
-                </div>
-            </div>
+            <!-- Mini Nav Bar + Sound Toggle -->
+            <nav class="hud-nav-bar">
+                <a href="/" class="nav-item {{ 'active' if active_page == 'home' }}">[TERMINAL]</a>
+                <a href="/about" class="nav-item {{ 'active' if active_page == 'about' }}">[INTEL_SPEC]</a>
+                <button class="sfx-toggle-btn" id="sfx-toggle" title="Toggle Sound">[SFX: ON]</button>
+            </nav>
         </header>
 
-        <!-- Vertical Rail along right border -->
-        <div class="vertical-rail-tag">
-            <span class="rail-text">LOADING MOTIVATION.EXE [|||||||||||||]</span>
-        </div>
-
-        <!-- ====================================================================
-             MAIN POSTER BODY
-             ==================================================================== -->
-        <main class="poster-main-content">
+        <!-- MAIN VIEWPORT -->
+        <main class="tactical-main">
             {% block content %}{% endblock %}
         </main>
 
-        <!-- ====================================================================
-             POSTER BOTTOM PROGRESS & STATUS FOOTER
-             ==================================================================== -->
-        <footer class="poster-footer-404">
-            <!-- Progress Bar: ПОИСК МОТИВАЦИИ... -->
-            <div class="search-progress-wrap">
-                <div class="progress-labels-row">
-                    <span class="p-search-text" id="progress-search-label">ПОИСК МОТИВАЦИИ...</span>
-                    <span class="p-search-percent" id="progress-search-pct">0%</span>
-                </div>
-                <div class="progress-track-border">
-                    <div class="progress-track-fill" id="progress-fill-bar"></div>
-                </div>
+        <!-- FOOTER STATUS -->
+        <footer class="tactical-footer">
+            <div class="footer-prompt">
+                <span class="prompt-sym">&gt;&gt;&gt;</span>
+                <span class="prompt-text">_SYSTEM_READY...</span>
             </div>
-
-            <!-- Bottom Metadata Status Row -->
-            <div class="status-footer-row">
-                <!-- Left: SYSTEM STATUS: UNSTABLE / BUT YOU GOT THIS ♥ -->
-                <div class="stat-left">
-                    <div class="sys-unstable-line">
-                        <span>SYSTEM STATUS:</span>
-                        <span class="neon-pink-text">UNSTABLE</span>
-                    </div>
-                    <div class="sys-heart-line">
-                        <span>BUT YOU GOT THIS</span>
-                        <span class="pixel-pink-heart">&#9829;</span>
-                    </div>
-                </div>
-
-                <!-- Center: Globe icon + RECONNECT WITH YOUR WHY >_ -->
-                <div class="stat-center">
-                    <div class="globe-icon-box">&#127760;</div>
-                    <div class="reconnect-text">
-                        <span>RECONNECT</span>
-                        <span>WITH YOUR WHY</span>
-                        <span class="prompt-caret">&gt;_</span>
-                    </div>
-                </div>
-
-                <!-- Right: Barcode + KEEP GOING.EXE -->
-                <div class="stat-right">
-                    <div class="pixel-barcode">||| | |||| | |||||| || | ||</div>
-                    <div class="keep-going-tag">KEEP GOING.EXE</div>
-                </div>
+            <div class="footer-glyphs">
+                <span class="crosshair-marker">+</span>
+                <span class="diamond-group">&loz; &loz; &loz;</span>
             </div>
         </footer>
     </div>
