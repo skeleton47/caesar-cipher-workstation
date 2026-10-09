@@ -1,33 +1,61 @@
-/* theme.js — Display Mode / CRT Palette Toggle (No Emojis) */
+/* ==========================================================================
+   DESIGN SYSTEM VERSION SWITCHER
+   Toggles between:
+     - Version 2.0: Neo-Brutalist (Paper Beige, Thick Black Strokes, Solid Accents)
+     - Version 1.0: Cyber-Glitch (Dark Grunge Slate, CRT Scanlines, Blood Crimson)
+   ========================================================================== */
+
 (function () {
-    const btn = document.getElementById('theme-toggle');
-    if (!btn) return;
+    const btn = document.getElementById('version-toggle');
+    const curtain = document.getElementById('cyber-curtain');
 
-    function updateLabel(isDark) {
-        btn.innerHTML = `<span class="mode-text">THEME: ${isDark ? 'CRT_DARK' : 'BLUEPRINT'}</span>`;
-    }
+    // Default to Neo-Brutalist per user design system request
+    const savedVer = localStorage.getItem('cipher-design-system');
+    let currentVer = savedVer ? savedVer : 'neo';
 
-    const saved = localStorage.getItem('cipher-theme');
-    // Default to dark cyber mode
-    const isDark = saved === 'light' ? false : true;
+    function setVersion(ver, playSound = false) {
+        currentVer = ver;
+        localStorage.setItem('cipher-design-system', ver);
 
-    if (isDark) {
-        document.body.setAttribute('data-theme', 'dark');
-    } else {
-        document.body.removeAttribute('data-theme');
-    }
-    updateLabel(isDark);
-
-    btn.addEventListener('click', () => {
-        const currentlyDark = document.body.getAttribute('data-theme') === 'dark';
-        if (currentlyDark) {
-            document.body.removeAttribute('data-theme');
-            localStorage.setItem('cipher-theme', 'light');
-            updateLabel(false);
+        if (curtain) {
+            curtain.classList.add('closing');
+            setTimeout(() => {
+                applyClasses(ver);
+                curtain.classList.remove('closing');
+                curtain.classList.add('opening');
+                setTimeout(() => curtain.classList.remove('opening'), 320);
+            }, 180);
         } else {
-            document.body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('cipher-theme', 'dark');
-            updateLabel(true);
+            applyClasses(ver);
         }
-    });
+
+        if (playSound && window.CyberSFX) {
+            CyberSFX.click();
+        }
+    }
+
+    function applyClasses(ver) {
+        if (ver === 'cyber') {
+            document.body.classList.remove('neo-brutalist-theme');
+            document.body.classList.add('brutalist-theme');
+            if (btn) btn.textContent = '[STYLE: CYBER-DARK]';
+        } else {
+            document.body.classList.remove('brutalist-theme');
+            document.body.classList.add('neo-brutalist-theme');
+            if (btn) btn.textContent = '[STYLE: NEO-BRUTALIST]';
+        }
+
+        // Notify other components (like wireframe canvas)
+        window.dispatchEvent(new CustomEvent('cipherThemeChanged', { detail: { theme: ver } }));
+    }
+
+    // Apply initial theme immediately
+    applyClasses(currentVer);
+
+    if (btn) {
+        btn.addEventListener('click', () => {
+            const nextVer = currentVer === 'neo' ? 'cyber' : 'neo';
+            setVersion(nextVer, true);
+        });
+    }
 })();

@@ -1,11 +1,12 @@
 /* ==========================================================================
-   BRUTALIST CIPHER CONTROLLER — ERROR_404
-   Handles Encrypt/Decrypt/Crack, Dynamic Terminal Logging, and Audio
+   NEO-BRUTALIST CIPHER CONTROLLER (VERSION 2.0 & 1.0 DUAL ENGINE)
+   Handles Encrypt/Decrypt/Crack, Real-time Logging, Step Flow & Audio
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const msgInput          = document.getElementById('message-input');
+    const charCounter       = document.getElementById('char-limit-count');
     const shiftInput        = document.getElementById('shift-value');
     const shiftMinus        = document.getElementById('shift-minus');
     const shiftPlus         = document.getElementById('shift-plus');
@@ -26,6 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
     ].filter(Boolean);
 
     let currentMode = 'encrypt';
+
+    // ─── Step Flow Manager (1 -> 2 -> 3) ─────────────────────────────────────
+    function setStep(stepNum) {
+        const s1 = document.getElementById('step-1-indicator');
+        const s2 = document.getElementById('step-2-indicator');
+        const s3 = document.getElementById('step-3-indicator');
+        if (s1) s1.classList.toggle('step-active', stepNum === 1);
+        if (s2) s2.classList.toggle('step-active', stepNum === 2);
+        if (s3) s3.classList.toggle('step-active', stepNum === 3);
+    }
 
     // ─── Tactical Toast ──────────────────────────────────────────────────────
     function showToast(text) {
@@ -50,12 +61,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ─── Character Limit Counter & Typing Input ──────────────────────────────
+    if (msgInput) {
+        const updateChars = () => {
+            if (charCounter) {
+                charCounter.textContent = `${msgInput.value.length} / 500`;
+            }
+        };
+        updateChars();
+        msgInput.addEventListener('input', () => {
+            updateChars();
+            setStep(1);
+        });
+    }
+
     // ─── Shift Controls ──────────────────────────────────────────────────────
     if (shiftMinus) {
         shiftMinus.addEventListener('click', () => {
             let v = parseInt(shiftInput.value) || 3;
             shiftInput.value = v > 1 ? v - 1 : 25;
             updateVector();
+            setStep(2);
             if (window.CyberSFX) CyberSFX.shift();
             logMessage(`> PARAM_UPDATE: SHIFT K=${shiftInput.value}`);
         });
@@ -66,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let v = parseInt(shiftInput.value) || 3;
             shiftInput.value = v < 25 ? v + 1 : 1;
             updateVector();
+            setStep(2);
             if (window.CyberSFX) CyberSFX.shift();
             logMessage(`> PARAM_UPDATE: SHIFT K=${shiftInput.value}`);
         });
@@ -78,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (v < 1) shiftInput.value = 1;
                 if (v > 25) shiftInput.value = 25;
                 updateVector();
+                setStep(2);
             }
         });
     }
@@ -88,19 +116,32 @@ document.addEventListener('DOMContentLoaded', () => {
             modeButtons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentMode = btn.dataset.mode;
+            const isNeo = document.body.classList.contains('neo-brutalist-theme');
 
             if (currentMode === 'encrypt') {
-                if (actionBtnText) actionBtnText.textContent = 'INITIALIZE CIPHER EXECUTION';
-                if (deckStatusAlert) deckStatusAlert.innerHTML = '<span class="red-glitch-text">ACCESS DENIED</span>';
-                if (meshBadge) meshBadge.textContent = 'NOT FOUND_404';
+                if (actionBtnText) actionBtnText.textContent = isNeo ? 'EXECUTE ENCRYPTION (ROT-N)' : 'INITIALIZE CIPHER EXECUTION';
+                if (deckStatusAlert) {
+                    deckStatusAlert.innerHTML = isNeo
+                        ? '<div class="alert-banner-block banner-warning"><span class="banner-icon">&#9888;</span><span class="banner-msg">STATUS: READY FOR ROT-N TRANSFORMATION</span></div>'
+                        : '<span class="red-glitch-text">ACCESS DENIED</span>';
+                }
+                if (meshBadge) meshBadge.textContent = isNeo ? 'NEW: IDENTITY MESH' : 'NOT FOUND_404';
             } else if (currentMode === 'decrypt') {
-                if (actionBtnText) actionBtnText.textContent = 'EXECUTE REVERSE DECRYPTION';
-                if (deckStatusAlert) deckStatusAlert.innerHTML = '<span class="red-glitch-text">DECRYPT_STREAM</span>';
-                if (meshBadge) meshBadge.textContent = 'DECRYPTED_200';
+                if (actionBtnText) actionBtnText.textContent = isNeo ? 'EXECUTE REVERSE DECRYPTION' : 'EXECUTE REVERSE DECRYPTION';
+                if (deckStatusAlert) {
+                    deckStatusAlert.innerHTML = isNeo
+                        ? '<div class="alert-banner-block banner-danger"><span class="banner-icon">&#9888;</span><span class="banner-msg">STATUS: DECRYPTION STREAM ARMED</span></div>'
+                        : '<span class="red-glitch-text">DECRYPT_STREAM</span>';
+                }
+                if (meshBadge) meshBadge.textContent = isNeo ? 'REVERSE DECRYPT' : 'DECRYPTED_200';
             } else if (currentMode === 'crack') {
-                if (actionBtnText) actionBtnText.textContent = 'LAUNCH CONSCIOUSNESS BRUTE-FORCE';
-                if (deckStatusAlert) deckStatusAlert.innerHTML = '<span class="red-glitch-text">CRACK_ARMED</span>';
-                if (meshBadge) meshBadge.textContent = 'EXPLOIT_ACTIVE';
+                if (actionBtnText) actionBtnText.textContent = isNeo ? 'LAUNCH FREQUENCY CRACK' : 'LAUNCH CONSCIOUSNESS BRUTE-FORCE';
+                if (deckStatusAlert) {
+                    deckStatusAlert.innerHTML = isNeo
+                        ? '<div class="alert-banner-block banner-warning"><span class="banner-icon">&#9888;</span><span class="banner-msg">STATUS: UNIGRAM FREQUENCY READY</span></div>'
+                        : '<span class="red-glitch-text">CRACK_ARMED</span>';
+                }
+                if (meshBadge) meshBadge.textContent = isNeo ? 'FREQUENCY EXPLOIT' : 'EXPLOIT_ACTIVE';
             }
 
             if (window.CyberSFX) CyberSFX.click();
@@ -122,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultFieldBlock.classList.remove('hidden');
             resultFieldBlock.classList.add('revealed');
         }
+        setStep(3);
     }
 
     // ─── Live Dynamic Logging to Terminal Box ────────────────────────────────
@@ -155,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const shift = parseInt(shiftInput ? shiftInput.value : 3) || 3;
 
         if (!text) {
-            showToast('MEMORY BLOCK EMPTY // ENTER DATA');
+            showToast('PAYLOAD EMPTY // ENTER DATA');
             if (msgInput) msgInput.focus();
             return;
         }
@@ -173,14 +215,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.results && data.results.length > 0) {
                     const best = data.results[0];
                     if (resultOutput) {
-                        resultOutput.textContent = `[SHIFT ${best.shift}] ${best.text}`;
+                        resultOutput.textContent = `[KEY: ${best.shift}] ${best.text}`;
                     }
                     if (shiftInput) {
                         shiftInput.value = best.shift;
                         updateVector();
                     }
                     logMessage(`[ SUCCESS ] KEY RECOVERED: K=${best.shift} (SCORE: ${best.score})`, true);
-                    logMessage(`> SOUL CONSCIOUSNESS RESTORED`);
+                    logMessage(`> FREQUENCY ANALYSIS CONVERGED`);
                 }
             } else {
                 const endpoint = currentMode === 'encrypt' ? '/api/encrypt' : '/api/decrypt';
@@ -193,8 +235,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (resultOutput) {
                     resultOutput.textContent = data.result;
                 }
-                logMessage(`[ OK ] ROT-${shift} OPERATION RETURNED VALID STREAM`);
-                logMessage(`// PAYLOAD BUFFER LOADED TO MEMORY`);
+                logMessage(`[ OK ] ROT-${shift} TRANSFORMATION PROCESSED`);
+                logMessage(`// PAYLOAD READY IN INTERCEPT BUFFER`);
             }
 
             revealResult();
@@ -247,4 +289,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial setup
     updateVector();
     hideResult();
+    setStep(1);
 });

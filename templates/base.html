@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CIPHER // ERROR_404 TERMINAL{% endblock %}</title>
+    <title>{% block title %}NEO-BRUTALIST CIPHER SYSTEM // V2.0{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Public+Sans:wght@700;900&family=Chakra+Petch:wght@500;700&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="brutalist-theme">
-    <!-- Grunge Paper & Grain Overlay -->
+<body class="neo-brutalist-theme">
+    <!-- Background textures -->
     <div class="grunge-texture-overlay"></div>
     <div class="screen-scanline"></div>
 
-    <!-- Cyber Transition Curtain -->
+    <!-- Transition Curtain -->
     <div class="cyber-transition-curtain" id="cyber-curtain">
         <div class="curtain-line"></div>
-        <div class="curtain-glitch-text">&gt;&gt;&gt; REFORMATTING CONSCIOUSNESS...</div>
+        <div class="curtain-glitch-text">&gt;&gt;&gt; COMPILING DESIGN TOKENS...</div>
     </div>
 
     <div class="poster-container">
@@ -25,27 +25,28 @@
         <header class="poster-header">
             <div class="header-left-meta">
                 <div class="source-tag-group">
-                    <span class="source-pill">SOURCE: ERROR</span>
+                    <span class="source-pill">SYS: V2.0 NEO-BRUTALIST</span>
                     <div class="bracket-cluster">
                         <span class="b-char">&lceil;</span><span class="b-char">&rceil;</span>
                         <span class="b-char">&lfloor;</span><span class="b-char">&rfloor;</span>
                     </div>
                 </div>
                 <div class="uplink-fail-text">
-                    <span class="fail-line">[UPLINK: ENCRYPTED]</span>
-                    <span class="fail-line">[PORT: 5000 // ACTIVE]</span>
+                    <span class="fail-line">[STYLE: HIGH CONTRAST]</span>
+                    <span class="fail-line">[PORT: 5000 // STRICT GRID]</span>
                 </div>
             </div>
 
-            <!-- Page Navigation -->
+            <!-- Page Navigation & Controls -->
             <nav class="poster-nav">
                 <a href="/" class="p-nav-link {{ 'active' if active_page == 'home' }}">[CIPHER_CONSOLE]</a>
-                <a href="/about" class="p-nav-link {{ 'active' if active_page == 'about' }}">[MEMORY_DOSSIER]</a>
+                <a href="/about" class="p-nav-link {{ 'active' if active_page == 'about' }}">[DESIGN_SYSTEM]</a>
+                <button class="theme-version-btn" id="version-toggle" title="Switch Design System Version">[VER 2.0: NEO-BRUTALIST]</button>
                 <button class="sfx-toggle-btn" id="sfx-toggle" title="Toggle Audio">[SFX: ON]</button>
             </nav>
         </header>
 
-        <!-- MAIN POSTER CONTENT -->
+        <!-- MAIN CONTENT -->
         <main class="poster-body">
             {% block content %}{% endblock %}
         </main>
@@ -53,17 +54,17 @@
         <!-- BOTTOM FOOTER -->
         <footer class="poster-footer">
             <div class="footer-prompt-block">
-                <div class="script-line">&gt;&gt;&gt; IMPORT SOCKET</div>
-                <div class="script-line">&gt;&gt;&gt; IMPORT CIPHER</div>
-                <div class="script-line red-highlight">&gt;&gt;&gt; DATA CORRUPTED</div>
+                <div class="script-line">&gt;&gt;&gt; FOUNDATIONS: COLOR TOKENS LOADED</div>
+                <div class="script-line">&gt;&gt;&gt; ACCENT TEAL #00C2CB // MAGENTA #FF00FF // YELLOW #FFD700</div>
+                <div class="script-line red-highlight">&gt;&gt;&gt; USAGE RULE: THICK BLACK STROKES (3PX)</div>
                 <div class="script-line retrying-line">
-                    <span>&gt;&gt;&gt; _RETRYING...</span>
+                    <span>&gt;&gt;&gt; FOCUS ALWAYS VISIBLE</span>
                     <span class="crosshair-icon">+</span>
                 </div>
             </div>
 
             <div class="footer-system-block">
-                <div class="sys-corrupt-label">SYSTEM: USER DATA CORRUPTED</div>
+                <div class="sys-corrupt-label">DESIGN SPEC: BOLD. LOUD. SYSTEMATIC.</div>
                 <div class="dual-progress-bars">
                     <div class="d-bar top-bar"><div class="bar-fill fill-75"></div></div>
                     <div class="d-bar bottom-bar"><div class="bar-fill fill-40"></div></div>
@@ -81,6 +82,7 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/sfx.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

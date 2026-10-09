@@ -1,38 +1,138 @@
 {% extends 'base.html' %}
 {% set active_page = 'home' %}
-{% block title %}ERROR_404 // IDENTITY_CIPHER_CORE{% endblock %}
+{% block title %}NEO-BRUTALIST DESIGN SYSTEM // CAESAR CIPHER ENGINE{% endblock %}
 
 {% block content %}
+<!-- ====================================================================
+     TOP SYSTEM BANNER: NEO-BRUTALIST USAGE RULES & SPACING RULER
+     ==================================================================== -->
+<section class="neo-system-hero">
+    <div class="neo-hero-left">
+        <h1 class="neo-main-title">NEO-BRUTALIST<br><span class="accent-text">DESIGN SYSTEM</span></h1>
+        <p class="neo-subtitle">BOLD. LOUD. SYSTEMATIC. USABLE.</p>
+        <div class="neo-breadcrumbs">
+            <span>WORKSPACE</span> &gt; <span>CRYPTOGRAPHY</span> &gt; <span class="active-crumb">CAESAR WORKSTATION</span>
+        </div>
+    </div>
+
+    <div class="neo-hero-right">
+        <!-- Usage Rules Box matching the image -->
+        <div class="usage-rules-card">
+            <div class="rules-header-line">
+                <span class="rules-tag">USAGE RULES:</span>
+                <span class="rules-desc">THICK BLACK STROKES. SQUARED CORNERS. LIMITED RADII. SOLID ACCENT BLOCKS. STRICT GRID ALIGNMENT. HIGH CONTRAST. FOCUS ALWAYS VISIBLE.</span>
+            </div>
+            <div class="rules-pills-row">
+                <span class="num-pill pill-0">0</span>
+                <span class="num-pill pill-12 active">12</span>
+                <span class="num-pill pill-24">24</span>
+            </div>
+        </div>
+
+        <!-- Spacing Scale Ruler Graphic matching Foundations -->
+        <div class="ruler-scale-bar">
+            <div class="ruler-ticks">
+                <div class="ruler-item"><span class="r-mark tall"></span><span class="r-label">0</span></div>
+                <div class="ruler-item"><span class="r-mark short"></span></div>
+                <div class="ruler-item"><span class="r-mark mid"></span><span class="r-label">4</span></div>
+                <div class="ruler-item"><span class="r-mark short"></span></div>
+                <div class="ruler-item"><span class="r-mark mid"></span><span class="r-label">8</span></div>
+                <div class="ruler-item"><span class="r-mark short"></span></div>
+                <div class="ruler-item"><span class="r-mark tall"></span><span class="r-label">12</span></div>
+                <div class="ruler-item"><span class="r-mark short"></span></div>
+                <div class="ruler-item"><span class="r-mark mid"></span><span class="r-label">16</span></div>
+                <div class="ruler-item"><span class="r-mark short"></span></div>
+                <div class="ruler-item"><span class="r-mark tall"></span><span class="r-label">24</span></div>
+                <div class="ruler-item"><span class="r-mark short"></span></div>
+                <div class="ruler-item"><span class="r-mark mid"></span><span class="r-label">32</span></div>
+                <div class="ruler-item"><span class="r-mark short"></span></div>
+                <div class="ruler-item"><span class="r-mark tall"></span><span class="r-label">48</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ====================================================================
+     STEPS WORKFLOW BAR (1 -> 2 -> 3)
+     ==================================================================== -->
+<div class="neo-steps-flow">
+    <div class="step-badge step-active" id="step-1-indicator">
+        <span class="step-num">1.</span>
+        <span class="step-label">STEP ONE: INPUT PAYLOAD</span>
+    </div>
+    <div class="step-arrow">&rarr;</div>
+    <div class="step-badge" id="step-2-indicator">
+        <span class="step-num">2.</span>
+        <span class="step-label">STEP TWO: KEY SHIFT</span>
+    </div>
+    <div class="step-arrow">&rarr;</div>
+    <div class="step-badge" id="step-3-indicator">
+        <span class="step-num">3.</span>
+        <span class="step-label">STEP THREE: EXECUTE</span>
+    </div>
+</div>
+
+<!-- ====================================================================
+     MAIN 2-COLUMN BRUTALIST GRID
+     ==================================================================== -->
 <div class="poster-grid-layout">
-    <!-- ====================================================================
-         LEFT COLUMN: CIPHER DECK & BRUTALIST TERMINAL LOGS
-         ==================================================================== -->
+    <!-- ================================================================
+         LEFT COLUMN: INPUT CONTROLLER & TERMINAL STREAM
+         ================================================================ -->
     <div class="col-left">
-        <!-- 01. LOGIN / INPUT DECK BOX -->
+        <!-- 01. CIPHER INPUT DECK -->
         <div class="brutalist-card input-deck-card">
+            <!-- Tilted sticker badge matching poster -->
+            <div class="sticker-badge sticker-left">KEEP HIT AREA 44PX</div>
+
             <div class="card-inner-pad">
+                <!-- Color Tokens preview strip -->
+                <div class="color-tokens-strip">
+                    <span class="token-swatch sw-teal" title="Accent Teal #00C2CB"></span>
+                    <span class="token-swatch sw-magenta" title="Accent Magenta #FF00FF"></span>
+                    <span class="token-swatch sw-yellow" title="Accent Yellow #FFD700"></span>
+                    <span class="token-swatch sw-black" title="Black #000000"></span>
+                    <span class="token-swatch sw-white" title="White #FFFFFF"></span>
+                    <span class="token-swatch sw-beige" title="Paper Beige #F5F5DC"></span>
+                    <span class="token-spec-tag">FOUNDATIONS: 6 TOKENS</span>
+                </div>
+
+                <!-- TABS: ENCRYPT / DECRYPT / CRACK -->
+                <div class="deck-actions-cluster">
+                    <button class="bracket-action-btn tab-teal active" id="btn-encrypt" data-mode="encrypt">
+                        <span class="tab-dot">&bull;</span> TAB 1: ENCRYPT
+                    </button>
+                    <button class="bracket-action-btn tab-magenta" id="btn-decrypt" data-mode="decrypt">
+                        <span class="tab-dot">&bull;</span> TAB 2: DECRYPT
+                    </button>
+                    <button class="bracket-action-btn tab-yellow" id="btn-crack" data-mode="crack">
+                        <span class="tab-dot">&bull;</span> TAB 3: CRACK
+                    </button>
+                </div>
+
+                <!-- TEXT INPUT AREA -->
                 <div class="deck-field-row">
-                    <label class="deck-label" for="message-input">LOGIN:</label>
+                    <div class="input-header-row">
+                        <label class="deck-label" for="message-input">MESSAGE PAYLOAD:</label>
+                        <span class="char-limit-badge" id="char-limit-count">11 / 500</span>
+                    </div>
                     <div class="deck-input-wrap">
-                        <textarea id="message-input" placeholder="ENTER SECRET PAYLOAD..." maxlength="500">HELLO WORLD</textarea>
+                        <textarea id="message-input" placeholder="Type secret text here (bubble SFX on type)..." maxlength="500">HELLO WORLD</textarea>
+                    </div>
+                    <span class="helper-text-label">Helper Text: Plaintext or encrypted string for Caesar rotation.</span>
+                </div>
+
+                <!-- ALERT BANNER -->
+                <div class="deck-alert-row" id="deck-status-alert">
+                    <div class="alert-banner-block banner-warning">
+                        <span class="banner-icon">&#9888;</span>
+                        <span class="banner-msg">STATUS: READY FOR ROT-N TRANSFORMATION</span>
                     </div>
                 </div>
 
-                <!-- ACCESS DENIED ALERT -->
-                <div class="deck-alert-row" id="deck-status-alert">
-                    <span class="red-glitch-text">ACCESS DENIED</span>
-                </div>
-
-                <!-- BRUTALIST ACTION BUTTONS -->
-                <div class="deck-actions-cluster">
-                    <button class="bracket-action-btn active" id="btn-encrypt" data-mode="encrypt">[ENCRYPT]</button>
-                    <button class="bracket-action-btn" id="btn-decrypt" data-mode="decrypt">[DECRYPT]</button>
-                    <button class="bracket-action-btn" id="btn-crack" data-mode="crack">[CRACK]</button>
-                </div>
-
-                <!-- ROTATION KEY CONTROLS -->
+                <!-- ROTATION KEY (STEPPER) -->
                 <div class="deck-shift-ctrl">
-                    <span class="ctrl-tag">ROT_KEY:</span>
+                    <span class="ctrl-tag">ROTATION KEY:</span>
                     <button id="shift-minus" class="shift-bracket-btn" title="Decrease">&minus;</button>
                     <input type="number" id="shift-value" value="3" min="1" max="25">
                     <button id="shift-plus" class="shift-bracket-btn" title="Increase">&#43;</button>
@@ -40,58 +140,52 @@
                 </div>
 
                 <div class="deck-sub-meta">
-                    <span>MEMORY BLOCKED</span>
-                    <span>CPU OVERLOADED</span>
+                    <span>ELEVATION: SHADOW-1 (4PX)</span>
+                    <span>FOCUS: ALWAYS VISIBLE</span>
                 </div>
             </div>
         </div>
 
-        <!-- 02. SYSTEM ERROR LOG TERMINAL BOX -->
+        <!-- 02. DATA DISPLAY: AUDIT LOG TABLE -->
         <div class="brutalist-card terminal-logs-card">
+            <div class="table-header-bar">
+                <span class="th-title">EVENT STREAM [REAL-TIME AUDIT]</span>
+                <span class="th-badge">[COLUMN 1: LOG]</span>
+            </div>
             <div class="chamfered-border-wrap">
                 <div class="terminal-log-content" id="terminal-log-stream">
-                    <div class="log-line command-line">$ ./INIT_SELF --REBOOT</div>
-                    <div class="log-line error-line">[ ERROR ] IDENTITY MODULE FAILED TO LOAD</div>
-                    <div class="log-line error-line">[ ERROR ] NO MATCHING USER CONFIGURATION FOUND</div>
-                    <div class="log-line warn-line">[ SYSTEM WARNING ] AUTHENTICATION LOOP EXCEEDED THRESHOLD</div>
-                    <div class="log-line prompt-line">&gt; TRACE_USER --ID=UNKNOWN</div>
-                    <div class="log-line dim-line">&gt; RESPONSE: 0x00000000 (NULL)</div>
-                    <div class="log-line error-line">[ FATAL ERROR ]</div>
-                    <div class="log-line dim-line">// SELF-RECOGNITION SUBROUTINE RETURNED VOID</div>
-                    <div class="log-line red-log">// SOUL REFERENCE NOT FOUND IN MEMORY</div>
-                    <div class="log-line dim-line">// EMOTIONAL CORE CHECKSUM INVALID</div>
-                    <div class="log-line prompt-line red-log">&gt; REBOOT --SOUL</div>
-                    <div class="log-line dim-line">&#9746; FAILED: SOUL PARTITION NOT MOUNTED</div>
-                    <div class="log-line dim-line">&#9746; SUGGESTION: REFORMAT CONSCIOUSNESS</div>
-                    <div class="log-line prompt-line">&gt; LOGOUT --PERMANENTLY</div>
-                    <div class="log-line dim-line">STATUS: OFFLINE</div>
-                    <div class="log-line dim-line">// END_OF_SELF</div>
+                    <div class="log-line command-line">$ ./LOAD_SYSTEM --THEME=NEO_BRUTALIST</div>
+                    <div class="log-line error-line">[ INIT ] FOUNDATIONS: TOKENS INITIALIZED</div>
+                    <div class="log-line warn-line">[ RULES ] THICK BLACK STROKES (3PX) ENFORCED</div>
+                    <div class="log-line prompt-line">&gt; VERIFY_COMPONENTS: BUTTONS, TABS, INPUTS</div>
+                    <div class="log-line dim-line">&gt; KEYSPACE: MODULO 26 RING ACTIVE</div>
+                    <div class="log-line red-log">[ SYSTEM ] AWAITING EXECUTION TRIGGER</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ====================================================================
-         RIGHT COLUMN: 3D WIREFRAME HEAD CARD & DECRYPTED OUTPUT
-         ==================================================================== -->
+    <!-- ================================================================
+         RIGHT COLUMN: 3D WIREFRAME ENGINE & INTERCEPTED RESULT
+         ================================================================ -->
     <div class="col-right">
         <div class="brutalist-card identity-mesh-card">
-            <!-- Top Diagonal Hazard Hash Stripes -->
-            <div class="diagonal-hazard-bar top-stripes"></div>
+            <!-- Tilted sticker badge on top right -->
+            <div class="sticker-badge sticker-right">FOCUS ALWAYS VISIBLE</div>
 
             <!-- Card Header -->
             <div class="mesh-card-header">
-                <span class="header-red-badge" id="mesh-header-badge">NOT FOUND_404</span>
+                <span class="header-red-badge" id="mesh-header-badge">NEW: IDENTITY MESH</span>
+                <span class="header-sub-tag">0 - 12 - 24 RADII</span>
             </div>
 
             <!-- Massive Title Text -->
             <div class="mesh-title-block">
-                <h1 class="mesh-main-heading">ERROR: IDENTITY</h1>
-                <h2 class="mesh-main-heading">COULD NOT</h2>
-                <h2 class="mesh-main-heading">BE VERIFIED</h2>
+                <h2 class="mesh-main-heading">NEO-BRUTALIST</h2>
+                <h2 class="mesh-main-heading accent-subheading">VISUAL ENGINE</h2>
             </div>
 
-            <!-- Second Hazard Stripe Divider -->
+            <!-- Hazard Stripe Divider -->
             <div class="diagonal-hazard-bar mid-stripes"></div>
 
             <!-- 3D Humanoid Wireframe Canvas with Censor Bar -->
@@ -101,21 +195,28 @@
 
             <!-- Intercepted Output Box (Hidden until execution) -->
             <div class="result-payload-block hidden" id="result-field-block">
+                <div class="alert-banner-block banner-success">
+                    <span class="banner-icon">&#10004;</span>
+                    <span class="banner-msg">OPERATION EXECUTED SUCCESSFULLY</span>
+                </div>
                 <div class="payload-header-row">
                     <span class="payload-tag">[INTERCEPTED_PAYLOAD]</span>
-                    <button class="bracket-action-btn mini-btn" id="copy-btn" title="Copy Result">[COPY]</button>
+                    <button class="bracket-action-btn mini-btn copy-btn-highlight" id="copy-btn" title="Copy Result">
+                        &#128203; [COPY TO CLIPBOARD]
+                    </button>
                 </div>
                 <div class="payload-text-box" id="result-output">
                     <!-- Populated via user click -->
                 </div>
             </div>
 
-            <!-- Execute Trigger Bar -->
+            <!-- Primary Execute Trigger Bar -->
             <div class="execute-trigger-bar">
-                <button id="action-btn" class="big-execute-btn">
-                    <span class="ex-bracket">[</span>
+                <div class="sticker-primary-tag">ONE PRIMARY ACTION</div>
+                <button id="action-btn" class="big-execute-btn neo-primary-btn">
+                    <span class="ex-arrow">&blacktriangleright;</span>
                     <span class="ex-text" id="action-btn-text">INITIALIZE CIPHER EXECUTION</span>
-                    <span class="ex-bracket">]</span>
+                    <span class="ex-arrow">&blacktriangleright;</span>
                 </button>
             </div>
         </div>

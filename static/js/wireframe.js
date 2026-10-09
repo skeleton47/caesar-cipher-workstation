@@ -172,9 +172,11 @@
             };
         });
 
+        const isNeo = document.body.classList.contains('neo-brutalist-theme');
+
         // Draw wireframe lines
-        ctx.strokeStyle = 'rgba(238, 233, 220, 0.45)'; // Off-white cream lines
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = isNeo ? '#000000' : 'rgba(238, 233, 220, 0.45)';
+        ctx.lineWidth = isNeo ? 1.4 : 1;
 
         ctx.beginPath();
         edges.forEach(([i, j]) => {
@@ -192,40 +194,61 @@
         ctx.stroke();
 
         // Draw node vertices
-        ctx.fillStyle = 'rgba(238, 233, 220, 0.7)';
-        projected.forEach(p => {
-            if (p.z < 30) {
-                ctx.fillRect(p.x - 1, p.y - 1, 2, 2);
-            }
-        });
+        if (isNeo) {
+            projected.forEach(p => {
+                if (p.z < 30) {
+                    ctx.fillStyle = (p.z < 0) ? '#00C2CB' : '#FF00FF'; // Teal & Magenta nodes!
+                    ctx.fillRect(p.x - 1.5, p.y - 1.5, 3, 3);
+                }
+            });
+        } else {
+            ctx.fillStyle = 'rgba(238, 233, 220, 0.7)';
+            projected.forEach(p => {
+                if (p.z < 30) {
+                    ctx.fillRect(p.x - 1, p.y - 1, 2, 2);
+                }
+            });
+        }
 
-        // ─── ICONIC BLACK CENSOR RECTANGLE ACROSS EYE REGION ─────────────────
-        // Calculate dynamic eye level from projected vertex 23 (eye layer)
+        // ─── ICONIC CENSOR RECTANGLE ACROSS EYE REGION ─────────────────────────
         const eyeRef = projected[23] || { x: cx, y: cy - 25 };
-        const boxWidth = width * 0.68;
+        const boxWidth = width * 0.7;
         const boxHeight = 44;
         const boxX = cx - boxWidth / 2;
         const boxY = eyeRef.y - boxHeight / 2;
 
-        // Solid Black censor bar
-        ctx.fillStyle = '#0c0d11';
-        ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-
-        // Thin crimson border
-        ctx.strokeStyle = '#ff2442';
-        ctx.lineWidth = 1.5;
-        ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
-
-        // Digital Censor Text
-        ctx.fillStyle = '#eee9dc';
-        ctx.font = '10px "Chakra Petch", monospace';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        // Read active shift if available
         const shiftVal = document.getElementById('shift-value');
         const shiftStr = shiftVal ? String(shiftVal.value).padStart(2, '0') : '03';
-        ctx.fillText(`[IDENTITY_LOCKED // ROT-${shiftStr}]`, cx, boxY + boxHeight / 2);
+
+        if (isNeo) {
+            // Neo-Brutalist: Solid black box, 3px cyan border, yellow bold text
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+            ctx.strokeStyle = '#00C2CB';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+            ctx.fillStyle = '#FFD700';
+            ctx.font = 'bold 11px "Space Grotesk", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`[NEO-SYSTEM // ROT-${shiftStr}]`, cx, boxY + boxHeight / 2);
+        } else {
+            // Cyber Noir: Black box, crimson border, off-white text
+            ctx.fillStyle = '#0c0d11';
+            ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+            ctx.strokeStyle = '#ff2442';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+            ctx.fillStyle = '#eee9dc';
+            ctx.font = '10px "Chakra Petch", monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`[IDENTITY_LOCKED // ROT-${shiftStr}]`, cx, boxY + boxHeight / 2);
+        }
 
         requestAnimationFrame(render);
     }

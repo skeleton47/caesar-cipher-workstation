@@ -1,51 +1,127 @@
 {% extends 'base.html' %}
 {% set active_page = 'about' %}
-{% block title %}INTEL // MEMORY_DOSSIER{% endblock %}
+{% block title %}DESIGN SYSTEM // INTELLIGENCE DOSSIER{% endblock %}
 
 {% block content %}
-<div class="brutalist-card input-deck-card" style="margin-bottom: 20px;">
-    <div class="card-inner-pad">
-        <div class="diagonal-hazard-bar top-stripes"></div>
-        <div class="mesh-card-header">
-            <span class="header-red-badge">MEMORY_DOSSIER // ROT-26</span>
+<div class="neo-system-hero" style="margin-bottom: 24px;">
+    <div class="neo-hero-left">
+        <h1 class="neo-main-title">NEO-BRUTALIST<br><span class="accent-text">DESIGN SPEC &amp; INTEL</span></h1>
+        <p class="neo-subtitle">BOLD. LOUD. SYSTEMATIC. USABLE.</p>
+        <div class="neo-breadcrumbs">
+            <span>SPECIFICATION</span> &gt; <span>FOUNDATIONS</span> &gt; <span class="active-crumb">MATHEMATICAL DOSSIER</span>
         </div>
-        <div class="mesh-title-block">
-            <h1 class="mesh-main-heading">ARCHIVAL INTELLIGENCE</h1>
-            <p style="color: var(--ink-dim); font-size: 1rem; margin-top: 6px;">HISTORICAL ORIGINS, MATHEMATICAL PROOFS &amp; VULNERABILITY ANALYSIS</p>
+    </div>
+    <div class="neo-hero-right">
+        <div class="usage-rules-card">
+            <div class="rules-header-line">
+                <span class="rules-tag">SYSTEM RULES:</span>
+                <span class="rules-desc">HIGH CONTRAST. THICK 3PX/4PX BLACK STROKES. HARD 4PX/8PX DROP SHADOWS. STRICT SQUARED CORNERS. SOLID VIBRANT ACCENT BLOCKS.</span>
+            </div>
+            <div class="rules-pills-row">
+                <span class="num-pill pill-0">0</span>
+                <span class="num-pill pill-12 active">12</span>
+                <span class="num-pill pill-24">24</span>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="poster-grid-layout">
+    <!-- LEFT COLUMN: FOUNDATIONS & COLOR TOKENS -->
     <div class="col-left">
+        <div class="brutalist-card input-deck-card">
+            <div class="sticker-badge sticker-left">FOUNDATIONS</div>
+            <div class="card-inner-pad">
+                <h3 style="font-family: 'Public Sans', sans-serif; font-size: 1.4rem; font-weight: 900; margin-bottom: 12px; letter-spacing: 0.5px;">
+                    COLOR TOKENS &amp; ELEVATION
+                </h3>
+                <div class="tokens-grid-display">
+                    <div class="token-box" style="background: #00C2CB; color: #000;">
+                        <strong>ACCENT TEAL</strong>
+                        <span>#00C2CB</span>
+                    </div>
+                    <div class="token-box" style="background: #FF00FF; color: #fff;">
+                        <strong>ACCENT MAGENTA</strong>
+                        <span>#FF00FF</span>
+                    </div>
+                    <div class="token-box" style="background: #FFD700; color: #000;">
+                        <strong>ACCENT YELLOW</strong>
+                        <span>#FFD700</span>
+                    </div>
+                    <div class="token-box" style="background: #000000; color: #fff;">
+                        <strong>BLACK</strong>
+                        <span>#000000</span>
+                    </div>
+                    <div class="token-box" style="background: #FFFFFF; color: #000; border: 2px solid #000;">
+                        <strong>WHITE</strong>
+                        <span>#FFFFFF</span>
+                    </div>
+                    <div class="token-box" style="background: #F5F5DC; color: #000; border: 2px solid #000;">
+                        <strong>PAPER BEIGE</strong>
+                        <span>#F5F5DC</span>
+                    </div>
+                </div>
+
+                <div class="elevation-notes" style="margin-top: 18px; padding-top: 14px; border-top: 2px solid #000;">
+                    <div style="font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;">ELEVATION TOKENS:</div>
+                    <div style="font-size: 0.85rem; line-height: 1.5;">
+                        &bull; <strong>SHADOW-0:</strong> None (Flat)<br>
+                        &bull; <strong>SHADOW-1:</strong> 4px 4px 0px #000000 (Subtle offset)<br>
+                        &bull; <strong>SHADOW-2:</strong> 8px 8px 0px #000000 (Prominent elevation)<br>
+                        &bull; <strong>SHADOW-3:</strong> 12px 12px 0px #000000 (Hero / Modals)
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="brutalist-card terminal-logs-card">
+            <div class="table-header-bar">
+                <span class="th-title">HISTORICAL DOSSIER [58 BCE]</span>
+            </div>
             <div class="chamfered-border-wrap">
                 <div class="terminal-log-content">
-                    <div class="log-line command-line">$ ./QUERY_ARCHIVE --TOPIC=CAESAR</div>
-                    <div class="log-line error-line">[ 58 BCE ] ROMAN MILITARY ENCRYPTION STANDARD</div>
-                    <div class="log-line warn-line">[ ENTROPY ] MODULAR RING ARITHMETIC Z_26</div>
-                    <div class="log-line prompt-line">&gt; ENCRYPT: C &equiv; (P + K) mod 26</div>
-                    <div class="log-line prompt-line">&gt; DECRYPT: P &equiv; (C - K) mod 26</div>
-                    <div class="log-line dim-line">// FIXED OFFSET KEY K &isin; [1..25]</div>
-                    <div class="log-line red-log">// KEYS-SPACE DETERMINISTICALLY BOUNDED TO 25</div>
-                    <div class="log-line dim-line">&#9746; BRUTE-FORCE COMPLEXITY: O(1)</div>
+                    <div class="log-line command-line">$ ./QUERY_ARCHIVE --ROMAN_ERA</div>
+                    <div class="log-line error-line">[ ORIGIN ] JULIUS CAESAR PRIVATE CORRESPONDENCE</div>
+                    <div class="log-line warn-line">[ MECHANICS ] MONOALPHABETIC SUBSTITUTION CIPHER</div>
+                    <div class="log-line prompt-line">&gt; ENCRYPT(p) = (p + k) mod 26</div>
+                    <div class="log-line prompt-line">&gt; DECRYPT(c) = (c - k) mod 26</div>
+                    <div class="log-line red-log">// FIXED ROTATIONAL SHIFT: k &isin; {1, 2, ..., 25}</div>
+                    <div class="log-line dim-line">// BRUTE FORCE FEASIBILITY: 25 ATTEMPTS MAX</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- RIGHT COLUMN: CRYPTANALYSIS & SECURITY WARNING -->
     <div class="col-right">
         <div class="brutalist-card input-deck-card">
+            <div class="sticker-badge sticker-right">SECURITY FEEDBACK</div>
             <div class="card-inner-pad">
-                <div class="deck-alert-row" style="text-align: left; margin: 0 0 10px;">
-                    <span class="red-glitch-text" style="font-size: 1.2rem;">CRITICAL SECURITY WARNING</span>
+                <div class="alert-banner-block banner-danger" style="margin-bottom: 16px;">
+                    <span class="banner-icon">&#10006;</span>
+                    <span class="banner-msg">CRITICAL WARNING: ZERO COMPUTATIONAL SECURITY</span>
                 </div>
-                <p style="color: var(--ink-cream); font-size: 1rem; line-height: 1.5; margin-bottom: 12px;">
-                    The Caesar cipher exhibits <strong>ZERO computational security</strong> against unigram frequency correlation. Characters such as <strong>E (12.7%)</strong> and <strong>T (9.1%)</strong> expose the rotational key instantly.
+                <h3 style="font-family: 'Public Sans', sans-serif; font-size: 1.3rem; font-weight: 900; margin-bottom: 10px;">
+                    FREQUENCY ANALYSIS ATTACK
+                </h3>
+                <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 14px;">
+                    English plaintext exhibits deterministic letter frequencies (e.g. <strong>E = 12.7%</strong>, <strong>T = 9.1%</strong>, <strong>A = 8.2%</strong>). Because Caesar preserves the shape of the frequency distribution, frequency correlation breaks any message without needing the key.
                 </p>
-                <div class="deck-sub-meta" style="flex-direction: column; gap: 4px;">
-                    <span>MODERN REPLACEMENT MANDATE:</span>
-                    <span style="color: var(--blood-red);">AES-256-GCM / CHACHA20-POLY1305</span>
+
+                <div class="table-header-bar" style="margin-bottom: 8px;">
+                    <span class="th-title">TOP FREQUENCIES IN ENGLISH</span>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+                    <span class="token-swatch-badge" style="background: #00C2CB; color: #000; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">E: 12.7%</span>
+                    <span class="token-swatch-badge" style="background: #FF00FF; color: #fff; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">T: 9.1%</span>
+                    <span class="token-swatch-badge" style="background: #FFD700; color: #000; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">A: 8.2%</span>
+                    <span class="token-swatch-badge" style="background: #FFFFFF; color: #000; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">O: 7.5%</span>
+                    <span class="token-swatch-badge" style="background: #FFFFFF; color: #000; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">I: 7.0%</span>
+                </div>
+
+                <div style="background: #000; color: #fff; padding: 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; border: 2px solid #000;">
+                    MODERN CRYPTOGRAPHIC MANDATE:
+                    <div style="color: #00C2CB; font-size: 0.95rem; margin-top: 4px;">USE AES-256-GCM / CHACHA20-POLY1305 / RSA-4096 FOR REAL-WORLD PRIVACY.</div>
                 </div>
             </div>
         </div>

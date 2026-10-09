@@ -775,3 +775,898 @@ input[type="number"] { -moz-appearance: textfield; }
         align-items: flex-start;
     }
 }
+
+
+/* ==========================================================================
+   NEO-BRUTALIST DESIGN SYSTEM (VERSION 2.0)
+   Specifications from the Design System Blueprint:
+     - Color Tokens:
+         ACCENT TEAL:    #00C2CB
+         ACCENT MAGENTA: #FF00FF
+         ACCENT YELLOW:  #FFD700
+         BLACK:          #000000
+         WHITE:          #FFFFFF
+         PAPER BEIGE:    #F5F5DC / #FAF6EE
+     - Usage Rules:
+         Thick black strokes (3px - 4px)
+         Squared corners (0px / limited radii)
+         Solid accent blocks
+         Strict grid alignment
+         High contrast
+         Focus always visible
+     - Elevation Tokens:
+         SHADOW-0: None
+         SHADOW-1: 4px 4px 0px #000000
+         SHADOW-2: 8px 8px 0px #000000
+         SHADOW-3: 12px 12px 0px #000000
+   ========================================================================== */
+
+body.neo-brutalist-theme {
+    background-color: #FAF6EE;
+    color: #000000;
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    position: relative;
+    letter-spacing: -0.2px;
+}
+
+/* Subtle micro-dot pattern for Neo-Brutalist paper texture */
+body.neo-brutalist-theme .grunge-texture-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(#000000 0.85px, transparent 0.85px);
+    background-size: 20px 20px;
+    opacity: 0.055;
+    pointer-events: none;
+    z-index: 1;
+}
+
+body.neo-brutalist-theme .screen-scanline {
+    display: none;
+}
+
+/* Custom Neo-Brutalist Scrollbars */
+body.neo-brutalist-theme ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+body.neo-brutalist-theme ::-webkit-scrollbar-track {
+    background: #FAF6EE;
+    border-left: 2px solid #000000;
+}
+body.neo-brutalist-theme ::-webkit-scrollbar-thumb {
+    background: #000000;
+    border: 2px solid #FAF6EE;
+}
+
+/* ─── Header in Neo-Brutalist Theme ──────────────────────────────────────── */
+body.neo-brutalist-theme .poster-header {
+    border-bottom: 3px solid #000000;
+    padding-bottom: 16px;
+}
+
+body.neo-brutalist-theme .source-pill {
+    background: #FFD700;
+    color: #000000;
+    border: 2.5px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 4px 10px;
+}
+
+body.neo-brutalist-theme .bracket-cluster {
+    color: #000000;
+    font-weight: 900;
+}
+
+body.neo-brutalist-theme .uplink-fail-text {
+    color: #000000;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+body.neo-brutalist-theme .p-nav-link {
+    color: #000000;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    border: 2px solid transparent;
+    transition: all 0.1s ease;
+}
+
+body.neo-brutalist-theme .p-nav-link:hover {
+    background: #00C2CB;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+    color: #000000;
+    text-shadow: none;
+}
+
+body.neo-brutalist-theme .p-nav-link.active {
+    background: #000000;
+    color: #FFFFFF;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+    text-shadow: none;
+}
+
+body.neo-brutalist-theme .theme-version-btn {
+    background: #FFD700;
+    color: #000000;
+    border: 2.5px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+body.neo-brutalist-theme .theme-version-btn:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px #000000;
+    background: #ffe135;
+}
+
+body.neo-brutalist-theme .sfx-toggle-btn {
+    background: #FFFFFF;
+    color: #000000;
+    border: 2.5px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 6px 10px;
+}
+
+body.neo-brutalist-theme .sfx-toggle-btn:hover {
+    background: #00C2CB;
+    color: #000000;
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px #000000;
+}
+
+/* ─── Top System Hero Section ────────────────────────────────────────────── */
+.neo-system-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px dashed #000000;
+}
+
+.neo-hero-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.neo-main-title {
+    font-family: 'Public Sans', -apple-system, sans-serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    color: #000000;
+}
+
+.neo-main-title .accent-text {
+    background: #00C2CB;
+    color: #000000;
+    padding: 0 8px;
+    display: inline-block;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    margin-top: 4px;
+}
+
+.neo-subtitle {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #000000;
+}
+
+.neo-breadcrumbs {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #444444;
+    margin-top: 4px;
+}
+
+.neo-breadcrumbs .active-crumb {
+    color: #000000;
+    background: #FFD700;
+    padding: 1px 6px;
+    border: 1.5px solid #000000;
+}
+
+/* Usage Rules Box (Right of Hero) */
+.neo-hero-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 440px;
+    width: 100%;
+}
+
+.usage-rules-card {
+    background: #FAF6EE;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.rules-header-line {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rules-tag {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: #000000;
+    letter-spacing: 0.5px;
+}
+
+.rules-desc {
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #222222;
+}
+
+.rules-pills-row {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.num-pill {
+    background: #000000;
+    color: #FFFFFF;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 3px 6px;
+    border-radius: 2px;
+}
+
+.num-pill.active {
+    background: #FFD700;
+    color: #000000;
+}
+
+/* Spacing Scale Ruler graphic */
+.ruler-scale-bar {
+    background: #FFFFFF;
+    border: 2.5px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    padding: 4px 8px;
+}
+
+.ruler-ticks {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 24px;
+}
+
+.ruler-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.r-mark {
+    width: 1.5px;
+    background: #000000;
+    display: block;
+}
+
+.r-mark.short { height: 6px; }
+.r-mark.mid { height: 11px; }
+.r-mark.tall { height: 16px; }
+
+.r-label {
+    font-size: 0.65rem;
+    font-family: 'Space Grotesk', monospace;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* ─── Steps Workflow Bar (1 -> 2 -> 3) ──────────────────────────────────── */
+.neo-steps-flow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FFFFFF;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    padding: 8px 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.step-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    border: 2px solid transparent;
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+.step-num {
+    background: #000000;
+    color: #FFFFFF;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 900;
+}
+
+.step-badge.step-active {
+    background: #FFD700;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+}
+
+.step-badge.step-active .step-num {
+    background: #000000;
+    color: #FFD700;
+}
+
+.step-arrow {
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: #000000;
+}
+
+/* ─── Cards in Neo-Brutalist Theme ──────────────────────────────────────── */
+body.neo-brutalist-theme .brutalist-card {
+    background: #FFFFFF;
+    border: 3px solid #000000;
+    box-shadow: 6px 6px 0px #000000;
+    position: relative;
+}
+
+/* Tilted Stickers */
+.sticker-badge {
+    position: absolute;
+    top: -14px;
+    z-index: 10;
+    background: #FFFFFF;
+    color: #000000;
+    border: 2.5px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    text-transform: uppercase;
+}
+
+.sticker-left {
+    left: 18px;
+    transform: rotate(-3deg);
+    background: #FFFFFF;
+}
+
+.sticker-right {
+    right: 18px;
+    transform: rotate(3deg);
+    background: #FFD700;
+}
+
+.sticker-primary-tag {
+    background: #000000;
+    color: #FFFFFF;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 2px 8px;
+    display: inline-block;
+    margin-bottom: 6px;
+    transform: rotate(-2deg);
+}
+
+/* Color tokens preview strip */
+.color-tokens-strip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #000000;
+    flex-wrap: wrap;
+}
+
+.token-swatch {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #000000;
+    display: inline-block;
+}
+
+.token-swatch.sw-teal { background: #00C2CB; }
+.token-swatch.sw-magenta { background: #FF00FF; }
+.token-swatch.sw-yellow { background: #FFD700; }
+.token-swatch.sw-black { background: #000000; }
+.token-swatch.sw-white { background: #FFFFFF; }
+.token-swatch.sw-beige { background: #F5F5DC; }
+
+.token-spec-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    margin-left: 6px;
+    font-family: 'Space Grotesk', monospace;
+    color: #444444;
+}
+
+/* Tabs cluster in Neo-Brutalist Theme */
+body.neo-brutalist-theme .deck-actions-cluster {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+body.neo-brutalist-theme .bracket-action-btn {
+    border: 2.5px solid #000000;
+    background: #FAF6EE;
+    color: #000000;
+    box-shadow: 3px 3px 0px #000000;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 900;
+    padding: 8px 12px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+body.neo-brutalist-theme .bracket-action-btn:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px #000000;
+}
+
+body.neo-brutalist-theme .bracket-action-btn.active.tab-teal {
+    background: #00C2CB;
+    color: #000000;
+    box-shadow: 1px 1px 0px #000000;
+    transform: translate(2px, 2px);
+}
+
+body.neo-brutalist-theme .bracket-action-btn.active.tab-magenta {
+    background: #FF00FF;
+    color: #FFFFFF;
+    box-shadow: 1px 1px 0px #000000;
+    transform: translate(2px, 2px);
+}
+
+body.neo-brutalist-theme .bracket-action-btn.active.tab-yellow {
+    background: #FFD700;
+    color: #000000;
+    box-shadow: 1px 1px 0px #000000;
+    transform: translate(2px, 2px);
+}
+
+.tab-dot {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+/* Input Row */
+.input-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+body.neo-brutalist-theme .deck-label {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #000000;
+    letter-spacing: 0.5px;
+}
+
+.char-limit-badge {
+    background: #FAF6EE;
+    border: 1.5px solid #000000;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 1px 6px;
+}
+
+body.neo-brutalist-theme .deck-input-wrap {
+    border: 3px solid #000000;
+    background: #FFFFFF;
+    box-shadow: 4px 4px 0px #000000;
+}
+
+body.neo-brutalist-theme .deck-input-wrap textarea {
+    color: #000000;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 1.15rem;
+    font-weight: 700;
+    background: #FFFFFF;
+    padding: 12px;
+}
+
+body.neo-brutalist-theme .deck-input-wrap textarea:focus {
+    outline: 3px solid #000000;
+    outline-offset: 1px;
+}
+
+.helper-text-label {
+    font-size: 0.75rem;
+    color: #555555;
+    font-weight: 600;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Alert Banners matching Feedback section */
+.alert-banner-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 2.5px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.alert-banner-block .banner-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.banner-warning {
+    background: #FFD700;
+    color: #000000;
+}
+
+.banner-success {
+    background: #00C2CB;
+    color: #000000;
+}
+
+.banner-danger {
+    background: #FF00FF;
+    color: #FFFFFF;
+}
+
+/* Shift Key Stepper in Neo-Brutalist Theme */
+body.neo-brutalist-theme .deck-shift-ctrl {
+    border: 2.5px solid #000000;
+    background: #FAF6EE;
+    box-shadow: 3px 3px 0px #000000;
+    color: #000000;
+}
+
+body.neo-brutalist-theme .ctrl-tag {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 900;
+}
+
+body.neo-brutalist-theme .shift-bracket-btn {
+    border: 2px solid #000000;
+    background: #FFFFFF;
+    color: #000000;
+    box-shadow: 2px 2px 0px #000000;
+    width: 32px;
+    height: 32px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+}
+
+body.neo-brutalist-theme .shift-bracket-btn:hover {
+    background: #FFD700;
+    color: #000000;
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px #000000;
+}
+
+body.neo-brutalist-theme .deck-shift-ctrl input[type="number"] {
+    color: #000000;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+body.neo-brutalist-theme .vector-preview {
+    background: #FFD700;
+    color: #000000;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+    padding: 3px 10px;
+    font-family: 'Space Grotesk', monospace;
+    font-weight: 900;
+    font-size: 0.95rem;
+}
+
+body.neo-brutalist-theme .deck-sub-meta {
+    border-top: 2px solid #000000;
+    color: #000000;
+    font-weight: 800;
+}
+
+/* Event Stream Table */
+.table-header-bar {
+    background: #000000;
+    color: #FFFFFF;
+    padding: 6px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 3px solid #000000;
+    border-bottom: none;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 900;
+    font-size: 0.85rem;
+}
+
+.table-header-bar .th-badge {
+    color: #FFD700;
+}
+
+body.neo-brutalist-theme .chamfered-border-wrap {
+    border: 3px solid #000000;
+    background: #FFFFFF;
+    box-shadow: 6px 6px 0px #000000;
+    clip-path: none; /* Neo-Brutalist squared corners rule! */
+}
+
+body.neo-brutalist-theme .log-line.command-line { color: #000000; font-weight: 900; }
+body.neo-brutalist-theme .log-line.error-line   { color: #FF00FF; font-weight: 800; }
+body.neo-brutalist-theme .log-line.warn-line    { color: #d4a000; font-weight: 800; }
+body.neo-brutalist-theme .log-line.prompt-line  { color: #000000; font-weight: 700; }
+body.neo-brutalist-theme .log-line.dim-line     { color: #555555; }
+body.neo-brutalist-theme .log-line.red-log      { color: #FF00FF; font-weight: 900; }
+
+/* ─── Right Column: Visual Mesh & Primary Trigger ───────────────────────── */
+body.neo-brutalist-theme .identity-mesh-card {
+    border-right: 3px solid #000000;
+    padding: 16px;
+}
+
+body.neo-brutalist-theme .mesh-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+body.neo-brutalist-theme .header-red-badge {
+    background: #00C2CB;
+    color: #000000;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 900;
+    font-size: 0.8rem;
+    padding: 3px 8px;
+}
+
+.header-sub-tag {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #000000;
+}
+
+body.neo-brutalist-theme .mesh-main-heading {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #000000;
+    line-height: 1.05;
+    letter-spacing: -0.5px;
+}
+
+.accent-subheading {
+    color: #000000;
+    background: #FFD700;
+    display: inline-block;
+    padding: 0 6px;
+    border: 2px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    margin-top: 4px;
+}
+
+body.neo-brutalist-theme .canvas-viewport-wrap {
+    background: #FAF6EE;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    margin: 14px 0;
+}
+
+/* Intercepted Output Box */
+body.neo-brutalist-theme .result-payload-block {
+    background: #FFFFFF;
+    border: 3px solid #000000;
+    box-shadow: 6px 6px 0px #000000;
+    padding: 14px;
+    margin: 14px 0;
+}
+
+body.neo-brutalist-theme .payload-header-row {
+    border-bottom: 2px solid #000000;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+body.neo-brutalist-theme .payload-tag {
+    color: #000000;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 900;
+    font-size: 0.95rem;
+}
+
+body.neo-brutalist-theme .copy-btn-highlight {
+    background: #FFD700;
+    color: #000000;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+    font-weight: 900;
+}
+
+body.neo-brutalist-theme .payload-text-box {
+    background: #FAF6EE;
+    border: 2px solid #000000;
+    color: #000000;
+    font-family: 'Space Grotesk', monospace;
+    font-weight: 800;
+    font-size: 1.3rem;
+    padding: 14px;
+    letter-spacing: 1px;
+}
+
+/* Primary Action Button (The Star Component!) */
+.neo-primary-btn {
+    background: #00C2CB !important;
+    color: #000000 !important;
+    border: 3.5px solid #000000 !important;
+    box-shadow: 6px 6px 0px #000000 !important;
+    font-family: 'Public Sans', sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 1.15rem !important;
+    letter-spacing: 0.5px !important;
+    padding: 14px 20px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.neo-primary-btn:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 4px 4px 0px #000000 !important;
+    background: #00d6e0 !important;
+}
+
+.neo-primary-btn:active {
+    transform: translate(6px, 6px);
+    box-shadow: 0px 0px 0px #000000 !important;
+}
+
+.ex-arrow {
+    font-size: 1.2rem;
+}
+
+/* ─── Neo-Brutalist Toast Notifications ─────────────────────────────────── */
+body.neo-brutalist-theme .toast {
+    background: #FFD700;
+    color: #000000;
+    border: 3px solid #000000;
+    box-shadow: 5px 5px 0px #000000;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    border-radius: 0;
+}
+
+/* ─── Neo-Brutalist About Page Grid ─────────────────────────────────────── */
+.tokens-grid-display {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.token-box {
+    border: 2.5px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+/* ─── Footer in Neo-Brutalist Theme ─────────────────────────────────────── */
+body.neo-brutalist-theme .poster-footer {
+    border-top: 3px solid #000000;
+    padding-top: 18px;
+    color: #000000;
+}
+
+body.neo-brutalist-theme .script-line {
+    color: #000000;
+    font-weight: 700;
+}
+
+body.neo-brutalist-theme .script-line.red-highlight {
+    color: #000000;
+    background: #FFD700;
+    display: inline-block;
+    padding: 0 4px;
+    border: 1px solid #000000;
+}
+
+body.neo-brutalist-theme .sys-corrupt-label {
+    color: #000000;
+    font-weight: 900;
+    font-family: 'Public Sans', sans-serif;
+}
+
+body.neo-brutalist-theme .d-bar {
+    border: 2px solid #000000;
+    background: #FFFFFF;
+}
+
+body.neo-brutalist-theme .bar-fill.fill-75 {
+    background: #00C2CB;
+}
+
+body.neo-brutalist-theme .bar-fill.fill-40 {
+    background: #FF00FF;
+}
+
+body.neo-brutalist-theme .crosshair-big,
+body.neo-brutalist-theme .d-glyph {
+    color: #000000;
+}
