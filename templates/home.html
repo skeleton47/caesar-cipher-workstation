@@ -1,230 +1,167 @@
 {% extends 'base.html' %}
 {% set active_page = 'home' %}
-{% block title %}NEO-BRUTALIST DESIGN SYSTEM // CAESAR CIPHER ENGINE{% endblock %}
+{% block title %}ОШИБКА 404 // МОТИВАЦИЯ НЕ НАЙДЕНА{% endblock %}
 
 {% block content %}
 <!-- ====================================================================
-     TOP SYSTEM BANNER: NEO-BRUTALIST USAGE RULES & SPACING RULER
+     HERO SECTION: THE ICONIC 404 GLITCH POSTER
      ==================================================================== -->
-<section class="neo-system-hero">
-    <div class="neo-hero-left">
-        <h1 class="neo-main-title">NEO-BRUTALIST<br><span class="accent-text">DESIGN SYSTEM</span></h1>
-        <p class="neo-subtitle">BOLD. LOUD. SYSTEMATIC. USABLE.</p>
-        <div class="neo-breadcrumbs">
-            <span>WORKSPACE</span> &gt; <span>CRYPTOGRAPHY</span> &gt; <span class="active-crumb">CAESAR WORKSTATION</span>
+<section class="hero-glitch-poster">
+    <!-- Top Decorative Crosshair Box -->
+    <div class="top-crosshair-row">
+        <div class="square-cross-box">&#9747;</div>
+        <div class="glitch-ambient-flicker"></div>
+    </div>
+
+    <!-- Header Text Above 404: ОШИБКА ☒ -->
+    <div class="hero-oshbka-row">
+        <h2 class="oshbka-title">ОШИБКА</h2>
+        <span class="oshbka-x-box">&#9746;</span>
+    </div>
+
+    <!-- GIANT PIXEL ART 404 IN HOT PINK -->
+    <div class="hero-404-container">
+        <div class="giant-pixel-404" data-text="404">404</div>
+        <div class="pixel-slice-glitch"></div>
+    </div>
+
+    <!-- Under 404: МОТИВАЦИЯ НЕ НАЙДЕНА ▲ -->
+    <div class="hero-sub-row">
+        <div class="sub-text-left">
+            <h3 class="motivation-white-text">МОТИВАЦИЯ</h3>
+            <h3 class="ne-naydena-pink-text">НЕ НАЙДЕНА</h3>
+        </div>
+        <div class="sub-triangle-right">&#9650;</div>
+    </div>
+</section>
+
+<!-- ====================================================================
+     THE TWO RETRO WINDOWS (INTERACTIVE CIPHER DECK)
+     ==================================================================== -->
+<section class="poster-windows-deck">
+    <!-- ================================================================
+         WINDOW 1: ЧТО МОЖНО СДЕЛАТЬ? ☒ (LEFT MAIN WINDOW)
+         ================================================================ -->
+    <div class="retro-window main-cipher-window">
+        <!-- Window Title Bar -->
+        <div class="window-title-bar">
+            <span class="w-title-text">ЧТО МОЖНО СДЕЛАТЬ?</span>
+            <span class="w-close-box">&#9746;</span>
+        </div>
+
+        <div class="window-inner-content">
+            <!-- 3 ICON ACTION ROWS MATCHING THE POSTER -->
+            <div class="window-actions-list">
+                <!-- 01. REFRESH: ПОПРОБОВАТЬ ЕЩЁ РАЗ (F5) -> ENCRYPT -->
+                <button class="win-action-row active" id="btn-encrypt" data-mode="encrypt">
+                    <div class="win-icon-cell icon-refresh">&#8635;</div>
+                    <div class="win-text-cell">
+                        <span class="action-main-title">ПОПРОБОВАТЬ ЕЩЁ РАЗ</span>
+                        <span class="action-sub-hint">(F5) // [ЗАШИФРОВАТЬ / ENCRYPT]</span>
+                    </div>
+                </button>
+
+                <!-- 02. COFFEE: СДЕЛАТЬ ПЕРЕРЫВ (РЕКОМЕНДУЕТСЯ) -> DECRYPT -->
+                <button class="win-action-row" id="btn-decrypt" data-mode="decrypt">
+                    <div class="win-icon-cell icon-coffee">&#9749;</div>
+                    <div class="win-text-cell">
+                        <span class="action-main-title">СДЕЛАТЬ ПЕРЕРЫВ</span>
+                        <span class="action-sub-hint">(РЕКОМЕНДУЕТСЯ) // [РАСШИФРОВАТЬ / DECRYPT]</span>
+                    </div>
+                </button>
+
+                <!-- 03. HEART: НАПОМНИТЬ СЕБЕ, ЗАЧЕМ ТЫ НАЧАЛ -> CRACK -->
+                <button class="win-action-row" id="btn-crack" data-mode="crack">
+                    <div class="win-icon-cell icon-heart">&#9829;</div>
+                    <div class="win-text-cell">
+                        <span class="action-main-title">НАПОМНИТЬ СЕБЕ,</span>
+                        <span class="action-sub-hint">ЗАЧЕМ ТЫ НАЧАЛ // [ВЗЛОМ / CRACK FREQ]</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- PAYLOAD INPUT AREA (BUBBLE POP SFX ON TYPE) -->
+            <div class="cipher-input-block">
+                <div class="input-meta-bar">
+                    <span class="input-tag-title">&gt; ТЕКСТ / PAYLOAD:</span>
+                    <span class="input-char-counter" id="char-limit-count">11 / 500</span>
+                </div>
+                <div class="input-glow-frame">
+                    <textarea id="message-input" placeholder="Введите текст сюда... (со звуком печати)" maxlength="500">HELLO WORLD</textarea>
+                </div>
+            </div>
+
+            <!-- ROTATION KEY (SHIFT) CONTROLS -->
+            <div class="shift-key-row">
+                <span class="shift-tag">&gt; КЛЮЧ СДВИГА (KEY):</span>
+                <div class="shift-buttons-wrap">
+                    <button id="shift-minus" class="shift-step-btn" title="Decrease">&minus;</button>
+                    <input type="number" id="shift-value" value="3" min="1" max="25">
+                    <button id="shift-plus" class="shift-step-btn" title="Increase">&#43;</button>
+                </div>
+                <span class="vector-badge" id="vector-preview-txt">A &rarr; D</span>
+            </div>
+
+            <!-- Hidden status tags for script compatibility -->
+            <div id="deck-status-alert" style="display:none;"></div>
+            <div id="mesh-header-badge" style="display:none;"></div>
         </div>
     </div>
 
-    <div class="neo-hero-right">
-        <!-- Usage Rules Box matching the image -->
-        <div class="usage-rules-card">
-            <div class="rules-header-line">
-                <span class="rules-tag">USAGE RULES:</span>
-                <span class="rules-desc">THICK BLACK STROKES. SQUARED CORNERS. LIMITED RADII. SOLID ACCENT BLOCKS. STRICT GRID ALIGNMENT. HIGH CONTRAST. FOCUS ALWAYS VISIBLE.</span>
-            </div>
-            <div class="rules-pills-row">
-                <span class="num-pill pill-0">0</span>
-                <span class="num-pill pill-12 active">12</span>
-                <span class="num-pill pill-24">24</span>
-            </div>
+    <!-- ================================================================
+         WINDOW 2: OVERLAPPING POPUP WINDOW (СЕРЬЁЗНО? ☒)
+         ================================================================ -->
+    <div class="retro-window modal-popup-window">
+        <!-- Window Title Bar -->
+        <div class="window-title-bar">
+            <span class="w-title-text">СЕРЬЁЗНО?</span>
+            <span class="w-close-box">&#9746;</span>
         </div>
 
-        <!-- Spacing Scale Ruler Graphic matching Foundations -->
-        <div class="ruler-scale-bar">
-            <div class="ruler-ticks">
-                <div class="ruler-item"><span class="r-mark tall"></span><span class="r-label">0</span></div>
-                <div class="ruler-item"><span class="r-mark short"></span></div>
-                <div class="ruler-item"><span class="r-mark mid"></span><span class="r-label">4</span></div>
-                <div class="ruler-item"><span class="r-mark short"></span></div>
-                <div class="ruler-item"><span class="r-mark mid"></span><span class="r-label">8</span></div>
-                <div class="ruler-item"><span class="r-mark short"></span></div>
-                <div class="ruler-item"><span class="r-mark tall"></span><span class="r-label">12</span></div>
-                <div class="ruler-item"><span class="r-mark short"></span></div>
-                <div class="ruler-item"><span class="r-mark mid"></span><span class="r-label">16</span></div>
-                <div class="ruler-item"><span class="r-mark short"></span></div>
-                <div class="ruler-item"><span class="r-mark tall"></span><span class="r-label">24</span></div>
-                <div class="ruler-item"><span class="r-mark short"></span></div>
-                <div class="ruler-item"><span class="r-mark mid"></span><span class="r-label">32</span></div>
-                <div class="ruler-item"><span class="r-mark short"></span></div>
-                <div class="ruler-item"><span class="r-mark tall"></span><span class="r-label">48</span></div>
+        <div class="modal-inner-content">
+            <!-- Warning Triangle Icon from Poster -->
+            <div class="modal-warning-triangle">&#9888;</div>
+
+            <!-- Inspiring Quote from Poster -->
+            <div class="modal-quote-block">
+                <p class="q-lead">СЕРЬЁЗНО?</p>
+                <p class="q-line">ТЫ ЖЕ СИЛЬНЕЕ,</p>
+                <p class="q-line">ЧЕМ ДУМАЕШЬ</p>
+            </div>
+
+            <!-- Hidden until executed: Intercepted Cipher Output -->
+            <div class="result-payload-block hidden" id="result-field-block">
+                <div class="result-bar-header">
+                    <span class="res-tag">[РЕЗУЛЬТАТ / RESULT]</span>
+                    <button class="mini-copy-btn" id="copy-btn" title="Copy to clipboard">📋 [КОПИРОВАТЬ]</button>
+                </div>
+                <div class="result-text-display" id="result-output">
+                    <!-- Populated upon clicking OK -->
+                </div>
+            </div>
+
+            <!-- THE ICONIC SOLID HOT PINK "OK" BUTTON -->
+            <div class="modal-action-row">
+                <button id="action-btn" class="pink-ok-button">
+                    <span id="action-btn-text">OK</span>
+                </button>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ====================================================================
-     STEPS WORKFLOW BAR (1 -> 2 -> 3)
-     ==================================================================== -->
-<div class="neo-steps-flow">
-    <div class="step-badge step-active" id="step-1-indicator">
-        <span class="step-num">1.</span>
-        <span class="step-label">STEP ONE: INPUT PAYLOAD</span>
-    </div>
-    <div class="step-arrow">&rarr;</div>
-    <div class="step-badge" id="step-2-indicator">
-        <span class="step-num">2.</span>
-        <span class="step-label">STEP TWO: KEY SHIFT</span>
-    </div>
-    <div class="step-arrow">&rarr;</div>
-    <div class="step-badge" id="step-3-indicator">
-        <span class="step-num">3.</span>
-        <span class="step-label">STEP THREE: EXECUTE</span>
-    </div>
-</div>
-
-<!-- ====================================================================
-     MAIN 2-COLUMN BRUTALIST GRID
-     ==================================================================== -->
-<div class="poster-grid-layout">
-    <!-- ================================================================
-         LEFT COLUMN: INPUT CONTROLLER & TERMINAL STREAM
-         ================================================================ -->
-    <div class="col-left">
-        <!-- 01. CIPHER INPUT DECK -->
-        <div class="brutalist-card input-deck-card">
-            <!-- Tilted sticker badge matching poster -->
-            <div class="sticker-badge sticker-left">KEEP HIT AREA 44PX</div>
-
-            <div class="card-inner-pad">
-                <!-- Color Tokens preview strip -->
-                <div class="color-tokens-strip">
-                    <span class="token-swatch sw-teal" title="Accent Teal #00C2CB"></span>
-                    <span class="token-swatch sw-magenta" title="Accent Magenta #FF00FF"></span>
-                    <span class="token-swatch sw-yellow" title="Accent Yellow #FFD700"></span>
-                    <span class="token-swatch sw-black" title="Black #000000"></span>
-                    <span class="token-swatch sw-white" title="White #FFFFFF"></span>
-                    <span class="token-swatch sw-beige" title="Paper Beige #F5F5DC"></span>
-                    <span class="token-spec-tag">FOUNDATIONS: 6 TOKENS</span>
-                </div>
-
-                <!-- TABS: ENCRYPT / DECRYPT / CRACK -->
-                <div class="deck-actions-cluster">
-                    <button class="bracket-action-btn tab-teal active" id="btn-encrypt" data-mode="encrypt">
-                        <span class="tab-dot">&bull;</span> TAB 1: ENCRYPT
-                    </button>
-                    <button class="bracket-action-btn tab-magenta" id="btn-decrypt" data-mode="decrypt">
-                        <span class="tab-dot">&bull;</span> TAB 2: DECRYPT
-                    </button>
-                    <button class="bracket-action-btn tab-yellow" id="btn-crack" data-mode="crack">
-                        <span class="tab-dot">&bull;</span> TAB 3: CRACK
-                    </button>
-                </div>
-
-                <!-- TEXT INPUT AREA -->
-                <div class="deck-field-row">
-                    <div class="input-header-row">
-                        <label class="deck-label" for="message-input">MESSAGE PAYLOAD:</label>
-                        <span class="char-limit-badge" id="char-limit-count">11 / 500</span>
-                    </div>
-                    <div class="deck-input-wrap">
-                        <textarea id="message-input" placeholder="Type secret text here (bubble SFX on type)..." maxlength="500">HELLO WORLD</textarea>
-                    </div>
-                    <span class="helper-text-label">Helper Text: Plaintext or encrypted string for Caesar rotation.</span>
-                </div>
-
-                <!-- ALERT BANNER -->
-                <div class="deck-alert-row" id="deck-status-alert">
-                    <div class="alert-banner-block banner-warning">
-                        <span class="banner-icon">&#9888;</span>
-                        <span class="banner-msg">STATUS: READY FOR ROT-N TRANSFORMATION</span>
-                    </div>
-                </div>
-
-                <!-- ROTATION KEY (STEPPER) -->
-                <div class="deck-shift-ctrl">
-                    <span class="ctrl-tag">ROTATION KEY:</span>
-                    <button id="shift-minus" class="shift-bracket-btn" title="Decrease">&minus;</button>
-                    <input type="number" id="shift-value" value="3" min="1" max="25">
-                    <button id="shift-plus" class="shift-bracket-btn" title="Increase">&#43;</button>
-                    <span class="vector-preview" id="vector-preview-txt">A &rarr; D</span>
-                </div>
-
-                <div class="deck-sub-meta">
-                    <span>ELEVATION: SHADOW-1 (4PX)</span>
-                    <span>FOCUS: ALWAYS VISIBLE</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 02. DATA DISPLAY: AUDIT LOG TABLE -->
-        <div class="brutalist-card terminal-logs-card">
-            <div class="table-header-bar">
-                <span class="th-title">EVENT STREAM [REAL-TIME AUDIT]</span>
-                <span class="th-badge">[COLUMN 1: LOG]</span>
-            </div>
-            <div class="chamfered-border-wrap">
-                <div class="terminal-log-content" id="terminal-log-stream">
-                    <div class="log-line command-line">$ ./LOAD_SYSTEM --THEME=NEO_BRUTALIST</div>
-                    <div class="log-line error-line">[ INIT ] FOUNDATIONS: TOKENS INITIALIZED</div>
-                    <div class="log-line warn-line">[ RULES ] THICK BLACK STROKES (3PX) ENFORCED</div>
-                    <div class="log-line prompt-line">&gt; VERIFY_COMPONENTS: BUTTONS, TABS, INPUTS</div>
-                    <div class="log-line dim-line">&gt; KEYSPACE: MODULO 26 RING ACTIVE</div>
-                    <div class="log-line red-log">[ SYSTEM ] AWAITING EXECUTION TRIGGER</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================================================================
-         RIGHT COLUMN: 3D WIREFRAME ENGINE & INTERCEPTED RESULT
-         ================================================================ -->
-    <div class="col-right">
-        <div class="brutalist-card identity-mesh-card">
-            <!-- Tilted sticker badge on top right -->
-            <div class="sticker-badge sticker-right">FOCUS ALWAYS VISIBLE</div>
-
-            <!-- Card Header -->
-            <div class="mesh-card-header">
-                <span class="header-red-badge" id="mesh-header-badge">NEW: IDENTITY MESH</span>
-                <span class="header-sub-tag">0 - 12 - 24 RADII</span>
-            </div>
-
-            <!-- Massive Title Text -->
-            <div class="mesh-title-block">
-                <h2 class="mesh-main-heading">NEO-BRUTALIST</h2>
-                <h2 class="mesh-main-heading accent-subheading">VISUAL ENGINE</h2>
-            </div>
-
-            <!-- Hazard Stripe Divider -->
-            <div class="diagonal-hazard-bar mid-stripes"></div>
-
-            <!-- 3D Humanoid Wireframe Canvas with Censor Bar -->
-            <div class="canvas-viewport-wrap">
-                <canvas id="wireframe-canvas"></canvas>
-            </div>
-
-            <!-- Intercepted Output Box (Hidden until execution) -->
-            <div class="result-payload-block hidden" id="result-field-block">
-                <div class="alert-banner-block banner-success">
-                    <span class="banner-icon">&#10004;</span>
-                    <span class="banner-msg">OPERATION EXECUTED SUCCESSFULLY</span>
-                </div>
-                <div class="payload-header-row">
-                    <span class="payload-tag">[INTERCEPTED_PAYLOAD]</span>
-                    <button class="bracket-action-btn mini-btn copy-btn-highlight" id="copy-btn" title="Copy Result">
-                        &#128203; [COPY TO CLIPBOARD]
-                    </button>
-                </div>
-                <div class="payload-text-box" id="result-output">
-                    <!-- Populated via user click -->
-                </div>
-            </div>
-
-            <!-- Primary Execute Trigger Bar -->
-            <div class="execute-trigger-bar">
-                <div class="sticker-primary-tag">ONE PRIMARY ACTION</div>
-                <button id="action-btn" class="big-execute-btn neo-primary-btn">
-                    <span class="ex-arrow">&blacktriangleright;</span>
-                    <span class="ex-text" id="action-btn-text">INITIALIZE CIPHER EXECUTION</span>
-                    <span class="ex-arrow">&blacktriangleright;</span>
-                </button>
-            </div>
-        </div>
+<!-- Discreet Real-Time System Stream -->
+<div class="retro-terminal-footer-stream">
+    <div class="terminal-bar-title">$ ./STATUS_STREAM --LIVE</div>
+    <div class="terminal-log-content" id="terminal-log-stream">
+        <div class="log-line command-line">$ ./BOOT_SYSTEM --404_POSTER_INITIALIZED</div>
+        <div class="log-line dim-line">&gt; MOTIVATION_MODULE: 404_NOT_FOUND</div>
+        <div class="log-line warn-line">[ OK ] CAESAR CIPHER ENGINE ARMED</div>
+        <div class="log-line prompt-line">&gt; PRESS [ OK ] TO EXECUTE CIPHER</div>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/wireframe.js') }}"></script>
 <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
 {% endblock %}

@@ -1,130 +1,66 @@
 {% extends 'base.html' %}
 {% set active_page = 'about' %}
-{% block title %}DESIGN SYSTEM // INTELLIGENCE DOSSIER{% endblock %}
+{% block title %}О ПРОЕКТЕ // 404 ARCHIVE DOSSIER{% endblock %}
 
 {% block content %}
-<div class="neo-system-hero" style="margin-bottom: 24px;">
-    <div class="neo-hero-left">
-        <h1 class="neo-main-title">NEO-BRUTALIST<br><span class="accent-text">DESIGN SPEC &amp; INTEL</span></h1>
-        <p class="neo-subtitle">BOLD. LOUD. SYSTEMATIC. USABLE.</p>
-        <div class="neo-breadcrumbs">
-            <span>SPECIFICATION</span> &gt; <span>FOUNDATIONS</span> &gt; <span class="active-crumb">MATHEMATICAL DOSSIER</span>
-        </div>
+<section class="hero-glitch-poster" style="padding-bottom: 10px;">
+    <div class="top-crosshair-row">
+        <div class="square-cross-box">&#9747;</div>
     </div>
-    <div class="neo-hero-right">
-        <div class="usage-rules-card">
-            <div class="rules-header-line">
-                <span class="rules-tag">SYSTEM RULES:</span>
-                <span class="rules-desc">HIGH CONTRAST. THICK 3PX/4PX BLACK STROKES. HARD 4PX/8PX DROP SHADOWS. STRICT SQUARED CORNERS. SOLID VIBRANT ACCENT BLOCKS.</span>
-            </div>
-            <div class="rules-pills-row">
-                <span class="num-pill pill-0">0</span>
-                <span class="num-pill pill-12 active">12</span>
-                <span class="num-pill pill-24">24</span>
-            </div>
-        </div>
+    <div class="hero-oshbka-row">
+        <h2 class="oshbka-title">АРХИВ</h2>
+        <span class="oshbka-x-box">&#9746;</span>
     </div>
-</div>
-
-<div class="poster-grid-layout">
-    <!-- LEFT COLUMN: FOUNDATIONS & COLOR TOKENS -->
-    <div class="col-left">
-        <div class="brutalist-card input-deck-card">
-            <div class="sticker-badge sticker-left">FOUNDATIONS</div>
-            <div class="card-inner-pad">
-                <h3 style="font-family: 'Public Sans', sans-serif; font-size: 1.4rem; font-weight: 900; margin-bottom: 12px; letter-spacing: 0.5px;">
-                    COLOR TOKENS &amp; ELEVATION
-                </h3>
-                <div class="tokens-grid-display">
-                    <div class="token-box" style="background: #00C2CB; color: #000;">
-                        <strong>ACCENT TEAL</strong>
-                        <span>#00C2CB</span>
-                    </div>
-                    <div class="token-box" style="background: #FF00FF; color: #fff;">
-                        <strong>ACCENT MAGENTA</strong>
-                        <span>#FF00FF</span>
-                    </div>
-                    <div class="token-box" style="background: #FFD700; color: #000;">
-                        <strong>ACCENT YELLOW</strong>
-                        <span>#FFD700</span>
-                    </div>
-                    <div class="token-box" style="background: #000000; color: #fff;">
-                        <strong>BLACK</strong>
-                        <span>#000000</span>
-                    </div>
-                    <div class="token-box" style="background: #FFFFFF; color: #000; border: 2px solid #000;">
-                        <strong>WHITE</strong>
-                        <span>#FFFFFF</span>
-                    </div>
-                    <div class="token-box" style="background: #F5F5DC; color: #000; border: 2px solid #000;">
-                        <strong>PAPER BEIGE</strong>
-                        <span>#F5F5DC</span>
-                    </div>
-                </div>
-
-                <div class="elevation-notes" style="margin-top: 18px; padding-top: 14px; border-top: 2px solid #000;">
-                    <div style="font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;">ELEVATION TOKENS:</div>
-                    <div style="font-size: 0.85rem; line-height: 1.5;">
-                        &bull; <strong>SHADOW-0:</strong> None (Flat)<br>
-                        &bull; <strong>SHADOW-1:</strong> 4px 4px 0px #000000 (Subtle offset)<br>
-                        &bull; <strong>SHADOW-2:</strong> 8px 8px 0px #000000 (Prominent elevation)<br>
-                        &bull; <strong>SHADOW-3:</strong> 12px 12px 0px #000000 (Hero / Modals)
-                    </div>
-                </div>
-            </div>
+    <div class="hero-sub-row" style="margin-top: 10px;">
+        <div class="sub-text-left">
+            <h3 class="motivation-white-text">ШИФР ЦЕЗАРЯ</h3>
+            <h3 class="ne-naydena-pink-text">ИСТОРИЯ И КРИПТОАНАЛИЗ</h3>
         </div>
+        <div class="sub-triangle-right">&#9650;</div>
+    </div>
+</section>
 
-        <div class="brutalist-card terminal-logs-card">
-            <div class="table-header-bar">
-                <span class="th-title">HISTORICAL DOSSIER [58 BCE]</span>
-            </div>
-            <div class="chamfered-border-wrap">
-                <div class="terminal-log-content">
-                    <div class="log-line command-line">$ ./QUERY_ARCHIVE --ROMAN_ERA</div>
-                    <div class="log-line error-line">[ ORIGIN ] JULIUS CAESAR PRIVATE CORRESPONDENCE</div>
-                    <div class="log-line warn-line">[ MECHANICS ] MONOALPHABETIC SUBSTITUTION CIPHER</div>
-                    <div class="log-line prompt-line">&gt; ENCRYPT(p) = (p + k) mod 26</div>
-                    <div class="log-line prompt-line">&gt; DECRYPT(c) = (c - k) mod 26</div>
-                    <div class="log-line red-log">// FIXED ROTATIONAL SHIFT: k &isin; {1, 2, ..., 25}</div>
-                    <div class="log-line dim-line">// BRUTE FORCE FEASIBILITY: 25 ATTEMPTS MAX</div>
+<section class="poster-windows-deck">
+    <div class="retro-window main-cipher-window">
+        <div class="window-title-bar">
+            <span class="w-title-text">ИСТОРИЧЕСКАЯ СПРАВКА ☒</span>
+            <span class="w-close-box">&#9746;</span>
+        </div>
+        <div class="window-inner-content">
+            <div class="about-card-text">
+                <p>Шифр Цезаря — один из древнейших методов шифрования, названный в честь Юлия Цезаря (58 г. до н.э.), который использовал сдвиг на 3 символа для военной переписки.</p>
+                <div class="code-math-box">
+                    <span>ШИФРОВАНИЕ: C &equiv; (P + K) mod 26</span><br>
+                    <span>РАСШИФРОВАНИЕ: P &equiv; (C - K) mod 26</span>
                 </div>
+                <p>Каждая буква алфавита сдвигается на фиксированное число позиций <strong>K &isin; [1..25]</strong>.</p>
             </div>
         </div>
     </div>
 
-    <!-- RIGHT COLUMN: CRYPTANALYSIS & SECURITY WARNING -->
-    <div class="col-right">
-        <div class="brutalist-card input-deck-card">
-            <div class="sticker-badge sticker-right">SECURITY FEEDBACK</div>
-            <div class="card-inner-pad">
-                <div class="alert-banner-block banner-danger" style="margin-bottom: 16px;">
-                    <span class="banner-icon">&#10006;</span>
-                    <span class="banner-msg">CRITICAL WARNING: ZERO COMPUTATIONAL SECURITY</span>
-                </div>
-                <h3 style="font-family: 'Public Sans', sans-serif; font-size: 1.3rem; font-weight: 900; margin-bottom: 10px;">
-                    FREQUENCY ANALYSIS ATTACK
-                </h3>
-                <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 14px;">
-                    English plaintext exhibits deterministic letter frequencies (e.g. <strong>E = 12.7%</strong>, <strong>T = 9.1%</strong>, <strong>A = 8.2%</strong>). Because Caesar preserves the shape of the frequency distribution, frequency correlation breaks any message without needing the key.
-                </p>
-
-                <div class="table-header-bar" style="margin-bottom: 8px;">
-                    <span class="th-title">TOP FREQUENCIES IN ENGLISH</span>
-                </div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
-                    <span class="token-swatch-badge" style="background: #00C2CB; color: #000; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">E: 12.7%</span>
-                    <span class="token-swatch-badge" style="background: #FF00FF; color: #fff; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">T: 9.1%</span>
-                    <span class="token-swatch-badge" style="background: #FFD700; color: #000; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">A: 8.2%</span>
-                    <span class="token-swatch-badge" style="background: #FFFFFF; color: #000; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">O: 7.5%</span>
-                    <span class="token-swatch-badge" style="background: #FFFFFF; color: #000; padding: 4px 8px; font-weight: bold; border: 2px solid #000;">I: 7.0%</span>
-                </div>
-
-                <div style="background: #000; color: #fff; padding: 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; border: 2px solid #000;">
-                    MODERN CRYPTOGRAPHIC MANDATE:
-                    <div style="color: #00C2CB; font-size: 0.95rem; margin-top: 4px;">USE AES-256-GCM / CHACHA20-POLY1305 / RSA-4096 FOR REAL-WORLD PRIVACY.</div>
-                </div>
+    <div class="retro-window modal-popup-window">
+        <div class="window-title-bar">
+            <span class="w-title-text">ВЗЛОМ И БЕЗОПАСНОСТЬ ☒</span>
+            <span class="w-close-box">&#9746;</span>
+        </div>
+        <div class="modal-inner-content">
+            <div class="modal-warning-triangle">&#9888;</div>
+            <div class="modal-quote-block">
+                <p class="q-lead" style="color: #ff2a85;">ВНИМАНИЕ!</p>
+                <p class="q-line" style="font-size: 0.95rem; line-height: 1.4;">Шифр Цезаря тривиально взламывается методом <strong>частотного анализа</strong>.</p>
+            </div>
+            <div class="freq-token-list">
+                <span class="f-tag">E: 12.7%</span>
+                <span class="f-tag">T: 9.1%</span>
+                <span class="f-tag">A: 8.2%</span>
+                <span class="f-tag">O: 7.5%</span>
+            </div>
+            <div class="modal-action-row" style="margin-top: 15px;">
+                <a href="/" class="pink-ok-button" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                    <span>В КОНСОЛЬ</span>
+                </a>
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
