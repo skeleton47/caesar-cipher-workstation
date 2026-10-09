@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Caesar Cipher Studio</title>
+<!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            charcoal: '#181818',
+            paper: '#FCF9F4',
+            panel: '#FFFFFF',
+            accent: '#D8EE48',
+            'accent-hover': '#CBE037',
+            cream: '#F4F1EA',
+            'cream-light': '#F7F5EE',
+            'subtle-border': '#E4E0D6'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            'brutal-sm': '2px 2px 0px #181818',
+            'brutal': '3px 3px 0px #181818',
+            'brutal-lg': '4px 4px 0px #181818'
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #F6F3EE;
+      color: #181818;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .slider-track::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 9999px;
+      background: #181818;
+      cursor: pointer;
+      border: 3px solid #D8EE48;
+      box-shadow: 1px 1px 0px #181818;
+      margin-top: -7px;
+      transition: transform 0.1s ease;
+    }
+    .slider-track::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+    .slider-track::-webkit-slider-runnable-track {
+      height: 6px;
+      background: #E4E0D6;
+      border-radius: 9999px;
+      border: 1px solid #181818;
+    }
+  </style>
+</head>
+<body class="min-h-screen py-6 sm:py-10 px-4 sm:px-6 md:px-8 flex justify-center items-center selection:bg-accent selection:text-charcoal">
+<!-- Main Bento Container Shell -->
+<div class="w-full max-w-5xl bg-paper border-2 border-charcoal rounded-[2rem] p-6 sm:p-9 shadow-brutal-lg flex flex-col gap-8">
+<!-- 1. HEADER / NAVIGATION -->
+<header class="relative flex items-center justify-between pb-6 border-b border-charcoal/15">
+<!-- Left spacer for exact visual balance -->
+<div class="hidden sm:block w-36"></div>
+<!-- Centered Capsule Navigation Bar -->
+<nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-charcoal shadow-brutal-sm">
+<button class="nav-tab px-5 py-2 rounded-full bg-charcoal text-white text-xs font-bold tracking-wide transition shadow-sm" data-tab="caesar">Caesar</button>
+<button class="nav-tab px-5 py-2 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition" data-tab="vigenere">Vigenère</button>
+<button class="nav-tab px-5 py-2 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition" data-tab="frequency">Frequency</button>
+</nav>
+<!-- Right Header Actions (⌘K and Reset) -->
+<div class="flex items-center gap-2.5 ml-auto sm:ml-0">
+<div class="flex items-center px-3 py-1.5 rounded-full bg-panel border border-charcoal text-xs font-mono font-semibold text-charcoal shadow-sm">
+          ⌘K
+        </div>
+<button class="px-5 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm" id="quick-reset-btn">
+          Reset
+        </button>
+</div>
+</header>
+<!-- 2. TITLE AREA -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3 flex-wrap">
+<h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Caesar Cipher</h1>
+<span class="px-3 py-0.5 rounded-full bg-accent border border-charcoal text-[11px] font-mono font-bold text-charcoal shadow-sm">
+          ROT-N Modulo 26
+        </span>
+</div>
+<p class="text-xs sm:text-sm text-charcoal/70">
+        Monoalphabetic modular shift transformation and automated cryptanalysis
+      </p>
+</div>
+<!-- 3. WORKSPACE / CORE BENTO CARDS -->
+<main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- LEFT COLUMN: Shift Controller & Engine Constraints -->
+<section class="lg:col-span-5 flex flex-col gap-5">
+<!-- Card 1: Shift Offset Controller -->
+<article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<div>
+<span class="text-[11px] font-mono uppercase tracking-wider font-bold text-charcoal/60">Shift Offset</span>
+<div class="text-3xl sm:text-4xl font-mono font-black text-charcoal tracking-tight mt-0.5" id="shift-badge-display">
+                ROT-03
+              </div>
+</div>
+<div class="flex items-center gap-1.5 bg-cream-light p-1.5 rounded-xl border border-charcoal shadow-sm">
+<button class="w-9 h-9 rounded-lg bg-panel hover:bg-accent font-mono font-bold text-lg text-charcoal flex items-center justify-center transition border border-charcoal active:scale-95" id="shift-dec-btn" title="Decrease shift">−</button>
+<button class="w-9 h-9 rounded-lg bg-panel hover:bg-accent font-mono font-bold text-lg text-charcoal flex items-center justify-center transition border border-charcoal active:scale-95" id="shift-inc-btn" title="Increase shift">+</button>
+</div>
+</div>
+<!-- Slider -->
+<div class="space-y-2 pt-1">
+<input class="slider-track w-full appearance-none cursor-pointer" id="shift-slider" max="25" min="0" type="range" value="3"/>
+<div class="flex justify-between text-[11px] font-mono font-semibold text-charcoal/60 px-0.5">
+<span>0 (Identity)</span>
+<span>13 (Half-turn)</span>
+<span>25 (Max)</span>
+</div>
+</div>
+<!-- Standard Presets -->
+<div class="space-y-2.5 pt-3 border-t border-charcoal/10">
+<label class="text-[10px] font-mono uppercase font-bold tracking-wider text-charcoal/60">Quick Presets</label>
+<div class="flex flex-wrap gap-2">
+<button class="preset-chip px-3.5 py-1.5 rounded-full text-xs font-mono font-bold border border-charcoal bg-accent text-charcoal transition hover:bg-accent-hover shadow-brutal-sm" data-rot="3">
+                ROT-3 (Caesar)
+              </button>
+<button class="preset-chip px-3.5 py-1.5 rounded-full text-xs font-mono font-bold border border-charcoal bg-cream-light text-charcoal transition hover:border-charcoal hover:bg-cream" data-rot="13">
+                ROT-13
+              </button>
+<button class="preset-chip px-3.5 py-1.5 rounded-full text-xs font-mono font-bold border border-charcoal bg-cream-light text-charcoal transition hover:border-charcoal hover:bg-cream" data-rot="5">
+                ROT-5
+              </button>
+</div>
+</div>
+</article>
+<!-- Card 2: Engine Constraints / Toggles -->
+<article class="bg-panel border-2 border-charcoal rounded-2xl p-5 shadow-brutal-sm flex flex-col gap-3">
+<span class="text-xs font-bold uppercase tracking-wider text-charcoal/70">Engine Constraints</span>
+<div class="grid grid-cols-2 gap-2.5 pt-0.5">
+<label class="flex items-center justify-between p-3 rounded-xl border border-charcoal/30 bg-cream-light hover:bg-cream cursor-pointer text-xs font-semibold text-charcoal transition">
+<span>Preserve Case</span>
+<input checked="" class="rounded border-charcoal text-charcoal focus:ring-0 cursor-pointer w-4 h-4 accent-charcoal ml-2" id="toggle-preserve-case" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-xl border border-charcoal/30 bg-cream-light hover:bg-cream cursor-pointer text-xs font-semibold text-charcoal transition">
+<span>Keep Punctuation</span>
+<input checked="" class="rounded border-charcoal text-charcoal focus:ring-0 cursor-pointer w-4 h-4 accent-charcoal ml-2" id="toggle-keep-punct" type="checkbox"/>
+</label>
+</div>
+</article>
+<!-- Card 3: Key Space & Benchmark info card -->
+<article class="bg-cream-light border-2 border-charcoal rounded-2xl p-4 sm:p-5 shadow-brutal-sm flex items-center justify-between">
+<div class="space-y-0.5">
+<div class="text-[10px] font-mono uppercase font-bold tracking-wider text-charcoal/60">Key Space Complexity</div>
+<div class="text-xl font-mono font-bold text-charcoal">26 Keys (ℤ₂₆)</div>
+</div>
+<div class="text-right space-y-0.5">
+<span class="inline-block px-2.5 py-1 rounded-md bg-accent border border-charcoal text-[11px] font-mono font-bold text-charcoal">
+              Instant (~0.1ms)
+            </span>
+<div class="text-[10px] font-mono text-charcoal/60">Brute-force crackable</div>
+</div>
+</article>
+</section>
+<!-- RIGHT COLUMN: Cryptor Engine Input / Output -->
+<section class="lg:col-span-7 flex flex-col gap-4">
+<div class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-5">
+<!-- Action bar with Mode Switch & Utilities -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-charcoal/10">
+<!-- Mode switch -->
+<div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal">
+<button class="px-5 py-2 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm" id="direction-encrypt-btn">
+                Encrypt
+              </button>
+<button class="px-5 py-2 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition" id="direction-decrypt-btn">
+                Decrypt
+              </button>
+</div>
+<!-- Utilities -->
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-2 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-semibold text-charcoal transition active:scale-95 shadow-sm" id="sample-text-btn">
+                Sample Text
+              </button>
+<button class="px-3.5 py-2 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-semibold text-charcoal transition active:scale-95 shadow-sm" id="clear-input-btn">
+                Clear
+              </button>
+</div>
+</div>
+<!-- Plaintext Message Input -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between text-xs">
+<span class="font-bold uppercase tracking-wider text-charcoal" id="input-heading">Plaintext (Input)</span>
+<span class="font-mono text-[11px] font-semibold text-charcoal/70 px-2.5 py-0.5 rounded-md bg-cream-light border border-charcoal/20" id="input-char-count">
+                29 characters
+              </span>
+</div>
+<textarea class="w-full rounded-xl border border-charcoal bg-cream-light/40 p-3.5 text-sm sm:text-base font-mono font-medium focus:ring-2 focus:ring-charcoal focus:border-charcoal focus:outline-none transition resize-y leading-relaxed placeholder:text-charcoal/40" id="cipher-input" placeholder="Type or paste message..." rows="4">MEET AT THE FORUM BY MIDNIGHT</textarea>
+</div>
+<!-- Action Divider with Swap -->
+<div class="flex items-center justify-center py-0.5">
+<button class="px-5 py-1.5 rounded-full border border-charcoal bg-cream hover:bg-accent text-charcoal text-xs font-mono font-bold transition shadow-brutal-sm flex items-center gap-2 active:scale-95" id="swap-texts-btn">
+<span>⇅</span>
+<span>Swap</span>
+</button>
+</div>
+<!-- Ciphertext Output Box -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between text-xs">
+<span class="font-bold uppercase tracking-wider text-charcoal" id="output-heading">Ciphertext (Result)</span>
+<div class="flex items-center gap-2">
+<span class="text-[11px] font-mono font-bold text-charcoal opacity-0 transition-opacity" id="copy-toast">Copied!</span>
+<span class="font-mono text-[11px] font-semibold text-charcoal/70 px-2.5 py-0.5 rounded-md bg-cream-light border border-charcoal/20" id="output-char-count">
+                  29 characters
+                </span>
+<button class="px-4 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-accent text-xs font-bold text-charcoal flex items-center gap-1.5 transition active:scale-95 shadow-sm" id="copy-output-btn">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Copy</span>
+</button>
+</div>
+</div>
+<div class="w-full min-h-[104px] rounded-xl border border-charcoal bg-cream-light p-3.5 text-sm sm:text-base font-mono font-bold text-charcoal break-words leading-relaxed select-all" id="cipher-output">PHHW DW WKH IRUXP EB PLGQLJKW</div>
+</div>
+</div>
+</section>
+</main>
+<!-- 4. BOTTOM SECTION: Brute-Force Cryptanalysis -->
+<section class="border-t border-charcoal/15 pt-6 flex flex-col gap-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div>
+<h2 class="text-sm font-bold uppercase tracking-wider text-charcoal">Brute-Force Cryptanalysis</h2>
+<p class="text-xs text-charcoal/60">Automated inverse shift matching ranked by English language frequency</p>
+</div>
+<div class="flex items-center">
+<span class="px-3.5 py-1.5 rounded-full bg-panel border border-charcoal text-xs font-mono font-bold text-charcoal shadow-brutal-sm" id="best-match-summary">
+            Top Match: ROT-19 (44% match)
+          </span>
+</div>
+</div>
+<!-- Matcher Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3.5" id="cracker-cards-grid">
+<!-- Javascript dynamically injects top 3 candidates here -->
+</div>
+</section>
+<!-- 5. FOOTER -->
+<footer class="border-t border-charcoal/15 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-charcoal/60 font-mono">
+<span>Modulo 26 Ring Arithmetic · Discrete Cipher Engine</span>
+<span>ROT(N) mod 26</span>
+</footer>
+</div>
+<!-- JavaScript Engine -->
+<script>
+    const state = {
+      shift: 3,
+      isDecrypt: false,
+      preserveCase: true,
+      keepPunctuation: true
+    };
+
+    const DICTIONARY = [
+      'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
+      'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
+      'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her',
+      'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there',
+      'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get',
+      'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no',
+      'just', 'him', 'know', 'take', 'people', 'into', 'year', 'your',
+      'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then',
+      'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also',
+      'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first',
+      'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these',
+      'give', 'day', 'most', 'us', 'meet', 'forum', 'midnight', 'attack',
+      'caesar', 'rome', 'secret', 'dawn', 'river', 'bridge', 'senate', 'march'
+    ];
+
+    const HISTORICAL_SAMPLES = [
+      "MEET AT THE FORUM BY MIDNIGHT",
+      "ATTACK AT DAWN ALONG THE NORTHERN RIVER",
+      "BEWARE THE IDES OF MARCH",
+      "THE SECRET PASSWORD IS GOLDEN EAGLE",
+      "RETREAT TO THE WEST WALL BEFORE SUNRISE"
+    ];
+    let sampleCounter = 0;
+
+    // DOM Elements
+    const shiftSlider = document.getElementById('shift-slider');
+    const shiftBadgeDisplay = document.getElementById('shift-badge-display');
+    const shiftDecBtn = document.getElementById('shift-dec-btn');
+    const shiftIncBtn = document.getElementById('shift-inc-btn');
+    const togglePreserveCase = document.getElementById('toggle-preserve-case');
+    const toggleKeepPunct = document.getElementById('toggle-keep-punct');
+    const directionEncryptBtn = document.getElementById('direction-encrypt-btn');
+    const directionDecryptBtn = document.getElementById('direction-decrypt-btn');
+    const inputHeading = document.getElementById('input-heading');
+    const outputHeading = document.getElementById('output-heading');
+    const cipherInput = document.getElementById('cipher-input');
+    const cipherOutput = document.getElementById('cipher-output');
+    const inputCharCount = document.getElementById('input-char-count');
+    const outputCharCount = document.getElementById('output-char-count');
+    const copyOutputBtn = document.getElementById('copy-output-btn');
+    const copyToast = document.getElementById('copy-toast');
+    const sampleTextBtn = document.getElementById('sample-text-btn');
+    const clearInputBtn = document.getElementById('clear-input-btn');
+    const swapTextsBtn = document.getElementById('swap-texts-btn');
+    const quickResetBtn = document.getElementById('quick-reset-btn');
+    const crackerCardsGrid = document.getElementById('cracker-cards-grid');
+    const bestMatchSummary = document.getElementById('best-match-summary');
+    const presetChips = document.querySelectorAll('.preset-chip');
+
+    // Transformation logic
+    function transformCaesar(text, shift, isDecrypt) {
+      if (!text) return '';
+      let effectiveShift = isDecrypt ? (26 - (shift % 26)) % 26 : (shift % 26);
+
+      return text.split('').map(char => {
+        const code = char.charCodeAt(0);
+
+        if (code >= 65 && code <= 90) {
+          return String.fromCharCode(((code - 65 + effectiveShift) % 26) + 65);
+        }
+        if (code >= 97 && code <= 122) {
+          if (!state.preserveCase) {
+            return String.fromCharCode(((code - 97 + effectiveShift) % 26) + 65);
+          }
+          return String.fromCharCode(((code - 97 + effectiveShift) % 26) + 97);
+        }
+        if (!state.keepPunctuation && !/[a-zA-Z]/.test(char)) {
+          return '';
+        }
+        return char;
+      }).join('');
+    }
+
+    function calculateEnglishScore(text) {
+      if (!text || text.length < 3) return 10;
+      const cleanLower = text.toLowerCase();
+      const words = cleanLower.split(/[^a-z]+/).filter(w => w.length > 1);
+
+      let dictionaryMatches = 0;
+      words.forEach(w => {
+        if (DICTIONARY.includes(w)) dictionaryMatches++;
+      });
+
+      const commonLetters = (cleanLower.match(/[etaoinshr]/g) || []).length;
+      const totalLetters = (cleanLower.match(/[a-z]/g) || []).length;
+      const letterFreqScore = totalLetters > 0 ? (commonLetters / totalLetters) : 0;
+
+      let score = (dictionaryMatches * 26) + (letterFreqScore * 35);
+      if (words.length > 0 && dictionaryMatches / words.length > 0.4) {
+        score += 25;
+      }
+      return Math.min(Math.round(score), 98);
+    }
+
+    function runEngine() {
+      const input = cipherInput.value;
+      const result = transformCaesar(input, state.shift, state.isDecrypt);
+
+      cipherOutput.textContent = result || '—';
+      inputCharCount.textContent = `${input.length} characters`;
+      outputCharCount.textContent = `${result.length} characters`;
+
+      updateCryptanalysis(input);
+    }
+
+    function updateCryptanalysis(rawText) {
+      if (!rawText || rawText.trim().length === 0) {
+        crackerCardsGrid.innerHTML = `
+          <div class="col-span-1 md:col-span-3 p-5 rounded-xl border border-charcoal/20 bg-cream-light text-center text-xs text-charcoal/60">
+            Enter ciphertext or plain text above to analyze candidate shifts.
+          </div>
+        `;
+        bestMatchSummary.textContent = 'Awaiting Input';
+        return;
+      }
+
+      const candidateList = [];
+      for (let s = 1; s <= 25; s++) {
+        const candidateDecryption = transformCaesar(rawText, s, true);
+        const score = calculateEnglishScore(candidateDecryption);
+        candidateList.push({
+          shift: s,
+          text: candidateDecryption,
+          score: score
+        });
+      }
+
+      candidateList.sort((a, b) => b.score - a.score);
+      const topThree = candidateList.slice(0, 3);
+      const best = topThree[0];
+
+      bestMatchSummary.textContent = `Top Match: ROT-${best.shift} (${best.score}% match)`;
+
+      crackerCardsGrid.innerHTML = '';
+      topThree.forEach((cand, idx) => {
+        const card = document.createElement('div');
+        const isLeader = idx === 0;
+        card.className = `p-4 sm:p-5 rounded-xl border-2 border-charcoal transition ${
+          isLeader ? 'bg-cream-light shadow-brutal-sm' : 'bg-panel shadow-sm'
+        } flex flex-col justify-between gap-3`;
+
+        const truncated = cand.text.length > 55 ? cand.text.substring(0, 52) + '...' : cand.text;
+
+        card.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md ${isLeader ? 'bg-charcoal text-white' : 'bg-cream border border-charcoal/20 text-charcoal'}">
+                ROT-${cand.shift}
+              </span>
+              <span class="text-xs font-mono font-bold ${isLeader ? 'text-charcoal' : 'text-charcoal/70'}">
+                ${cand.score}% match
+              </span>
+            </div>
+            <p class="font-mono text-xs text-charcoal font-medium break-words leading-relaxed pt-1">
+              "${escapeHtml(truncated)}"
+            </p>
+          </div>
+          <div class="flex items-center justify-between pt-2.5 border-t border-charcoal/10">
+            <span class="text-[11px] text-charcoal/60 font-mono">${isLeader ? 'High probability' : 'Candidate'}</span>
+            <button class="apply-shift-btn px-3 py-1 rounded-lg border border-charcoal bg-panel hover:bg-accent text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm" data-shift="${cand.shift}">
+              Apply ROT-${cand.shift}
+            </button>
+          </div>
+        `;
+
+        card.querySelector('.apply-shift-btn').addEventListener('click', () => {
+          setShift(cand.shift);
+        });
+
+        crackerCardsGrid.appendChild(card);
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function setShift(val) {
+      let num = parseInt(val, 10);
+      if (isNaN(num)) num = 0;
+      num = ((num % 26) + 26) % 26;
+      state.shift = num;
+
+      shiftSlider.value = num;
+      shiftBadgeDisplay.textContent = `ROT-${num < 10 ? '0' : ''}${num}`;
+
+      presetChips.forEach(btn => {
+        const rot = parseInt(btn.dataset.rot, 10);
+        if (rot === num) {
+          btn.className = 'preset-chip px-3.5 py-1.5 rounded-full text-xs font-mono font-bold border border-charcoal bg-accent text-charcoal transition hover:bg-accent-hover shadow-brutal-sm';
+        } else {
+          btn.className = 'preset-chip px-3.5 py-1.5 rounded-full text-xs font-mono font-bold border border-charcoal bg-cream-light text-charcoal transition hover:border-charcoal hover:bg-cream';
+        }
+      });
+
+      runEngine();
+    }
+
+    // Event Listeners
+    shiftSlider.addEventListener('input', e => setShift(e.target.value));
+    shiftIncBtn.addEventListener('click', () => setShift(state.shift + 1));
+    shiftDecBtn.addEventListener('click', () => setShift(state.shift - 1));
+
+    presetChips.forEach(chip => {
+      chip.addEventListener('click', () => setShift(chip.dataset.rot));
+    });
+
+    cipherInput.addEventListener('input', runEngine);
+
+    togglePreserveCase.addEventListener('change', e => {
+      state.preserveCase = e.target.checked;
+      runEngine();
+    });
+
+    toggleKeepPunct.addEventListener('change', e => {
+      state.keepPunctuation = e.target.checked;
+      runEngine();
+    });
+
+    function setDirection(isDec) {
+      state.isDecrypt = isDec;
+      if (isDec) {
+        directionDecryptBtn.className = 'px-5 py-2 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+        directionEncryptBtn.className = 'px-5 py-2 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+        inputHeading.textContent = 'Ciphertext (Input)';
+        outputHeading.textContent = 'Decrypted Plaintext';
+      } else {
+        directionEncryptBtn.className = 'px-5 py-2 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+        directionDecryptBtn.className = 'px-5 py-2 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+        inputHeading.textContent = 'Plaintext (Input)';
+        outputHeading.textContent = 'Ciphertext (Result)';
+      }
+      runEngine();
+    }
+
+    directionEncryptBtn.addEventListener('click', () => setDirection(false));
+    directionDecryptBtn.addEventListener('click', () => setDirection(true));
+
+    clearInputBtn.addEventListener('click', () => {
+      cipherInput.value = '';
+      runEngine();
+      cipherInput.focus();
+    });
+
+    sampleTextBtn.addEventListener('click', () => {
+      sampleCounter = (sampleCounter + 1) % HISTORICAL_SAMPLES.length;
+      cipherInput.value = HISTORICAL_SAMPLES[sampleCounter];
+      setDirection(false);
+      setShift(3);
+    });
+
+    swapTextsBtn.addEventListener('click', () => {
+      const currentOutput = cipherOutput.textContent.trim();
+      if (currentOutput && currentOutput !== '—') {
+        cipherInput.value = currentOutput;
+        setDirection(!state.isDecrypt);
+      }
+    });
+
+    quickResetBtn.addEventListener('click', () => {
+      cipherInput.value = "MEET AT THE FORUM BY MIDNIGHT";
+      state.preserveCase = true;
+      state.keepPunctuation = true;
+      togglePreserveCase.checked = true;
+      toggleKeepPunct.checked = true;
+      setDirection(false);
+      setShift(3);
+    });
+
+    copyOutputBtn.addEventListener('click', async () => {
+      const textToCopy = cipherOutput.textContent.trim();
+      if (!textToCopy || textToCopy === '—') return;
+
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        copyToast.style.opacity = '1';
+        setTimeout(() => { copyToast.style.opacity = '0'; }, 1600);
+      } catch (err) {
+        const el = document.createElement('textarea');
+        el.value = textToCopy;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        copyToast.style.opacity = '1';
+        setTimeout(() => { copyToast.style.opacity = '0'; }, 1600);
+      }
+    });
+
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => {
+          t.className = 'nav-tab px-5 py-2 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition';
+        });
+        tab.className = 'nav-tab px-5 py-2 rounded-full bg-charcoal text-white text-xs font-bold tracking-wide transition shadow-sm';
+      });
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setShift(3);
+    });
+  </script>
+</body></html>

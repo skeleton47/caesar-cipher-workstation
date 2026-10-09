@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary": "#1A1A1A",
+        "on-primary": "#FFFFFF",
+        "background": "#FCF9F4",
+        "surface": "#FFFFFF",
+        "surface-container": "#F0EDE4",
+        "surface-container-low": "#F6F3EE",
+        "surface-container-lowest": "#FFFFFF",
+        "surface-container-high": "#EBE8E0",
+        "on-surface": "#1A1A1A",
+        "on-surface-variant": "#57564F",
+        "secondary-container": "#D9F99D",
+        "on-secondary-fixed": "#191E00",
+        "outline": "#1A1A1A"
+      },
+      fontFamily: {
+        sans: ["Plus Jakarta Sans", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"]
+      }
+    }
+  }
+};
+</script><style>
+@layer base {
+  body {
+    background-color: #FCF9F4;
+    color: #1A1A1A;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+.neo-border {
+  border: 1.5px solid #1A1A1A;
+}
+.neo-shadow {
+  box-shadow: 2px 2px 0px #1A1A1A;
+}
+.neo-shadow-sm {
+  box-shadow: 1px 1px 0px #1A1A1A;
+}
+.neo-shadow-md {
+  box-shadow: 3px 3px 0px #1A1A1A;
+}
+</style></head><body class="min-h-screen bg-background text-on-surface antialiased flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-fixed">
+<!-- Centered Capsule Top Header -->
+<header class="w-full sticky top-0 z-50 bg-[#FCF9F4]/90 backdrop-blur-md border-b-[1.5px] border-primary">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+<!-- Left balancing empty spacer (no logo, no brand, no version) -->
+<div class="w-24 sm:w-32 hidden sm:block"></div>
+<!-- Centered Nav Capsule -->
+<nav class="flex items-center mx-auto bg-surface-container-low p-1 rounded-full neo-border neo-shadow-sm">
+<a class="px-5 py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Caesar</a>
+<a class="px-5 py-1.5 rounded-full text-xs font-bold bg-primary text-white neo-shadow-sm cursor-default" href="#">Vigenère</a>
+<a class="px-5 py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Frequency</a>
+</nav>
+<!-- Right Shortcut Pill & Reset -->
+<div class="flex items-center justify-end gap-2.5 w-auto sm:w-32">
+<div class="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface neo-border font-mono text-xs font-semibold text-on-surface-variant select-none shadow-[1px_1px_0px_#1A1A1A]">
+<kbd class="font-sans text-xs">⌘</kbd><kbd class="font-sans text-xs">K</kbd>
+</div>
+<button class="px-3.5 py-1.5 rounded-xl bg-surface hover:bg-surface-container neo-border font-mono text-xs font-semibold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 shrink-0 whitespace-nowrap" id="nav-reset-btn">
+<span class="material-symbols-outlined text-[15px]">refresh</span>
+<span>Reset</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="w-full flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
+<!-- Title Area -->
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-1">
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center gap-3 flex-wrap">
+<h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-primary">Vigenère Cipher</h1>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container neo-border font-mono text-xs font-bold text-on-secondary-fixed whitespace-nowrap">
+          Polyalphabetic
+        </span>
+</div>
+<p class="text-sm sm:text-base text-on-surface-variant font-normal">
+        Periodic keystream substitution with interactive character mapping &amp; Kasiski cryptanalysis
+      </p>
+</div>
+<div class="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-surface-container-low neo-border text-xs font-mono text-on-surface-variant shrink-0">
+<span class="w-2 h-2 rounded-full bg-secondary-container neo-border"></span>
+<span class="whitespace-nowrap font-medium">Tabula Recta Modulo 26</span>
+</div>
+</div>
+<!-- Workspace Grid: 2 Columns -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- Left Column: Keystream & Matrix -->
+<section class="lg:col-span-5 flex flex-col gap-6">
+<!-- Secret Keyword Card -->
+<div class="bg-surface rounded-2xl neo-border p-5 sm:p-6 neo-shadow flex flex-col gap-4">
+<div class="flex items-center justify-between pb-3 border-b-[1.5px] border-primary/10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">key</span>
+<h2 class="text-base font-bold text-primary">Secret Keyword</h2>
+</div>
+<span class="px-2.5 py-0.5 rounded-md bg-surface-container-low neo-border font-mono text-xs font-semibold text-primary whitespace-nowrap" id="key-len-badge">5 chars</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-mono text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant" for="cipher-key">Shift Keyword (Key Stream)</label>
+<div class="relative">
+<input class="w-full uppercase font-mono text-base font-bold tracking-widest px-3.5 py-2.5 pr-10 rounded-xl bg-surface-container-low neo-border focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-primary" id="cipher-key" maxlength="20" placeholder="ENTER KEYWORD" type="text" value="LEMON"/>
+<button class="absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary p-1.5 flex items-center justify-center transition-colors" id="clear-key-btn" title="Clear keyword">
+<span class="material-symbols-outlined text-[17px]">close</span>
+</button>
+</div>
+</div>
+<!-- Presets -->
+<div class="flex items-center gap-2 flex-wrap pt-0.5">
+<span class="font-mono text-xs text-on-surface-variant mr-1">Presets:</span>
+<button class="preset-pill px-3 py-1.5 rounded-lg bg-surface hover:bg-secondary-container neo-border font-mono text-xs font-semibold text-primary transition-all active:scale-95 neo-shadow-sm whitespace-nowrap" data-key="LEMON">LEMON</button>
+<button class="preset-pill px-3 py-1.5 rounded-lg bg-surface hover:bg-secondary-container neo-border font-mono text-xs font-semibold text-primary transition-all active:scale-95 neo-shadow-sm whitespace-nowrap" data-key="CIPHER">CIPHER</button>
+<button class="preset-pill px-3 py-1.5 rounded-lg bg-surface hover:bg-secondary-container neo-border font-mono text-xs font-semibold text-primary transition-all active:scale-95 neo-shadow-sm whitespace-nowrap" data-key="FORTIFY">FORTIFY</button>
+</div>
+<!-- Repeating Key Stream Ribbon -->
+<div class="flex flex-col gap-1.5 pt-1">
+<div class="flex items-center justify-between">
+<span class="font-mono text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant">Repeating Key Stream</span>
+<span class="font-mono text-[10px] text-on-surface-variant">Pᵢ ↔ Kᵢ Alignment</span>
+</div>
+<div class="flex flex-wrap gap-1.5 p-3 rounded-xl bg-surface-container-low neo-border min-h-[48px] items-center" id="key-stream-container">
+<span class="w-7 h-7 rounded-lg bg-surface neo-border flex items-center justify-center font-mono text-xs font-bold text-primary neo-shadow-sm">L</span>
+<span class="w-7 h-7 rounded-lg bg-surface neo-border flex items-center justify-center font-mono text-xs font-bold text-primary neo-shadow-sm">E</span>
+<span class="w-7 h-7 rounded-lg bg-surface neo-border flex items-center justify-center font-mono text-xs font-bold text-primary neo-shadow-sm">M</span>
+<span class="w-7 h-7 rounded-lg bg-surface neo-border flex items-center justify-center font-mono text-xs font-bold text-primary neo-shadow-sm">O</span>
+<span class="w-7 h-7 rounded-lg bg-surface neo-border flex items-center justify-center font-mono text-xs font-bold text-primary neo-shadow-sm">N</span>
+</div>
+</div>
+</div>
+<!-- Tabula Recta Quick-Lookup Card -->
+<div class="bg-surface rounded-2xl neo-border p-5 sm:p-6 neo-shadow flex flex-col gap-3.5">
+<div class="flex items-center justify-between pb-3 border-b-[1.5px] border-primary/10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">grid_4x4</span>
+<h3 class="text-base font-bold text-primary">Tabula Recta Quick-Lookup</h3>
+</div>
+<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-md bg-surface-container-low neo-border font-semibold">C = (P + K) % 26</span>
+</div>
+<!-- Lookup 3-box summary -->
+<div class="grid grid-cols-3 gap-2 text-center p-3 rounded-xl bg-surface-container-low neo-border">
+<div class="flex flex-col items-center py-1">
+<span class="text-[10px] font-mono text-on-surface-variant uppercase font-bold tracking-wider">Plaintext Col</span>
+<span class="font-mono text-xl font-bold text-primary mt-1" id="lookup-p">A</span>
+<span class="text-[10px] font-mono text-on-surface-variant mt-0.5">val = 0</span>
+</div>
+<div class="flex flex-col items-center py-1 border-x-[1.5px] border-primary/10">
+<span class="text-[10px] font-mono text-on-surface-variant uppercase font-bold tracking-wider">Key Row</span>
+<span class="font-mono text-xl font-bold text-primary mt-1" id="lookup-k">L</span>
+<span class="text-[10px] font-mono text-on-surface-variant mt-0.5">shift = 11</span>
+</div>
+<div class="flex flex-col items-center py-1 bg-secondary-container rounded-lg neo-border shadow-sm">
+<span class="text-[10px] font-mono text-on-secondary-fixed uppercase font-bold tracking-wider">Intersection</span>
+<span class="font-mono text-xl font-bold text-on-secondary-fixed mt-1" id="lookup-c">L</span>
+<span class="text-[10px] font-mono text-on-secondary-fixed/80 mt-0.5 font-semibold">result</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 pt-1">
+<span class="text-[10px] font-mono text-on-surface-variant uppercase tracking-wider font-semibold">Tabula Mini Sample (A–F)</span>
+<div class="grid grid-cols-7 gap-1 text-center font-mono text-xs select-none p-2.5 rounded-xl bg-surface-container-low neo-border" id="tabula-mini-table"></div>
+</div>
+</div>
+</section>
+<!-- Right Column: Cryptor Engine & Analysis -->
+<section class="lg:col-span-7 flex flex-col gap-6">
+<!-- Cryptor Engine Card -->
+<div class="bg-surface rounded-2xl neo-border p-5 sm:p-6 neo-shadow flex flex-col gap-5">
+<!-- Card Header with Toggle -->
+<div class="flex items-center justify-between pb-3.5 border-b-[1.5px] border-primary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">terminal</span>
+<h2 class="text-base font-bold text-primary">Cryptor Engine</h2>
+</div>
+<div class="inline-flex p-1 rounded-full bg-surface-container-low neo-border neo-shadow-sm">
+<button class="px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all bg-primary text-white neo-shadow-sm" id="btn-mode-encrypt">Encrypt</button>
+<button class="px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all text-on-surface-variant hover:text-primary" id="btn-mode-decrypt">Decrypt</button>
+</div>
+</div>
+<!-- Plaintext Input -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-mono text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant" for="text-input" id="input-label">Plaintext Message (Input)</label>
+<span class="font-mono text-xs text-on-surface-variant font-medium" id="char-counter">14 characters</span>
+</div>
+<div class="relative">
+<textarea class="w-full font-mono text-sm leading-relaxed p-3.5 rounded-xl bg-surface-container-low neo-border focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none text-primary font-medium" id="text-input" placeholder="Type message to process..." rows="3">ATTACK AT DAWN</textarea>
+</div>
+</div>
+<!-- Keystream Alignment Strip -->
+<div class="flex flex-col gap-2 p-3.5 rounded-xl bg-surface-container-low neo-border">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[17px]">view_timeline</span>
+<span class="font-mono text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant">Keystream Alignment</span>
+</div>
+<span class="font-mono text-[10px] text-on-surface-variant font-medium">Live Character Map</span>
+</div>
+<div class="overflow-x-auto pb-1 pt-1">
+<div class="min-w-max flex flex-col gap-2 font-mono text-xs" id="keystream-alignment-table"></div>
+</div>
+</div>
+<!-- Transition Badge -->
+<div class="flex items-center justify-center -my-1">
+<div class="px-4 py-1.5 rounded-full bg-surface-container-low neo-border font-mono text-[11px] text-on-surface flex items-center gap-2 neo-shadow-sm" id="transform-badge">
+<span class="material-symbols-outlined text-[16px] text-primary" id="transform-icon">arrow_downward</span>
+<span class="font-bold tracking-tight" id="transform-text">Encryption Shift (+K mod 26)</span>
+</div>
+</div>
+<!-- Output Result Box -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-mono text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant" for="text-output" id="output-label">Ciphertext Result (Output)</label>
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-emerald-700 font-bold hidden" id="copy-status">Copied!</span>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface hover:bg-secondary-container neo-border font-mono text-xs font-semibold text-primary transition-all flex items-center gap-1.5 active:translate-x-0.5 active:translate-y-0.5 neo-shadow-sm whitespace-nowrap" id="copy-btn">
+<span class="material-symbols-outlined text-[15px]">content_copy</span>
+<span>Copy</span>
+</button>
+</div>
+</div>
+<textarea class="w-full font-mono text-base font-bold tracking-wider leading-relaxed p-3.5 rounded-xl bg-surface-container-low neo-border text-primary focus:outline-none resize-none selection:bg-secondary-container cursor-text" id="text-output" readonly="" rows="3">LXFOPV EF RNHR</textarea>
+</div>
+<!-- Action Bar: Options & Action Buttons -->
+<div class="flex flex-wrap items-center justify-between gap-4 pt-3 border-t-[1.5px] border-primary/10">
+<div class="flex items-center gap-5 flex-wrap">
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded neo-border accent-primary cursor-pointer" id="toggle-spaces" type="checkbox"/>
+<span class="font-mono text-xs font-semibold text-on-surface">Preserve Spaces</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded neo-border accent-primary cursor-pointer" id="toggle-punct" type="checkbox"/>
+<span class="font-mono text-xs font-semibold text-on-surface">Include Punctuation</span>
+</label>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 rounded-xl bg-surface hover:bg-surface-container-low neo-border font-mono text-xs font-bold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 whitespace-nowrap" id="sample-btn">Sample</button>
+<button class="px-5 py-2 rounded-xl bg-primary hover:bg-neutral-800 text-white neo-border font-mono text-xs font-bold neo-shadow-sm transition-all active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 whitespace-nowrap" id="execute-btn">
+<span>Execute</span>
+<span class="material-symbols-outlined text-[15px]">bolt</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Key Stream Analysis Card -->
+<div class="bg-surface rounded-2xl neo-border p-5 sm:p-6 neo-shadow flex flex-col gap-3.5">
+<div class="flex items-center justify-between pb-3 border-b-[1.5px] border-primary/10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">troubleshoot</span>
+<h3 class="text-base font-bold text-primary">Key Stream Analysis</h3>
+</div>
+<span class="px-3 py-1 rounded-full bg-secondary-container neo-border font-mono text-xs font-bold text-on-secondary-fixed whitespace-nowrap">Factor Detection</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+<div class="p-3.5 rounded-xl bg-surface-container-low neo-border neo-shadow-sm flex flex-col justify-between">
+<span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">Estimated Period</span>
+<span class="font-mono text-xl font-bold text-primary my-1" id="analysis-key-len">L = 5</span>
+<span class="text-[10px] font-mono text-on-surface-variant font-medium">Kasiski Factor</span>
+</div>
+<div class="p-3.5 rounded-xl bg-surface-container-low neo-border neo-shadow-sm flex flex-col justify-between">
+<span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">Index of Coincidence</span>
+<span class="font-mono text-xl font-bold text-primary my-1" id="analysis-ioc">0.0303</span>
+<span class="text-[10px] font-mono text-on-surface-variant font-medium">Uniform poly spread</span>
+</div>
+<div class="p-3.5 rounded-xl bg-surface-container-low neo-border neo-shadow-sm flex flex-col justify-between">
+<span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">Keyspace States</span>
+<span class="font-mono text-xl font-bold text-primary my-1" id="analysis-keyspace">1.19e7 states</span>
+<span class="text-[10px] font-mono text-on-surface-variant font-medium" id="keyspace-formula">26⁵ States</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Harmonized Clean Footer -->
+<footer class="w-full bg-surface-container-low border-t-[1.5px] border-primary mt-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs text-on-surface-variant">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-medium text-primary">Polyalphabetic Keystream Substitution • Tabula Recta Modulo 26</span>
+</div>
+<div class="text-[11px] text-on-surface-variant">
+      Kasiski Factor Examination &amp; Periodic Stream Analysis
+    </div>
+</div>
+</footer>
+<!-- Application Logic -->
+<script>
+  (function() {
+    const keyInput = document.getElementById('cipher-key');
+    const keyLenBadge = document.getElementById('key-len-badge');
+    const clearKeyBtn = document.getElementById('clear-key-btn');
+    const keyStreamContainer = document.getElementById('key-stream-container');
+    const keystreamTable = document.getElementById('keystream-alignment-table');
+    
+    const textInput = document.getElementById('text-input');
+    const textOutput = document.getElementById('text-output');
+    const charCounter = document.getElementById('char-counter');
+    const inputLabel = document.getElementById('input-label');
+    const outputLabel = document.getElementById('output-label');
+    
+    const btnModeEncrypt = document.getElementById('btn-mode-encrypt');
+    const btnModeDecrypt = document.getElementById('btn-mode-decrypt');
+    const transformText = document.getElementById('transform-text');
+    const transformIcon = document.getElementById('transform-icon');
+    
+    const toggleSpaces = document.getElementById('toggle-spaces');
+    const togglePunct = document.getElementById('toggle-punct');
+    const sampleBtn = document.getElementById('sample-btn');
+    const executeBtn = document.getElementById('execute-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    const copyStatus = document.getElementById('copy-status');
+    const navResetBtn = document.getElementById('nav-reset-btn');
+    
+    const lookupP = document.getElementById('lookup-p');
+    const lookupK = document.getElementById('lookup-k');
+    const lookupC = document.getElementById('lookup-c');
+    const tabulaMiniTable = document.getElementById('tabula-mini-table');
+    
+    const analysisKeyLen = document.getElementById('analysis-key-len');
+    const analysisIoc = document.getElementById('analysis-ioc');
+    const analysisKeyspace = document.getElementById('analysis-keyspace');
+    const keyspaceFormula = document.getElementById('keyspace-formula');
+
+    let mode = 'encrypt'; // 'encrypt' | 'decrypt'
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function cleanKey(str) {
+      return (str || '').toUpperCase().replace(/[^A-Z]/g, '');
+    }
+
+    // Build Tabula Recta mini slice (A-F)
+    function buildTabulaMini() {
+      tabulaMiniTable.innerHTML = '';
+      const letters = ['·', 'A', 'B', 'C', 'D', 'E', 'F'];
+      
+      letters.forEach((l, idx) => {
+        const d = document.createElement('div');
+        d.className = `py-1.5 rounded-lg font-bold ${idx === 0 ? 'bg-primary text-white' : 'bg-surface-container neo-border text-primary'}`;
+        d.textContent = l;
+        tabulaMiniTable.appendChild(d);
+      });
+
+      for (let r = 0; r < 6; r++) {
+        const rowChar = alphabet[r];
+        const rh = document.createElement('div');
+        rh.className = 'py-1.5 rounded-lg font-bold bg-surface-container neo-border text-primary';
+        rh.textContent = rowChar;
+        tabulaMiniTable.appendChild(rh);
+
+        for (let c = 0; c < 6; c++) {
+          const colChar = alphabet[c];
+          const resChar = alphabet[(r + c) % 26];
+          const cell = document.createElement('button');
+          cell.type = 'button';
+          cell.className = 'py-1.5 rounded-lg bg-surface neo-border hover:bg-secondary-container transition-colors font-semibold text-primary';
+          cell.textContent = resChar;
+          cell.title = `Row ${rowChar} + Col ${colChar} = ${resChar}`;
+          cell.addEventListener('mouseenter', () => {
+            lookupP.textContent = colChar;
+            lookupK.textContent = rowChar;
+            lookupC.textContent = resChar;
+          });
+          tabulaMiniTable.appendChild(cell);
+        }
+      }
+    }
+
+    // Vigenere cipher execution
+    function computeVigenere(text, rawKey, isEncrypt, keepSpaces, keepPunct) {
+      const key = cleanKey(rawKey) || 'A';
+      let kIndex = 0;
+      let output = '';
+
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const isUpper = ch >= 'A' && ch <= 'Z';
+        const isLower = ch >= 'a' && ch <= 'z';
+
+        if (isUpper || isLower) {
+          const base = isUpper ? 65 : 97;
+          const pVal = ch.charCodeAt(0) - base;
+          const kVal = key.charCodeAt(kIndex % key.length) - 65;
+          let shift;
+
+          if (isEncrypt) {
+            shift = (pVal + kVal) % 26;
+          } else {
+            shift = (pVal - kVal + 26) % 26;
+          }
+
+          output += String.fromCharCode(base + shift);
+          kIndex++;
+        } else if (ch === ' ') {
+          if (keepSpaces) output += ' ';
+        } else {
+          if (keepPunct) output += ch;
+        }
+      }
+      return output;
+    }
+
+    // Index of Coincidence
+    function computeIoC(str) {
+      const clean = str.toUpperCase().replace(/[^A-Z]/g, '');
+      const n = clean.length;
+      if (n <= 1) return 0.0385;
+      const counts = {};
+      for (let i = 0; i < n; i++) {
+        counts[clean[i]] = (counts[clean[i]] || 0) + 1;
+      }
+      let sum = 0;
+      for (let k in counts) {
+        sum += counts[k] * (counts[k] - 1);
+      }
+      return sum / (n * (n - 1));
+    }
+
+    // Render repeating key stream ribbon
+    function renderKeyTiles(keyStr) {
+      const clean = cleanKey(keyStr);
+      keyStreamContainer.innerHTML = '';
+      keyLenBadge.textContent = `${clean.length} chars`;
+
+      if (!clean) {
+        keyStreamContainer.innerHTML = '<span class="text-xs font-mono text-on-surface-variant">Enter a secret keyword above</span>';
+        return;
+      }
+
+      for (let i = 0; i < Math.min(clean.length, 12); i++) {
+        const tile = document.createElement('span');
+        tile.className = 'w-7 h-7 rounded-lg bg-surface neo-border flex items-center justify-center font-mono text-xs font-bold text-primary neo-shadow-sm';
+        tile.textContent = clean[i];
+        keyStreamContainer.appendChild(tile);
+      }
+
+      if (clean.length > 12) {
+        const more = document.createElement('span');
+        more.className = 'text-xs font-mono text-on-surface-variant ml-1 font-semibold';
+        more.textContent = `+${clean.length - 12} more`;
+        keyStreamContainer.appendChild(more);
+      }
+    }
+
+    // Render keystream alignment
+    function renderAlignment(plain, rawKey) {
+      keystreamTable.innerHTML = '';
+      const key = cleanKey(rawKey) || 'A';
+      const cleanInp = plain.slice(0, 24);
+      
+      if (!cleanInp) {
+        keystreamTable.innerHTML = '<span class="text-xs text-on-surface-variant">Enter text to visualize keystream alignment</span>';
+        return;
+      }
+
+      const pRow = document.createElement('div');
+      pRow.className = 'flex items-center gap-1.5';
+      const pHeader = document.createElement('span');
+      pHeader.className = 'w-6 font-bold text-on-surface-variant uppercase text-xs';
+      pHeader.textContent = mode === 'encrypt' ? 'P :' : 'C :';
+      pRow.appendChild(pHeader);
+
+      const kRow = document.createElement('div');
+      kRow.className = 'flex items-center gap-1.5';
+      const kHeader = document.createElement('span');
+      kHeader.className = 'w-6 font-bold text-primary uppercase text-xs';
+      kHeader.textContent = 'K :';
+      kRow.appendChild(kHeader);
+
+      let kIdx = 0;
+      for (let i = 0; i < cleanInp.length; i++) {
+        const ch = cleanInp[i];
+        const isAlpha = /[a-zA-Z]/.test(ch);
+
+        const pBox = document.createElement('span');
+        pBox.className = `w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold neo-border ${isAlpha ? 'bg-surface text-primary shadow-[1px_1px_0px_#1A1A1A]' : 'bg-surface-container text-on-surface-variant'}`;
+        pBox.textContent = ch === ' ' ? '␣' : ch.toUpperCase();
+        pRow.appendChild(pBox);
+
+        const kBox = document.createElement('span');
+        kBox.className = `w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold neo-border ${isAlpha ? 'bg-secondary-container text-on-secondary-fixed shadow-[1px_1px_0px_#1A1A1A]' : 'bg-surface-container text-on-surface-variant/40'}`;
+        kBox.textContent = isAlpha ? key[kIdx % key.length] : '·';
+        kRow.appendChild(kBox);
+
+        if (isAlpha) kIdx++;
+      }
+
+      keystreamTable.appendChild(pRow);
+      keystreamTable.appendChild(kRow);
+    }
+
+    function toSuperscript(num) {
+      const sups = { '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹' };
+      return String(num).split('').map(d => sups[d] || d).join('');
+    }
+
+    function updateApp() {
+      const rawKey = keyInput.value;
+      const text = textInput.value;
+      const isEnc = mode === 'encrypt';
+      const keepSpaces = toggleSpaces.checked;
+      const keepPunct = togglePunct.checked;
+
+      renderKeyTiles(rawKey);
+
+      const result = computeVigenere(text, rawKey, isEnc, keepSpaces, keepPunct);
+      textOutput.value = result;
+
+      charCounter.textContent = `${text.length} characters`;
+      renderAlignment(text, rawKey);
+
+      // Tabula coordinate lookup top char
+      const cleanK = cleanKey(rawKey) || 'L';
+      const cleanT = cleanKey(text) || 'A';
+      lookupP.textContent = cleanT[0] || 'A';
+      lookupK.textContent = cleanK[0] || 'L';
+      lookupC.textContent = result.replace(/[^A-Za-z]/g, '')[0] || 'L';
+
+      // Analysis metrics
+      const kLen = cleanK.length;
+      analysisKeyLen.textContent = `L = ${kLen}`;
+      
+      const iocVal = computeIoC(result);
+      analysisIoc.textContent = iocVal.toFixed(4);
+
+      if (kLen > 0) {
+        const permutations = Math.pow(26, kLen);
+        keyspaceFormula.textContent = `26${toSuperscript(kLen)} States`;
+        if (permutations > 1e6) {
+          analysisKeyspace.textContent = permutations.toExponential(2).replace('+', '') + ' states';
+        } else {
+          analysisKeyspace.textContent = permutations.toLocaleString() + ' states';
+        }
+      } else {
+        analysisKeyspace.textContent = '1';
+        keyspaceFormula.textContent = '26⁰ States';
+      }
+    }
+
+    // Mode toggles
+    btnModeEncrypt.addEventListener('click', () => {
+      mode = 'encrypt';
+      btnModeEncrypt.className = 'px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all bg-primary text-white neo-shadow-sm';
+      btnModeDecrypt.className = 'px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all text-on-surface-variant hover:text-primary';
+      inputLabel.textContent = 'Plaintext Message (Input)';
+      outputLabel.textContent = 'Ciphertext Result (Output)';
+      transformText.textContent = 'Encryption Shift (+K mod 26)';
+      transformIcon.textContent = 'arrow_downward';
+      updateApp();
+    });
+
+    btnModeDecrypt.addEventListener('click', () => {
+      mode = 'decrypt';
+      btnModeDecrypt.className = 'px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all bg-primary text-white neo-shadow-sm';
+      btnModeEncrypt.className = 'px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all text-on-surface-variant hover:text-primary';
+      inputLabel.textContent = 'Ciphertext Message (Input)';
+      outputLabel.textContent = 'Plaintext Result (Decrypted Output)';
+      transformText.textContent = 'Decryption Inverse (-K mod 26)';
+      transformIcon.textContent = 'arrow_upward';
+      updateApp();
+    });
+
+    // Inputs & events
+    keyInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase();
+      updateApp();
+    });
+
+    textInput.addEventListener('input', updateApp);
+    toggleSpaces.addEventListener('change', updateApp);
+    togglePunct.addEventListener('change', updateApp);
+
+    clearKeyBtn.addEventListener('click', () => {
+      keyInput.value = '';
+      keyInput.focus();
+      updateApp();
+    });
+
+    document.querySelectorAll('.preset-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        keyInput.value = btn.dataset.key;
+        updateApp();
+      });
+    });
+
+    sampleBtn.addEventListener('click', () => {
+      if (mode === 'encrypt') {
+        textInput.value = 'ATTACK AT DAWN';
+      } else {
+        textInput.value = 'LXFOPV EF RNHR';
+      }
+      keyInput.value = 'LEMON';
+      updateApp();
+    });
+
+    executeBtn.addEventListener('click', updateApp);
+
+    copyBtn.addEventListener('click', () => {
+      if (!textOutput.value) return;
+      navigator.clipboard.writeText(textOutput.value).then(() => {
+        copyStatus.classList.remove('hidden');
+        setTimeout(() => {
+          copyStatus.classList.add('hidden');
+        }, 1600);
+      });
+    });
+
+    navResetBtn.addEventListener('click', () => {
+      keyInput.value = 'LEMON';
+      textInput.value = 'ATTACK AT DAWN';
+      mode = 'encrypt';
+      btnModeEncrypt.click();
+      updateApp();
+    });
+
+    // Keyboard shortcut CMD+K / CTRL+K
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        keyInput.focus();
+        keyInput.select();
+      }
+    });
+
+    // Initialize
+    buildTabulaMini();
+    updateApp();
+
+  })();
+</script>
+</body></html>

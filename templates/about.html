@@ -1,141 +1,157 @@
-{% extends 'base.html' %}
-{% set active_page = 'about' %}
-{% block title %}CIPHER LAB — Cryptographic Specifications & Architecture{% endblock %}
-
-{% block content %}
-<!-- HEADER BAR -->
-<div class="workbench-hero-bar">
-    <div class="hero-text-block">
-        <h1>Cryptographic Specifications</h1>
-        <p>Formal mathematical model, cryptanalytic attack profiles, and cipher taxonomy.</p>
-    </div>
-    <div class="hero-actions-block">
-        <a href="/" class="btn btn-primary btn-sm">&larr; Return to Workbench</a>
-    </div>
-</div>
-
-<div style="display: flex; flex-direction: column; gap: 20px; max-width: 960px; margin: 0 auto; width: 100%;">
-    <!-- SECTION 1: FORMAL MATHEMATICAL MODEL -->
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title-group">
-                <div class="card-title">
-                    <span class="badge badge-cyan">§ 1</span>
-                    <span>Formal Mathematical Definition</span>
-                </div>
-                <span class="card-description">Cyclic monoalphabetic substitution over the finite ring $\mathbb{Z}_{26}$</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Cryptographic Intelligence Dossier — Warm Bento Edition</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS v3 with Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                charcoal: '#181818',
+                paper: '#FCF9F4',
+                panel: '#FFFFFF',
+                accent: '#D8EE48',
+                cream: '#F4F1EA',
+                'cream-light': '#F7F5EE'
+              },
+              fontFamily: {
+                sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                mono: ['"JetBrains Mono"', 'monospace']
+              },
+              boxShadow: {
+                'brutal-sm': '2px 2px 0px #181818',
+                'brutal': '3px 3px 0px #181818',
+                'brutal-lg': '4px 4px 0px #181818'
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        body {
+          background-color: #F6F3EE;
+          color: #181818;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-6 sm:py-10 px-4 sm:px-6 md:px-8 flex justify-center items-center selection:bg-accent selection:text-charcoal">
+    <div class="w-full max-w-5xl bg-paper border-2 border-charcoal rounded-[2rem] p-6 sm:p-9 shadow-brutal-lg flex flex-col gap-8">
+        
+        <!-- Header -->
+        <header class="relative flex items-center justify-between pb-6 border-b border-charcoal/15">
+            <div class="hidden sm:block w-36"></div>
+            <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-charcoal shadow-brutal-sm gap-1">
+                <a href="/" class="nav-tab px-5 py-2 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Caesar</a>
+                <a href="/vigenere" class="nav-tab px-5 py-2 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Vigenère</a>
+                <a href="/frequency" class="nav-tab px-5 py-2 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Frequency</a>
+            </nav>
+            <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
+                <a href="/" class="px-5 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm">
+                    Back to Studio
+                </a>
             </div>
-        </div>
-        <div class="card-content">
-            <p style="color: var(--muted-foreground); line-height: 1.6; font-size: 0.88rem;">
-                Let alphabet $\Sigma = \{A, B, \dots, Z\}$ be indexed as integer ring $\mathbb{Z}_{26} = \{0, 1, \dots, 25\}$. The Caesar cipher maps an arbitrary character $P_i \in \Sigma$ into ciphertext $C_i \in \Sigma$ parameterized by key $K \in \mathbb{Z}_{26}$:
+        </header>
+
+        <!-- Title -->
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-3 flex-wrap">
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Cryptographic Specifications</h1>
+                <span class="px-3 py-0.5 rounded-full bg-accent border border-charcoal text-[11px] font-mono font-bold text-charcoal shadow-sm">
+                    MIL-SPEC CR-26.4
+                </span>
+            </div>
+            <p class="text-xs sm:text-sm text-charcoal/70">
+                Formal mathematical formulation, complexity bounds, and vulnerability profiles
             </p>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 10px;">
-                <div class="stat-item-box" style="padding: 16px;">
-                    <span class="stat-label">Encryption Transformation</span>
-                    <div style="font-family: var(--font-mono); font-size: 1.15rem; color: var(--cyan-accent); margin: 6px 0;">
-                        C &equiv; (P + K) mod 26
-                    </div>
-                    <span style="font-size: 0.78rem; color: var(--muted-foreground);">Shift forward by key $K$ positions.</span>
-                </div>
-
-                <div class="stat-item-box" style="padding: 16px;">
-                    <span class="stat-label">Decryption Transformation</span>
-                    <div style="font-family: var(--font-mono); font-size: 1.15rem; color: var(--amber-accent); margin: 6px 0;">
-                        P &equiv; (C - K) mod 26
-                    </div>
-                    <span style="font-size: 0.78rem; color: var(--muted-foreground);">Equivalent to adding $(26 - K) \pmod{26}$.</span>
-                </div>
-            </div>
         </div>
-    </div>
 
-    <!-- SECTION 2: CRYPTANALYTIC VULNERABILITY -->
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title-group">
-                <div class="card-title">
-                    <span class="badge badge-amber">§ 2</span>
-                    <span>Cryptanalytic Vulnerability Profiles</span>
+        <!-- Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Box 1: Caesar Cipher -->
+            <div class="bg-panel border-2 border-charcoal rounded-2xl p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base font-bold text-charcoal">01 // Caesar Cipher (ROT-N)</h2>
+                    <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-cream-light border border-charcoal/20">Monoalphabetic</span>
                 </div>
-                <span class="card-description">Why Caesar offers zero confidentiality in modern threat models</span>
-            </div>
-        </div>
-        <div class="card-content" style="gap: 14px;">
-            <div style="border-left: 3px solid var(--amber-accent); background: var(--secondary); padding: 14px 18px; border-radius: 0 var(--radius-md) var(--radius-md) 0;">
-                <h4 style="font-size: 0.92rem; font-weight: 600; color: var(--foreground);">1. Exhaustive Key-Search Attack (Brute Force)</h4>
-                <p style="font-size: 0.82rem; color: var(--muted-foreground); margin-top: 4px; line-height: 1.5;">
-                    The effective key space consists of only 25 non-trivial shifts ($|K| = 25$). Entropy is bounded by $\log_2(25) \approx 4.64\text{ bits}$. Any modern CPU completes exhaustive search in under 5 microseconds.
+                <div class="p-3 bg-cream-light border border-charcoal/20 rounded-xl font-mono text-xs text-charcoal">
+                    C ≡ (P + K) mod 26<br>
+                    P ≡ (C - K) mod 26
+                </div>
+                <p class="text-xs text-charcoal/80 leading-relaxed">
+                    Substitution mapping where every glyph is shifted by a constant integer K in the cyclic finite group ℤ₂₆. Keyspace is limited to 25 non-trivial permutations, permitting instantaneous brute-force cracking (&lt; 0.001ms).
                 </p>
             </div>
 
-            <div style="border-left: 3px solid var(--destructive-foreground); background: var(--secondary); padding: 14px 18px; border-radius: 0 var(--radius-md) var(--radius-md) 0;">
-                <h4 style="font-size: 0.92rem; font-weight: 600; color: var(--foreground);">2. Unigram Frequency Invariance Attack</h4>
-                <p style="font-size: 0.82rem; color: var(--muted-foreground); margin-top: 4px; line-height: 1.5;">
-                    Because each character maps 1-to-1, natural language frequency distributions remain completely preserved. By locating the highest frequency character peak (in English, 'E' at ~12.7%), an analyst determines $K = (C_{\text{peak}} - 4) \pmod{26}$ instantly without testing other keys.
+            <!-- Box 2: Vigenère Cipher -->
+            <div class="bg-panel border-2 border-charcoal rounded-2xl p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base font-bold text-charcoal">02 // Vigenère Cipher</h2>
+                    <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-accent border border-charcoal/30">Polyalphabetic</span>
+                </div>
+                <div class="p-3 bg-cream-light border border-charcoal/20 rounded-xl font-mono text-xs text-charcoal">
+                    Cᵢ ≡ (Pᵢ + Kᵢ) mod 26<br>
+                    where Kᵢ = Key[i mod L]
+                </div>
+                <p class="text-xs text-charcoal/80 leading-relaxed">
+                    Employs a repeating periodic keystream vector across a Tabula Recta matrix. While flattening basic unigram frequency peaks, it remains vulnerable to Kasiski examination and Index of Coincidence (IoC) periodic factor attacks.
                 </p>
             </div>
-        </div>
-    </div>
 
-    <!-- SECTION 3: PARADIGM COMPARISON TABLE -->
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title-group">
-                <div class="card-title">
-                    <span class="badge badge-emerald">§ 3</span>
-                    <span>Cryptographic Paradigm Comparison</span>
+            <!-- Box 3: Frequency Analysis -->
+            <div class="bg-panel border-2 border-charcoal rounded-2xl p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base font-bold text-charcoal">03 // Frequency Cryptanalysis</h2>
+                    <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-cream-light border border-charcoal/20">Heuristic</span>
                 </div>
-                <span class="card-description">Historical substitution primitives vs. contemporary authenticated standards</span>
+                <div class="p-3 bg-cream-light border border-charcoal/20 rounded-xl font-mono text-xs text-charcoal">
+                    χ² = Σ [ (Oᵢ - Eᵢ)² / Eᵢ ]<br>
+                    IoC = Σ [ fᵢ(fᵢ - 1) / (N(N - 1)) ]
+                </div>
+                <p class="text-xs text-charcoal/80 leading-relaxed">
+                    Uses the non-uniform natural distribution of standard English (ETAOIN SHRDLU: 'E' ≈ 12.7%, 'T' ≈ 9.1%) to identify cipher shifts without prior knowledge of the secret key.
+                </p>
+            </div>
+
+            <!-- Box 4: Modern Standards -->
+            <div class="bg-panel border-2 border-charcoal rounded-2xl p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base font-bold text-charcoal">04 // Modern Security Standards</h2>
+                    <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300">Production</span>
+                </div>
+                <div class="space-y-1.5 font-mono text-xs text-charcoal pt-1">
+                    <div class="flex justify-between py-1 border-b border-charcoal/10">
+                        <span>AES-256-GCM</span>
+                        <span class="font-bold">FIPS 197 Standard</span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-charcoal/10">
+                        <span>ChaCha20-Poly1305</span>
+                        <span class="font-bold">RFC 8439 Authenticated</span>
+                    </div>
+                    <div class="flex justify-between py-1">
+                        <span>ML-KEM (Kyber)</span>
+                        <span class="font-bold">NIST Post-Quantum</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-content" style="padding: 0;">
-            <div class="table-wrapper" style="border: none; border-radius: 0;">
-                <table class="shadcn-table">
-                    <thead>
-                        <tr>
-                            <th>Cipher Standard</th>
-                            <th>Family / Mechanism</th>
-                            <th>Effective Keyspace</th>
-                            <th>Cryptographic Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="font-weight: 600;">Caesar (ROT-N)</td>
-                            <td>Monoalphabetic Shift</td>
-                            <td style="font-family: var(--font-mono);">25 keys (~4.64 b)</td>
-                            <td><span class="badge" style="background: rgba(127, 29, 29, 0.3); color: #fca5a5;">Insecure · Educational</span></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 600;">Vigenère</td>
-                            <td>Polyalphabetic Substitution</td>
-                            <td style="font-family: var(--font-mono);">26<sup>L</sup> keys</td>
-                            <td><span class="badge badge-amber">Broken · Kasiski Attack</span></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 600;">DES (Data Encryption Std)</td>
-                            <td>Feistel Block Cipher (56-bit)</td>
-                            <td style="font-family: var(--font-mono);">2<sup>56</sup> keys</td>
-                            <td><span class="badge badge-amber">Deprecated · EFF Cracker</span></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 600;">AES-256-GCM</td>
-                            <td>SPN Authenticated Block AEAD</td>
-                            <td style="font-family: var(--font-mono);">2<sup>256</sup> keys</td>
-                            <td><span class="badge badge-emerald">Standard · Post-Quantum Ready</span></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 600;">ChaCha20-Poly1305</td>
-                            <td>Stream AEAD (RFC 8439)</td>
-                            <td style="font-family: var(--font-mono);">2<sup>256</sup> keys</td>
-                            <td><span class="badge badge-emerald">Standard · High Performance</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+
+        <footer class="border-t border-charcoal/15 pt-4 flex items-center justify-between text-xs text-charcoal/60 font-mono">
+            <span>Discrete Applied Mathematics · ℤ₂₆ Ring Arithmetic</span>
+            <span>Cipher Studio Suite</span>
+        </footer>
     </div>
-</div>
-{% endblock %}
+</body>
+</html>

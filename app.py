@@ -1,14 +1,15 @@
 """
-CIPHER LAB — Cryptographic Instrument Engine
-Caesar Cipher: Encrypt, Decrypt, Crack (with heuristic analysis)
+Cipher Studio Suite — Flask Backend
+Warm Bento Brutalism Edition: Caesar Cipher, Vigenère Cipher, Frequency Analysis
 """
 
 from flask import Flask, render_template, request, jsonify
 import string
+import math
 
 app = Flask(__name__)
 
-# ─── English letter frequency (used for smart cracking) ─────────────────────
+# ─── English letter frequency baseline (ETAOIN SHRDLU %) ────────────────────
 ENGLISH_FREQ = {
     'a': 8.2, 'b': 1.5, 'c': 2.8, 'd': 4.3, 'e': 12.7, 'f': 2.2,
     'g': 2.0, 'h': 6.1, 'i': 7.0, 'j': 0.15, 'k': 0.77, 'l': 4.0,
@@ -17,7 +18,7 @@ ENGLISH_FREQ = {
     'y': 2.0, 'z': 0.074,
 }
 
-# Common English words for bonus scoring
+# Common English words for scoring
 COMMON_WORDS = {
     'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
     'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
@@ -31,12 +32,13 @@ COMMON_WORDS = {
     'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first',
     'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these',
     'give', 'day', 'most', 'us', 'is', 'was', 'are', 'has', 'had',
-    'hello', 'world', 'secret', 'message', 'attack', 'defend',
+    'meet', 'forum', 'midnight', 'attack', 'caesar', 'secret', 'dawn',
 }
 
 
+# ─── Caesar Math ────────────────────────────────────────────────────────────
 def caesar_shift(text: str, shift: int) -> str:
-    """Shift every letter in *text* by *shift* positions (mod 26)."""
+    """Shift every letter in text by shift positions (mod 26)."""
     result = []
     for ch in text:
         if ch.isalpha():
@@ -47,35 +49,70 @@ def caesar_shift(text: str, shift: int) -> str:
     return ''.join(result)
 
 
+# ─── Vigenère Math ──────────────────────────────────────────────────────────
+def vigenere_shift(text: str, key: str, decrypt: bool = False) -> str:
+    """Polyalphabetic substitution cipher over text with key."""
+    if not key:
+        return text
+    clean_key = ''.join([c.upper() for c in key if c.isalpha()])
+    if not clean_key:
+        return text
+
+    result = []
+    key_idx = 0
+    for ch in text:
+        if ch.isalpha():
+            base = ord('A') if ch.isupper() else ord('a')
+            k_char = clean_key[key_idx % len(clean_key)]
+            shift = ord(k_char) - ord('A')
+            if decrypt:
+                shift = -shift
+            result.append(chr((ord(ch) - base + shift) % 26 + base))
+            key_idx += 1
+        else:
+            result.append(ch)
+    return ''.join(result)
+
+
+# ─── Cryptanalysis & Heuristics ─────────────────────────────────────────────
 def score_text(text: str) -> float:
-    """
-    Score how 'English-like' a candidate text is using letter frequencies
-    and common vocabulary hits.
-    """
+    """Score how English-like a text is."""
     lower = text.lower()
     letters = [ch for ch in lower if ch.isalpha()]
     if not letters:
         return 0.0
 
     freq_score = sum(ENGLISH_FREQ.get(ch, 0) for ch in letters) / len(letters)
-
     words = lower.split()
     word_hits = sum(1 for w in words if w.strip(string.punctuation) in COMMON_WORDS)
-    word_bonus = (word_hits / max(len(words), 1)) * 15
+    word_bonus = (word_hits / max(len(words), 1)) * 18.0
 
     return freq_score + word_bonus
 
 
 # ─── Routes ─────────────────────────────────────────────────────────────────
-
 @app.route('/')
+@app.route('/index.html')
+@app.route('/caesar')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', active_tab='caesar')
+
+
+@app.route('/vigenere')
+@app.route('/vigenere.html')
+def vigenere_page():
+    return render_template('vigenere.html', active_tab='vigenere')
+
+
+@app.route('/frequency')
+@app.route('/frequency.html')
+def frequency_page():
+    return render_template('frequency.html', active_tab='frequency')
 
 
 @app.route('/tools')
 def tools():
-    return render_template('tools.html')
+    return render_template('home.html', active_tab='caesar')
 
 
 @app.route('/about')
@@ -84,12 +121,11 @@ def about():
 
 
 # ─── API Endpoints ──────────────────────────────────────────────────────────
-
 @app.route('/api/encrypt', methods=['POST'])
 def api_encrypt():
     data = request.get_json(force=True)
     text = data.get('text', '')
-    shift = int(data.get('shift', 3)) % 26
+    shift = int(data.get('shift', 3))
     result = caesar_shift(text, shift)
     return jsonify({'result': result, 'shift': shift})
 
@@ -98,7 +134,7 @@ def api_encrypt():
 def api_decrypt():
     data = request.get_json(force=True)
     text = data.get('text', '')
-    shift = int(data.get('shift', 3)) % 26
+    shift = int(data.get('shift', 3))
     result = caesar_shift(text, -shift)
     return jsonify({'result': result, 'shift': shift})
 
@@ -108,24 +144,53 @@ def api_crack():
     data = request.get_json(force=True)
     text = data.get('text', '')
 
-    all_shifts = []
-    for shift in range(0, 26):
+    results = []
+    for shift in range(1, 26):
         decrypted = caesar_shift(text, -shift)
         sc = score_text(decrypted)
-        all_shifts.append({
-            'shift': shift,
-            'text': decrypted,
-            'score': round(sc, 2)
-        })
+        results.append({'shift': shift, 'text': decrypted, 'score': round(sc, 2)})
 
-    # Sort descending by score for ranked best-match
-    ranked = sorted(all_shifts, key=lambda x: x['score'], reverse=True)
-    return jsonify({'results': ranked, 'all_shifts': all_shifts})
+    results.sort(key=lambda x: x['score'], reverse=True)
+    return jsonify({'results': results})
+
+
+@app.route('/api/vigenere/encrypt', methods=['POST'])
+def api_vigenere_encrypt():
+    data = request.get_json(force=True)
+    text = data.get('text', '')
+    key = data.get('key', 'LEMON')
+    result = vigenere_shift(text, key, decrypt=False)
+    return jsonify({'result': result, 'key': key})
+
+
+@app.route('/api/vigenere/decrypt', methods=['POST'])
+def api_vigenere_decrypt():
+    data = request.get_json(force=True)
+    text = data.get('text', '')
+    key = data.get('key', 'LEMON')
+    result = vigenere_shift(text, key, decrypt=True)
+    return jsonify({'result': result, 'key': key})
+
+
+@app.route('/api/frequency', methods=['POST'])
+def api_frequency():
+    data = request.get_json(force=True)
+    text = data.get('text', '')
+    clean = [c.lower() for c in text if c.isalpha()]
+    total = len(clean)
+
+    counts = {c: clean.count(c) for c in string.ascii_lowercase}
+    percentages = {c: round((cnt / total * 100), 2) if total else 0 for c, cnt in counts.items()}
+
+    return jsonify({
+        'total': total,
+        'counts': counts,
+        'percentages': percentages
+    })
 
 
 # ─── Run ────────────────────────────────────────────────────────────────────
-
 if __name__ == '__main__':
-    print("\n  [*] CIPHER LAB is active on http://localhost:5000\n")
+    print("\n  [*] Cipher Studio Suite (Warm Bento Edition) running!")
+    print("  [>] Open http://localhost:5000 in your browser\n")
     app.run(debug=True, host='0.0.0.0', port=5000)
-

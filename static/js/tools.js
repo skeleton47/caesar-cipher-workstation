@@ -1,69 +1,55 @@
 /* ==========================================================================
-   CIPHER LAB // DEVTOOLS CLIENT ENGINE & INTERACTIVE WORKSPACE
-   Cryptographic Transformations, Ribbon Visualizer, Telemetry & Brute-Force
+   CIPHER_OS // CAESAR WORKSTATION TACTICAL CORE ENGINE
+   Entropy Telemetry, Frequency Spectrum, Hidden Result Drawer, SFX Dispatch
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     // ─── DOM References ──────────────────────────────────────────────────────
-    const cipherInput       = document.getElementById('cipher-input');
-    const inputCharCount    = document.getElementById('input-char-count');
-    const inputLabelText    = document.getElementById('input-label-text');
-    const outputLabelText   = document.getElementById('output-label-text');
-    const outputMetaStatus  = document.getElementById('output-meta-status');
-    const outputWrapper     = document.getElementById('output-wrapper');
-    const outputEmptyState  = document.getElementById('output-empty-state');
-    const outputContentText = document.getElementById('output-content-text');
-    const outputActionsBar  = document.getElementById('output-actions-bar');
+    const msgInput          = document.getElementById('message-input');
+    const charCount         = document.getElementById('char-count');
+    const shiftInput        = document.getElementById('shift-value');
+    const shiftSlider       = document.getElementById('shift-slider');
+    const shiftMinus        = document.getElementById('shift-minus');
+    const shiftPlus         = document.getElementById('shift-plus');
+    const actionBtn         = document.getElementById('action-btn');
+    const btnCaptionText    = document.getElementById('btn-caption-text');
+    const resultFieldBlock  = document.getElementById('result-field-block');
+    const resultOutput      = document.getElementById('result-output');
+    const streamStatusBadge = document.getElementById('stream-status-badge');
+    const statusBadge       = document.getElementById('status-badge');
+    const vectorMetaVal     = document.getElementById('vector-meta-val');
+    const paramHexBadge     = document.getElementById('param-hex-badge');
+    const paramNumPreview   = document.getElementById('param-num-preview');
+    const copyBtn           = document.getElementById('copy-btn');
+    const swapBtn           = document.getElementById('swap-btn');
+    const downloadBtn       = document.getElementById('download-btn');
+    const modeBtns          = document.querySelectorAll('.btn-bracket-cmd');
+    
+    // Presets
+    const btnDispatch       = document.getElementById('btn-sample-dispatch');
+    const btnRot13          = document.getElementById('btn-preset-rot13');
+    const btnSampleCrack    = document.getElementById('btn-sample-crack');
+    const btnClearInput     = document.getElementById('btn-clear-input');
 
-    // Controls
-    const shiftInput        = document.getElementById('shift-input');
-    const shiftRange        = document.getElementById('shift-range');
-    const shiftBadgeVal     = document.getElementById('shift-badge-val');
-    const btnShiftMinus     = document.getElementById('btn-shift-minus');
-    const btnShiftPlus      = document.getElementById('btn-shift-plus');
-    const btnExecute        = document.getElementById('btn-execute');
-    const executeBtnIcon    = document.getElementById('execute-btn-icon');
-    const executeBtnLabel   = document.getElementById('execute-btn-label');
-    const shiftControlsCont = document.getElementById('shift-controls-container');
+    // Right Column View Switcher
+    const tabBtnDossier     = document.getElementById('tab-btn-dossier');
+    const tabBtnSpectrum    = document.getElementById('tab-btn-spectrum');
+    const paneDossier       = document.getElementById('pane-dossier');
+    const paneSpectrum      = document.getElementById('pane-spectrum');
+    const freqBarsGrid      = document.getElementById('freq-bars-grid');
+    const crackRankingsBox  = document.getElementById('crack-rankings-box');
+    const crackCandidatesList = document.getElementById('crack-candidates-list');
 
-    // Mode Buttons
-    const modeTabBtns       = document.querySelectorAll('.mode-tab-btn');
-    const navModeBtns       = document.querySelectorAll('[data-nav-mode]');
-
-    // Presets & Tools
-    const btnLoadSample     = document.getElementById('btn-load-sample');
-    const btnRot13          = document.getElementById('btn-rot13');
-    const btnClear          = document.getElementById('btn-clear');
-    const btnCopyOutput     = document.getElementById('btn-copy-output');
-    const btnSwapOutput     = document.getElementById('btn-swap-output');
-    const btnDownloadOutput = document.getElementById('btn-download-output');
-
-    // Visualizer Elements
-    const alphabetStrip     = document.getElementById('alphabet-strip');
-    const visualizerPreview = document.getElementById('visualizer-preview-pill');
-
-    // Telemetry Elements
-    const statChars         = document.getElementById('stat-chars');
-    const statShift         = document.getElementById('stat-shift');
-    const statScore         = document.getElementById('stat-score');
-
-    // Crack Section
-    const crackSection      = document.getElementById('crack-section');
-    const crackEmptyNotice  = document.getElementById('crack-empty-notice');
-    const crackTableContainer = document.getElementById('crack-table-container');
-    const crackTableBody    = document.getElementById('crack-table-body');
-    const crackMetaPill     = document.getElementById('crack-meta-pill');
-
-    // Toast
-    const toastNotice       = document.getElementById('toast-notice');
-    const toastMessage      = document.getElementById('toast-message');
+    // Telemetry Tags
+    const entropyTag        = document.getElementById('entropy-tag');
+    const iocTag            = document.getElementById('ioc-tag');
+    const liveUtcClock      = document.getElementById('live-utc-clock');
 
     let currentMode = 'encrypt';
-    let currentShift = 3;
-    let toastTimeout = null;
+    let isResultRevealed = false;
 
-    // ─── English Frequency & Dictionary Baselines ────────────────────────────
+    // Standard English letter frequency distribution (ETAOIN SHRDLU baseline %)
     const ENGLISH_FREQ = {
         'A': 8.17, 'B': 1.49, 'C': 2.78, 'D': 4.25, 'E': 12.70, 'F': 2.23,
         'G': 2.02, 'H': 6.09, 'I': 6.97, 'J': 0.15, 'K': 0.77,  'L': 4.03,
@@ -72,513 +58,514 @@ document.addEventListener('DOMContentLoaded', () => {
         'Y': 1.97, 'Z': 0.07
     };
 
-    const COMMON_WORDS = new Set([
-        'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
-        'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
-        'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her',
-        'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there',
-        'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get',
-        'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no',
-        'just', 'him', 'know', 'take', 'people', 'into', 'year', 'your',
-        'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then',
-        'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also',
-        'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first',
-        'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these',
-        'give', 'day', 'most', 'us', 'is', 'was', 'are', 'has', 'had',
-        'hello', 'world', 'secret', 'message', 'attack', 'defend', 'rendezvous', 'sector', 'dawn'
-    ]);
-
-    // ─── Toast Feedback System ───────────────────────────────────────────────
-    function showToast(msg) {
-        if (!toastNotice) return;
-        if (toastTimeout) clearTimeout(toastTimeout);
-        if (toastMessage) toastMessage.textContent = msg;
-        toastNotice.classList.add('show');
-        toastTimeout = setTimeout(() => {
-            toastNotice.classList.remove('show');
-        }, 2200);
+    // ─── Live UTC Military Clock ─────────────────────────────────────────────
+    function updateClock() {
+        if (!liveUtcClock) return;
+        const now = new Date();
+        const pad = (n, l = 2) => String(n).padStart(l, '0');
+        liveUtcClock.textContent = `UTC ${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${pad(now.getUTCDate())} ${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}.${pad(Math.floor(now.getUTCMilliseconds() / 10), 2)}`;
     }
+    setInterval(updateClock, 100);
+    updateClock();
 
-    // ─── Mathematical Core: Caesar Transformation ────────────────────────────
-    function transformChar(ch, shift) {
-        const code = ch.charCodeAt(0);
-        // Uppercase Latin A-Z (65 - 90)
-        if (code >= 65 && code <= 90) {
-            return String.fromCharCode(((code - 65 + shift) % 26 + 26) % 26 + 65);
+    // ─── Tactical Toast Notification ─────────────────────────────────────────
+    function showToast(text) {
+        let toast = document.querySelector('.toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.className = 'toast';
+            document.body.appendChild(toast);
         }
-        // Lowercase Latin a-z (97 - 122)
-        if (code >= 97 && code <= 122) {
-            return String.fromCharCode(((code - 97 + shift) % 26 + 26) % 26 + 97);
-        }
-        // Pass-through non-alphabet characters
-        return ch;
+        toast.innerHTML = `<span style="color:#e6323e;font-weight:bold;">[TACTICAL_SYS]</span> &gt;&gt; ${text}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
-    function caesarTransform(text, shift) {
-        return text.split('').map(ch => transformChar(ch, shift)).join('');
-    }
-
-    // Heuristic Scorer for Plaintext Candidates
-    function scoreEnglishText(text) {
+    // ─── Shannon Entropy & Index of Coincidence (IoC) Telemetry ──────────────
+    function computeTelemetry(text) {
         const clean = text.toUpperCase().replace(/[^A-Z]/g, '');
-        if (!clean.length) return 0;
+        const len = clean.length;
 
-        let freqScore = 0;
-        for (let i = 0; i < clean.length; i++) {
-            freqScore += (ENGLISH_FREQ[clean[i]] || 0);
-        }
-        freqScore = freqScore / clean.length;
-
-        // Word match bonuses
-        const words = text.toLowerCase().split(/\s+/);
-        let wordHits = 0;
-        words.forEach(w => {
-            const stripped = w.replace(/[^a-z]/g, '');
-            if (COMMON_WORDS.has(stripped)) wordHits++;
-        });
-
-        const wordBonus = (wordHits / Math.max(words.length, 1)) * 18;
-        return parseFloat((freqScore + wordBonus).toFixed(2));
-    }
-
-    // ─── Signature Visual Element: Alphabet Shift Ribbon ─────────────────────
-    function initAlphabetStrip() {
-        if (!alphabetStrip) return;
-        alphabetStrip.innerHTML = '';
-
-        for (let i = 0; i < 26; i++) {
-            const originalChar = String.fromCharCode(65 + i);
-            const cell = document.createElement('div');
-            cell.className = 'ribbon-cell';
-            cell.id = `ribbon-cell-${originalChar}`;
-            cell.dataset.letter = originalChar;
-
-            cell.innerHTML = `
-                <span class="ribbon-top">${originalChar}</span>
-                <span class="ribbon-arr">&darr;</span>
-                <span class="ribbon-bot" id="ribbon-bot-${originalChar}">?</span>
-            `;
-
-            alphabetStrip.appendChild(cell);
+        if (len === 0) {
+            if (entropyTag) entropyTag.textContent = '0.00 BPC';
+            if (iocTag) iocTag.textContent = 'IoC: 0.000';
+            return;
         }
 
-        updateAlphabetStrip();
-    }
-
-    function updateAlphabetStrip() {
-        const s = ((currentShift % 26) + 26) % 26;
-
-        for (let i = 0; i < 26; i++) {
-            const orig = String.fromCharCode(65 + i);
-            const shifted = String.fromCharCode(65 + ((i + s) % 26));
-            const shiftedEl = document.getElementById(`ribbon-bot-${orig}`);
-            if (shiftedEl) {
-                shiftedEl.textContent = shifted;
-            }
+        const counts = {};
+        for (let i = 0; i < len; i++) {
+            const ch = clean[i];
+            counts[ch] = (counts[ch] || 0) + 1;
         }
 
-        const shiftedA = String.fromCharCode(65 + s);
-        if (visualizerPreview) {
-            visualizerPreview.textContent = `Shift +${s}: A \u2192 ${shiftedA}`;
+        // Shannon Entropy: H = -sum(p * log2(p))
+        let entropy = 0;
+        let sumFreqSq = 0;
+        for (const ch in counts) {
+            const p = counts[ch] / len;
+            entropy -= p * Math.log2(p);
+            sumFreqSq += counts[ch] * (counts[ch] - 1);
+        }
+
+        // Index of Coincidence: Ic = sum(f_i * (f_i - 1)) / (N * (N - 1))
+        let ioc = len > 1 ? (sumFreqSq / (len * (len - 1))) : 0;
+
+        if (entropyTag) {
+            entropyTag.textContent = `${entropy.toFixed(2)} BPC`;
+        }
+        if (iocTag) {
+            iocTag.textContent = `IoC: ${ioc.toFixed(3)}`;
         }
     }
 
-    // Highlight visualizer columns corresponding to input letters
-    function highlightActiveLetters() {
-        if (!alphabetStrip || !cipherInput) return;
-        const text = cipherInput.value.toUpperCase();
-        const activeChars = new Set(text.replace(/[^A-Z]/g, '').split(''));
+    // ─── Frequency Analysis Spectrum Chart Rendering ─────────────────────────
+    function initFrequencyChart() {
+        if (!freqBarsGrid) return;
+        freqBarsGrid.innerHTML = '';
 
         for (let i = 0; i < 26; i++) {
             const letter = String.fromCharCode(65 + i);
-            const cell = document.getElementById(`ribbon-cell-${letter}`);
-            if (cell) {
-                if (activeChars.has(letter)) {
-                    cell.classList.add('active-input-char');
-                } else {
-                    cell.classList.remove('active-input-char');
-                }
+            const col = document.createElement('div');
+            col.className = 'freq-col';
+            col.dataset.letter = letter;
+
+            col.innerHTML = `
+                <div class="bars-container">
+                    <div class="freq-bar bar-payload" id="pbar-${letter}" style="height: 0%;" title="${letter} Payload"></div>
+                    <div class="freq-bar bar-baseline" id="bbar-${letter}" style="height: ${Math.min(100, (ENGLISH_FREQ[letter] / 13) * 100)}%;" title="${letter} English Baseline (${ENGLISH_FREQ[letter]}%)"></div>
+                </div>
+                <span class="freq-label">${letter}</span>
+            `;
+            freqBarsGrid.appendChild(col);
+        }
+    }
+
+    function updateFrequencyChart(text) {
+        if (!freqBarsGrid) return;
+        const clean = text.toUpperCase().replace(/[^A-Z]/g, '');
+        const total = clean.length;
+
+        const counts = {};
+        for (let i = 0; i < total; i++) {
+            const ch = clean[i];
+            counts[ch] = (counts[ch] || 0) + 1;
+        }
+
+        for (let i = 0; i < 26; i++) {
+            const letter = String.fromCharCode(65 + i);
+            const pBar = document.getElementById(`pbar-${letter}`);
+            if (pBar) {
+                const count = counts[letter] || 0;
+                const pct = total > 0 ? (count / total) * 100 : 0;
+                // Scale height relative to 14% max height
+                const barHeightPct = Math.min(100, (pct / 14) * 100);
+                pBar.style.height = `${barHeightPct}%`;
+                pBar.title = `${letter} Payload: ${pct.toFixed(1)}% (${count} hits)`;
             }
         }
     }
 
-    // ─── Telemetry Updater ───────────────────────────────────────────────────
-    function updateTelemetry(outText) {
-        const text = cipherInput ? cipherInput.value : '';
-        if (statChars) {
-            statChars.textContent = `${text.length} chars (${new Blob([text]).size} B)`;
+    // ─── Shift Vector & Hex Hud ──────────────────────────────────────────────
+    function updateVectorHUD() {
+        let s = parseInt(shiftInput ? shiftInput.value : 3) || 3;
+        s = ((s % 26) + 26) % 26;
+        if (s === 0) s = 1;
+
+        const targetChar = String.fromCharCode(65 + s);
+        const hexFrom = '0x41';
+        const hexTo = '0x' + (65 + s).toString(16).toUpperCase();
+
+        if (vectorMetaVal) {
+            vectorMetaVal.innerHTML = `A [${hexFrom}] &rarr; ${targetChar} [${hexTo}] (ROT-${String(s).padStart(2, '0')})`;
         }
-        if (statShift) {
-            const s = currentShift;
-            const inv = (26 - s) % 26;
-            statShift.textContent = `K = ${s} (K⁻¹ = ${inv})`;
+        if (paramHexBadge) {
+            paramHexBadge.textContent = `0x${s.toString(16).toUpperCase().padStart(8, '0')} (ROT-${String(s).padStart(2, '0')})`;
         }
-        if (statScore) {
-            const target = outText || text;
-            if (target && target.trim().length > 0) {
-                const sc = scoreEnglishText(target);
-                statScore.textContent = `${sc} pts`;
-            } else {
-                statScore.textContent = '—';
-            }
+        if (paramNumPreview) {
+            paramNumPreview.textContent = `SHIFT: ${s}`;
+        }
+
+        if (shiftSlider && shiftSlider.value != s) {
+            shiftSlider.value = s;
+        }
+        if (shiftInput && shiftInput.value != s) {
+            shiftInput.value = s;
         }
     }
 
-    // ─── Shift Synchronizer (Stepper & Slider) ───────────────────────────────
+    // ─── Shift Synchronizer ──────────────────────────────────────────────────
     function setShift(val) {
-        let parsed = parseInt(val, 10);
-        if (isNaN(parsed)) parsed = 0;
-        parsed = ((parsed % 26) + 26) % 26;
+        let s = parseInt(val) || 3;
+        if (s < 1) s = 25;
+        if (s > 25) s = 1;
 
-        currentShift = parsed;
-        if (shiftInput && parseInt(shiftInput.value, 10) !== currentShift) {
-            shiftInput.value = currentShift;
-        }
-        if (shiftRange && parseInt(shiftRange.value, 10) !== currentShift) {
-            shiftRange.value = currentShift;
-        }
-        if (shiftBadgeVal) {
-            shiftBadgeVal.textContent = `K = ${currentShift}`;
-        }
+        if (shiftInput) shiftInput.value = s;
+        if (shiftSlider) shiftSlider.value = s;
 
-        updateAlphabetStrip();
-        updateTelemetry();
+        updateVectorHUD();
         if (window.CyberSFX) CyberSFX.shift();
 
-        // If in encrypt/decrypt mode and output is already visible, update live
-        if (outputContentText && outputContentText.style.display !== 'none' && currentMode !== 'crack') {
-            performCipher();
+        // Keep result live if already revealed
+        if (isResultRevealed) {
+            triggerProcessing(false);
         }
     }
 
-    if (btnShiftMinus) {
-        btnShiftMinus.addEventListener('click', () => {
-            setShift(currentShift - 1);
+    if (shiftMinus) {
+        shiftMinus.addEventListener('click', () => {
+            const current = parseInt(shiftInput.value) || 3;
+            setShift(current - 1);
         });
     }
 
-    if (btnShiftPlus) {
-        btnShiftPlus.addEventListener('click', () => {
-            setShift(currentShift + 1);
+    if (shiftPlus) {
+        shiftPlus.addEventListener('click', () => {
+            const current = parseInt(shiftInput.value) || 3;
+            setShift(current + 1);
         });
     }
 
     if (shiftInput) {
         shiftInput.addEventListener('input', () => {
-            setShift(shiftInput.value);
+            let v = parseInt(shiftInput.value);
+            if (!isNaN(v)) setShift(v);
         });
     }
 
-    if (shiftRange) {
-        shiftRange.addEventListener('input', (e) => {
+    if (shiftSlider) {
+        shiftSlider.addEventListener('input', (e) => {
             setShift(e.target.value);
         });
     }
 
-    // ─── Mode Switching (Encrypt / Decrypt / Crack) ───────────────────────────
-    function setMode(mode) {
-        currentMode = mode;
+    // ─── Input Payloads & Character Counters ─────────────────────────────────
+    if (msgInput) {
+        msgInput.addEventListener('input', () => {
+            const len = msgInput.value.length;
+            if (len > 500) msgInput.value = msgInput.value.substring(0, 500);
+            if (charCount) charCount.textContent = msgInput.value.length;
 
-        // Sync mode tab buttons
-        modeTabBtns.forEach(btn => {
-            const isActive = btn.dataset.mode === mode;
-            btn.classList.toggle('active', isActive);
-            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            computeTelemetry(msgInput.value);
+            updateFrequencyChart(msgInput.value);
+
+            if (isResultRevealed) triggerProcessing(false);
         });
-
-        // Sync header nav pills
-        navModeBtns.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.navMode === mode);
-        });
-
-        if (mode === 'encrypt') {
-            if (inputLabelText) inputLabelText.textContent = 'Plaintext Input';
-            if (outputLabelText) outputLabelText.textContent = 'Ciphertext Output';
-            if (executeBtnLabel) executeBtnLabel.textContent = 'Encrypt Message';
-            if (executeBtnIcon) executeBtnIcon.textContent = '🔒';
-            if (shiftControlsCont) shiftControlsCont.style.display = 'flex';
-            if (crackSection) crackSection.classList.remove('active');
-        } else if (mode === 'decrypt') {
-            if (inputLabelText) inputLabelText.textContent = 'Ciphertext Input';
-            if (outputLabelText) outputLabelText.textContent = 'Plaintext Output';
-            if (executeBtnLabel) executeBtnLabel.textContent = 'Decrypt Message';
-            if (executeBtnIcon) executeBtnIcon.textContent = '🔓';
-            if (shiftControlsCont) shiftControlsCont.style.display = 'flex';
-            if (crackSection) crackSection.classList.remove('active');
-        } else if (mode === 'crack') {
-            if (inputLabelText) inputLabelText.textContent = 'Ciphertext to Crack';
-            if (outputLabelText) outputLabelText.textContent = 'Best Candidate Match';
-            if (executeBtnLabel) executeBtnLabel.textContent = 'Crack Cipher';
-            if (executeBtnIcon) executeBtnIcon.textContent = '⚡';
-            if (crackSection) crackSection.classList.add('active');
-        }
-
-        if (window.CyberSFX) CyberSFX.click();
     }
 
-    modeTabBtns.forEach(btn => {
+    // ─── Mode Switching (ENCRYPT / DECRYPT / CRACK) ──────────────────────────
+    modeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            setMode(btn.dataset.mode);
-        });
-    });
+            modeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentMode = btn.dataset.mode;
 
-    navModeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            setMode(btn.dataset.navMode);
-            const ws = document.getElementById('workbench');
-            if (ws) ws.scrollIntoView({ behavior: 'smooth' });
-        });
-    });
-
-    // ─── Execution Logic ─────────────────────────────────────────────────────
-    function performCipher() {
-        const text = cipherInput ? cipherInput.value : '';
-        if (!text.trim()) {
-            showToast('Please enter text first');
-            if (cipherInput) cipherInput.focus();
-            return;
-        }
-
-        if (currentMode === 'crack') {
-            performCrack(text);
-            return;
-        }
-
-        const effectiveShift = currentMode === 'encrypt' ? currentShift : -currentShift;
-        const result = caesarTransform(text, effectiveShift);
-
-        // Render result in output panel
-        if (outputEmptyState) outputEmptyState.style.display = 'none';
-        if (outputContentText) {
-            outputContentText.textContent = result;
-            outputContentText.style.display = 'block';
-        }
-        if (outputMetaStatus) {
-            outputMetaStatus.textContent = currentMode === 'encrypt' ? 'Encrypted' : 'Decrypted';
-        }
-
-        updateTelemetry(result);
-        if (window.CyberSFX) CyberSFX.success();
-    }
-
-    // ─── Exhaustive 26-Shift Brute Force Crack ────────────────────────────────
-    function performCrack(text) {
-        const candidates = [];
-        for (let shift = 0; shift < 26; shift++) {
-            const decrypted = caesarTransform(text, -shift);
-            const score = scoreEnglishText(decrypted);
-            candidates.push({
-                shift: shift,
-                text: decrypted,
-                score: score
-            });
-        }
-
-        // Sort descending by score for ranked list
-        const sorted = [...candidates].sort((a, b) => b.score - a.score);
-        const best = sorted[0];
-
-        // Populate top match into main output area
-        if (outputEmptyState) outputEmptyState.style.display = 'none';
-        if (outputContentText) {
-            outputContentText.textContent = best.text;
-            outputContentText.style.display = 'block';
-        }
-        if (outputMetaStatus) {
-            outputMetaStatus.textContent = `Shift ${best.shift} (Score: ${best.score})`;
-        }
-
-        // Render all 26 rows into shadcn table
-        if (crackTableBody) {
-            crackTableBody.innerHTML = '';
-            sorted.forEach((cand, idx) => {
-                const isBest = idx === 0;
-                const tr = document.createElement('tr');
-                if (isBest) tr.className = 'top-candidate-row';
-
-                tr.innerHTML = `
-                    <td style="font-family: var(--font-mono); font-weight: 600;">
-                        ${isBest ? '<span class="badge badge-emerald">#1 Best</span>' : `#${idx + 1}`}
-                    </td>
-                    <td>
-                        <span class="badge ${isBest ? 'badge-amber' : 'badge-secondary'}">
-                            ROT-${String(cand.shift).padStart(2, '0')} (Shift ${cand.shift})
-                        </span>
-                    </td>
-                    <td>
-                        <div class="candidate-preview-text" title="${cand.text}">
-                            ${cand.text}
-                        </div>
-                    </td>
-                    <td style="font-family: var(--font-mono); font-weight: 600; color: ${isBest ? 'var(--emerald-accent)' : 'var(--muted-foreground)'};">
-                        ${cand.score} pts
-                    </td>
-                    <td style="text-align: right;">
-                        <button type="button" class="btn btn-outline btn-sm apply-key-btn">
-                            Apply Key &rarr;
-                        </button>
-                    </td>
-                `;
-
-                // Handle clicking row or apply button
-                tr.addEventListener('click', () => {
-                    setShift(cand.shift);
-                    setMode('decrypt');
-                    if (outputContentText) outputContentText.textContent = cand.text;
-                    if (outputMetaStatus) outputMetaStatus.textContent = `Applied Shift ${cand.shift}`;
-                    updateTelemetry(cand.text);
-                    showToast(`Applied Shift ${cand.shift}`);
-                    const ws = document.getElementById('workbench');
-                    if (ws) ws.scrollIntoView({ behavior: 'smooth' });
-                    if (window.CyberSFX) CyberSFX.click();
-                });
-
-                crackTableBody.appendChild(tr);
-            });
-        }
-
-        if (crackEmptyNotice) crackEmptyNotice.style.display = 'none';
-        if (crackTableContainer) crackTableContainer.style.display = 'block';
-        if (crackSection) crackSection.classList.add('active');
-        if (crackMetaPill) crackMetaPill.textContent = `Top Match: Shift ${best.shift} (${best.score} pts)`;
-
-        updateTelemetry(best.text);
-        if (window.CyberSFX) CyberSFX.success();
-        showToast(`Analyzed 26 shifts. Top candidate: Shift ${best.shift}`);
-    }
-
-    if (btnExecute) {
-        btnExecute.addEventListener('click', () => {
-            if (window.CyberSFX) CyberSFX.execute();
-            performCipher();
-        });
-    }
-
-    // ─── Input Events & Live Character Counter ───────────────────────────────
-    if (cipherInput) {
-        cipherInput.addEventListener('input', () => {
-            if (inputCharCount) inputCharCount.textContent = cipherInput.value.length;
-            highlightActiveLetters();
-            updateTelemetry();
-        });
-
-        // Enter key to execute (Shift+Enter for newline)
-        cipherInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if (btnExecute) btnExecute.click();
+            if (currentMode === 'encrypt') {
+                if (btnCaptionText) btnCaptionText.textContent = 'EXECUTE CIPHER PAYLOAD';
+                if (statusBadge) statusBadge.textContent = 'CIPHER ARMED';
+                if (crackRankingsBox) crackRankingsBox.style.display = 'none';
+            } else if (currentMode === 'decrypt') {
+                if (btnCaptionText) btnCaptionText.textContent = 'DECRYPT INTERCEPTED STREAM';
+                if (statusBadge) statusBadge.textContent = 'DECRYPT ARMED';
+                if (crackRankingsBox) crackRankingsBox.style.display = 'none';
+            } else if (currentMode === 'crack') {
+                if (btnCaptionText) btnCaptionText.textContent = 'LAUNCH BRUTE-FORCE CRACK';
+                if (statusBadge) statusBadge.textContent = 'CRACK ARMED';
+                if (crackRankingsBox) crackRankingsBox.style.display = 'block';
             }
+
+            if (window.CyberSFX) CyberSFX.click();
+            hideResult(); // Keep result hidden on mode change until action button clicked!
+        });
+    });
+
+    // ─── Right Column View Switcher (Dossier vs Spectrum) ────────────────────
+    if (tabBtnDossier && tabBtnSpectrum) {
+        tabBtnDossier.addEventListener('click', () => {
+            tabBtnDossier.classList.add('active');
+            tabBtnSpectrum.classList.remove('active');
+            if (paneDossier) paneDossier.classList.add('active');
+            if (paneSpectrum) paneSpectrum.classList.remove('active');
+            if (window.CyberSFX) CyberSFX.click();
+        });
+
+        tabBtnSpectrum.addEventListener('click', () => {
+            tabBtnSpectrum.classList.add('active');
+            tabBtnDossier.classList.remove('active');
+            if (paneSpectrum) paneSpectrum.classList.add('active');
+            if (paneDossier) paneDossier.classList.remove('active');
+            if (window.CyberSFX) CyberSFX.click();
+            updateFrequencyChart(msgInput ? msgInput.value : '');
         });
     }
 
-    // ─── Presets & Action Buttons ────────────────────────────────────────────
-    if (btnLoadSample) {
-        btnLoadSample.addEventListener('click', () => {
-            if (cipherInput) {
-                cipherInput.value = 'THE EAGLE FLIES AT MIDNIGHT. RENDEZVOUS AT SECTOR SEVEN.';
-                if (inputCharCount) inputCharCount.textContent = cipherInput.value.length;
-                highlightActiveLetters();
-                updateTelemetry();
+    // ─── Quick Presets Actions ────────────────────────────────────────────────
+    if (btnDispatch) {
+        btnDispatch.addEventListener('click', () => {
+            if (msgInput) {
+                msgInput.value = 'THE EAGLE FLIES AT MIDNIGHT. RENDEZVOUS AT SECTOR SEVEN.';
+                if (charCount) charCount.textContent = msgInput.value.length;
+                computeTelemetry(msgInput.value);
+                updateFrequencyChart(msgInput.value);
             }
             if (window.CyberSFX) CyberSFX.click();
-            showToast('Sample transmission loaded');
+            showToast('LOADED SAMPLE DISPATCH');
+            hideResult();
         });
     }
 
     if (btnRot13) {
         btnRot13.addEventListener('click', () => {
             setShift(13);
-            showToast('Shift set to ROT-13');
+            showToast('SET KEY TO ROT-13');
         });
     }
 
-    if (btnClear) {
-        btnClear.addEventListener('click', () => {
-            if (cipherInput) {
-                cipherInput.value = '';
-                if (inputCharCount) inputCharCount.textContent = '0';
+    if (btnSampleCrack) {
+        btnSampleCrack.addEventListener('click', () => {
+            const sample = 'WKLV LV D VHFUHW PHVVDJH HQFUBSWHG ZLWK FDHVDU FLSKHU';
+            if (msgInput) {
+                msgInput.value = sample;
+                if (charCount) charCount.textContent = msgInput.value.length;
+                computeTelemetry(msgInput.value);
+                updateFrequencyChart(msgInput.value);
             }
-            if (outputContentText) {
-                outputContentText.textContent = '';
-                outputContentText.style.display = 'none';
+            const crackBtn = document.querySelector('.btn-bracket-cmd[data-mode="crack"]');
+            if (crackBtn) crackBtn.click();
+            if (tabBtnSpectrum) tabBtnSpectrum.click();
+            showToast('LOADED CIPHERTEXT TEST // READY TO CRACK');
+        });
+    }
+
+    if (btnClearInput) {
+        btnClearInput.addEventListener('click', () => {
+            if (msgInput) {
+                msgInput.value = '';
+                if (charCount) charCount.textContent = '0';
+                computeTelemetry('');
+                updateFrequencyChart('');
             }
-            if (outputEmptyState) outputEmptyState.style.display = 'flex';
-            if (outputMetaStatus) outputMetaStatus.textContent = 'Ready';
-            highlightActiveLetters();
-            updateTelemetry();
+            hideResult();
             if (window.CyberSFX) CyberSFX.click();
-            showToast('Workspace reset');
+            showToast('BUFFER CLEARED');
         });
     }
 
-    // Copy Result to Clipboard
-    if (btnCopyOutput) {
-        btnCopyOutput.addEventListener('click', () => {
-            if (!outputContentText || !outputContentText.textContent) {
-                showToast('No output to copy');
-                return;
+    // ─── Result Visibility State Handlers ────────────────────────────────────
+    function hideResult() {
+        isResultRevealed = false;
+        if (resultFieldBlock) {
+            resultFieldBlock.classList.add('hidden');
+        }
+    }
+
+    function revealResult() {
+        isResultRevealed = true;
+        if (resultFieldBlock) {
+            resultFieldBlock.classList.remove('hidden');
+            resultFieldBlock.classList.add('revealing');
+            setTimeout(() => resultFieldBlock.classList.remove('revealing'), 350);
+        }
+    }
+
+    // ─── Fallback Local Cryptographic Math ───────────────────────────────────
+    function shiftChar(char, shift) {
+        const code = char.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+            return String.fromCharCode(((code - 65 + shift) % 26 + 26) % 26 + 65);
+        } else if (code >= 97 && code <= 122) {
+            return String.fromCharCode(((code - 97 + shift) % 26 + 26) % 26 + 97);
+        }
+        return char;
+    }
+
+    function caesarLocal(str, shift) {
+        return str.split('').map(c => shiftChar(c, shift)).join('');
+    }
+
+    // ─── API Processing Engine (Flask Endpoints) ─────────────────────────────
+    async function triggerProcessing(reveal = true) {
+        const text = msgInput ? msgInput.value.trim() : '';
+        const shift = parseInt(shiftInput ? shiftInput.value : 3) || 3;
+
+        if (!text) {
+            showToast('PAYLOAD EMPTY // ENTER DATA');
+            if (msgInput) msgInput.focus();
+            return;
+        }
+
+        try {
+            if (currentMode === 'crack') {
+                const res = await fetch('/api/crack', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+                const data = await res.json();
+                if (data.results && data.results.length > 0) {
+                    const best = data.results[0];
+                    if (resultOutput) {
+                        resultOutput.textContent = `[SHIFT ${best.shift}] ${best.text}`;
+                    }
+                    if (streamStatusBadge) {
+                        streamStatusBadge.textContent = `KEY K=${best.shift} CRACKED`;
+                    }
+                    setShift(best.shift);
+
+                    // Render crack rankings
+                    if (crackCandidatesList) {
+                        crackCandidatesList.innerHTML = '';
+                        data.results.slice(0, 5).forEach((cand, idx) => {
+                            const item = document.createElement('div');
+                            item.className = `crack-candidate-item ${idx === 0 ? 'top-match' : ''}`;
+                            item.innerHTML = `
+                                <div class="cand-meta">
+                                    <span class="cand-key">[ROT-${String(cand.shift).padStart(2, '0')}]</span>
+                                    <span class="cand-score">CONF: ${cand.score}</span>
+                                </div>
+                                <div class="cand-text">${cand.text.substring(0, 48)}${cand.text.length > 48 ? '...' : ''}</div>
+                            `;
+                            item.addEventListener('click', () => {
+                                setShift(cand.shift);
+                                if (resultOutput) resultOutput.textContent = `[SHIFT ${cand.shift}] ${cand.text}`;
+                                if (window.CyberSFX) CyberSFX.click();
+                            });
+                            crackCandidatesList.appendChild(item);
+                        });
+                    }
+                }
+            } else {
+                const endpoint = currentMode === 'encrypt' ? '/api/encrypt' : '/api/decrypt';
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, shift })
+                });
+                const data = await res.json();
+                if (resultOutput) {
+                    resultOutput.textContent = data.result;
+                }
+                if (streamStatusBadge) {
+                    streamStatusBadge.textContent = currentMode === 'encrypt' 
+                        ? 'ENCRYPTED' 
+                        : 'DECRYPTED';
+                }
             }
-            navigator.clipboard.writeText(outputContentText.textContent).then(() => {
+
+            if (reveal) {
+                revealResult();
+                if (window.CyberSFX) CyberSFX.success();
+            }
+        } catch (err) {
+            // Local mathematical fallback
+            if (currentMode === 'encrypt') {
+                if (resultOutput) resultOutput.textContent = caesarLocal(text, shift);
+                if (streamStatusBadge) streamStatusBadge.textContent = 'ENCRYPTED';
+            } else if (currentMode === 'decrypt') {
+                if (resultOutput) resultOutput.textContent = caesarLocal(text, -shift);
+                if (streamStatusBadge) streamStatusBadge.textContent = 'DECRYPTED';
+            } else {
+                if (resultOutput) resultOutput.textContent = caesarLocal(text, -shift);
+                if (streamStatusBadge) streamStatusBadge.textContent = 'LOCAL_FALLBACK';
+            }
+
+            if (reveal) {
+                revealResult();
+                if (window.CyberSFX) CyberSFX.success();
+            }
+        }
+    }
+
+    // ─── Action Button Trigger (REVEALS RESULT CONTAINER!) ───────────────────
+    if (actionBtn) {
+        actionBtn.addEventListener('click', () => {
+            if (window.CyberSFX) CyberSFX.execute();
+            triggerProcessing(true);
+            showToast(`EXECUTED // MODE: ${currentMode.toUpperCase()}`);
+        });
+    }
+
+    // ─── Swap Result into Input Buffer ───────────────────────────────────────
+    if (swapBtn) {
+        swapBtn.addEventListener('click', () => {
+            if (!resultOutput || !resultOutput.textContent) return;
+            let val = resultOutput.textContent;
+            if (val.startsWith('[SHIFT ')) {
+                val = val.replace(/^\[SHIFT \d+\]\s*/, '');
+            }
+            if (msgInput) {
+                msgInput.value = val;
+                if (charCount) charCount.textContent = val.length;
+                computeTelemetry(val);
+                updateFrequencyChart(val);
+            }
+            if (window.CyberSFX) CyberSFX.click();
+            showToast('OUTPUT SWAPPED TO INPUT');
+            // Toggle encrypt / decrypt
+            if (currentMode === 'encrypt') {
+                const decBtn = document.querySelector('.btn-bracket-cmd[data-mode="decrypt"]');
+                if (decBtn) decBtn.click();
+            } else if (currentMode === 'decrypt') {
+                const encBtn = document.querySelector('.btn-bracket-cmd[data-mode="encrypt"]');
+                if (encBtn) encBtn.click();
+            }
+        });
+    }
+
+    // ─── Clipboard Copy ──────────────────────────────────────────────────────
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            if (!resultOutput || !resultOutput.textContent) return;
+            let val = resultOutput.textContent;
+            if (val.startsWith('[SHIFT ')) {
+                val = val.replace(/^\[SHIFT \d+\]\s*/, '');
+            }
+            navigator.clipboard.writeText(val).then(() => {
                 if (window.CyberSFX) CyberSFX.copy();
-                showToast('Copied to clipboard');
+                showToast('INTERCEPT COPIED TO CLIPBOARD');
             }).catch(() => {
-                showToast('Clipboard copy failed');
+                showToast('COPY FAILED');
             });
         });
     }
 
-    // Swap Output into Input
-    if (btnSwapOutput) {
-        btnSwapOutput.addEventListener('click', () => {
-            if (!outputContentText || !outputContentText.textContent) {
-                showToast('No output to swap');
-                return;
-            }
-            const currentOut = outputContentText.textContent;
-            if (cipherInput) {
-                cipherInput.value = currentOut;
-                if (inputCharCount) inputCharCount.textContent = currentOut.length;
-                highlightActiveLetters();
-            }
-            // Invert mode
-            if (currentMode === 'encrypt') {
-                setMode('decrypt');
-            } else if (currentMode === 'decrypt') {
-                setMode('encrypt');
-            }
-            updateTelemetry(currentOut);
-            if (window.CyberSFX) CyberSFX.click();
-            showToast('Output swapped into input');
-        });
-    }
-
-    // Download .txt Payload
-    if (btnDownloadOutput) {
-        btnDownloadOutput.addEventListener('click', () => {
-            if (!outputContentText || !outputContentText.textContent) {
-                showToast('No output to export');
-                return;
-            }
-            const blob = new Blob([outputContentText.textContent], { type: 'text/plain;charset=utf-8' });
+    // ─── Export .txt File ────────────────────────────────────────────────────
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            if (!resultOutput || !resultOutput.textContent) return;
+            const textToSave = resultOutput.textContent;
+            const blob = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `CIPHER_LAB_${currentMode.toUpperCase()}_SHIFT_${currentShift}.txt`;
+            a.download = `CIPHER_PAYLOAD_${Date.now()}.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             if (window.CyberSFX) CyberSFX.copy();
-            showToast('Exported as .txt file');
+            showToast('EXPORTED .TXT PAYLOAD');
         });
     }
 
-    // ─── Initial Setup ───────────────────────────────────────────────────────
-    initAlphabetStrip();
-    setShift(3);
-    if (cipherInput) {
-        if (inputCharCount) inputCharCount.textContent = cipherInput.value.length;
-        highlightActiveLetters();
-        updateTelemetry();
+    // ─── Keyboard Shortcut: Enter in Input to Execute ────────────────────────
+    if (msgInput) {
+        msgInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (actionBtn) actionBtn.click();
+            }
+        });
     }
+
+    // ─── Initial Startup Execution ───────────────────────────────────────────
+    initFrequencyChart();
+    updateVectorHUD();
+
+    if (msgInput && msgInput.value) {
+        if (charCount) charCount.textContent = msgInput.value.length;
+        computeTelemetry(msgInput.value);
+        updateFrequencyChart(msgInput.value);
+    }
+
+    hideResult(); // STRICT REQUIREMENT: Keep result hidden until action button click!
 });
