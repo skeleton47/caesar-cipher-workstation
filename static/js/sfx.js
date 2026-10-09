@@ -105,6 +105,36 @@ const CyberSFX = {
         } catch (e) {}
     },
 
+    // Subtle Tactile Hover Micro-Tick
+    lastHoverTime: 0,
+    hover() {
+        if (!this.enabled) return;
+        const now = Date.now();
+        if (now - this.lastHoverTime < 70) return;
+        this.lastHoverTime = now;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+            const t = this.ctx.currentTime;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1400, t);
+            osc.frequency.exponentialRampToValueAtTime(700, t + 0.012);
+
+            gain.gain.setValueAtTime(0.015, t);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(t);
+            osc.stop(t + 0.012);
+        } catch (e) {}
+    },
+
     // Rotary Shift Click
     shift() {
         if (!this.enabled) return;
