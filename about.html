@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Cryptographic Intelligence Dossier — Warm Bento Edition</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="static/css/interactions.css"/>
+    
+    <!-- Tailwind CSS v3 with Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                charcoal: '#181818',
+                paper: '#FCF9F4',
+                panel: '#FFFFFF',
+                accent: '#D8EE48',
+                'accent-hover': '#C8DE38',
+                cream: '#F4F1EA',
+                'cream-light': '#F7F5EE',
+                'subtle-border': '#E4E0D6'
+              },
+              fontFamily: {
+                sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                mono: ['"JetBrains Mono"', 'monospace']
+              },
+              boxShadow: {
+                'brutal-sm': '2px 2px 0px #181818',
+                'brutal': '3px 3px 0px #181818',
+                'brutal-lg': '4px 4px 0px #181818'
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        body {
+          background-color: #F6F3EE;
+          color: #181818;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-6 sm:py-10 px-4 sm:px-6 md:px-8 flex justify-center items-center selection:bg-accent selection:text-charcoal">
+    <!-- Main Bento Container Shell -->
+    <div class="w-full max-w-5xl bg-paper border-2 border-charcoal rounded-[2rem] p-6 sm:p-9 shadow-brutal-lg flex flex-col gap-8">
+        
+        <!-- 1. HEADER / NAVIGATION -->
+        <header class="relative flex items-center justify-between pb-6 border-b border-charcoal/15">
+            <!-- Left brand identifier -->
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-accent border border-charcoal"></span>
+                <span class="font-mono text-xs font-extrabold tracking-wider text-charcoal uppercase hidden sm:inline">CIPHER STUDIO</span>
+            </div>
+            
+            <!-- Centered Capsule Navigation Bar -->
+            <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-charcoal shadow-brutal-sm gap-0.5 sm:gap-1 flex-wrap justify-center">
+                <a href="index.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Caesar</a>
+                <a href="vigenere.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Vigenère</a>
+                <a href="playfair.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Playfair</a>
+                <a href="hill.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Hill</a>
+                <a href="frequency.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Frequency</a>
+                <a href="about.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full bg-charcoal text-white text-xs font-bold tracking-wide transition shadow-sm cursor-default active-studio">Specs</a>
+            </nav>
+            
+            <!-- Right Header Actions (SFX & Back to Studio) -->
+            <div class="flex items-center gap-2 ml-auto sm:ml-0">
+                <button id="sfx-toggle-btn" class="px-3 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Toggle audio feedback">
+                    <span id="sfx-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                    <span id="sfx-label">SFX</span>
+                </button>
+                <a href="index.html" class="px-4 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span>Studio</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- 2. TITLE AREA -->
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-3 flex-wrap">
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Cryptographic Intelligence Dossier</h1>
+                <span class="px-3 py-0.5 rounded-full bg-accent border border-charcoal text-[11px] font-mono font-bold text-charcoal shadow-sm">
+                    MIL-SPEC CR-26.5
+                </span>
+            </div>
+            <p class="text-xs sm:text-sm text-charcoal/70">
+                Formal mathematical foundations, keyspace complexity bounds, and vulnerability profiles
+            </p>
+        </div>
+
+        <!-- 3. BENTO DOSSIER GRID (6 CARDS) -->
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
+            
+            <!-- Card 1: Caesar Cipher -->
+            <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between pb-2 border-b border-charcoal/10">
+                    <h2 class="text-sm font-bold text-charcoal">01 // Caesar Cipher</h2>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-cream border border-charcoal/20 text-charcoal">Monoalphabetic</span>
+                </div>
+                <div class="p-3 bg-cream-light border border-charcoal/20 rounded-xl font-mono text-xs text-charcoal">
+                    C ≡ (P + K) mod 26<br/>
+                    P ≡ (C - K) mod 26
+                </div>
+                <p class="text-xs text-charcoal/80 leading-relaxed">
+                    Cyclic permutation over the finite group ℤ₂₆ with an invariant shift K. The keyspace is strictly limited to 25 non-trivial shifts, permitting instantaneous exhaustive brute-force cryptanalysis (&lt; 0.001ms).
+                </p>
+                <div class="mt-auto pt-2 border-t border-charcoal/10 flex items-center justify-between text-[11px] font-mono text-charcoal/60">
+                    <span>Keyspace: 25 keys</span>
+                    <span class="font-bold text-charcoal">Broken: O(26)</span>
+                </div>
+            </article>
+
+            <!-- Card 2: Vigenère Cipher -->
+            <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between pb-2 border-b border-charcoal/10">
+                    <h2 class="text-sm font-bold text-charcoal">02 // Vigenère Cipher</h2>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-accent border border-charcoal/30 text-charcoal">Polyalphabetic</span>
+                </div>
+                <div class="p-3 bg-cream-light border border-charcoal/20 rounded-xl font-mono text-xs text-charcoal">
+                    Cᵢ ≡ (Pᵢ + K[i mod L]) mod 26<br/>
+                    Pᵢ ≡ (Cᵢ - K[i mod L]) mod 26
+                </div>
+                <p class="text-xs text-charcoal/80 leading-relaxed">
+                    Superimposes a periodic keystream of length L across a 26×26 Tabula Recta. While masking unigram frequencies, it yields to Kasiski examination for period deduction and Index of Coincidence factor attacks.
+                </p>
+                <div class="mt-auto pt-2 border-t border-charcoal/10 flex items-center justify-between text-[11px] font-mono text-charcoal/60">
+                    <span>Keyspace: 26ᴸ states</span>
+                    <span class="font-bold text-charcoal">Kasiski / IoC</span>
+                </div>
+            </article>
+
+            <!-- Card 3: Playfair Cipher -->
+            <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between pb-2 border-b border-charcoal/10">
+                    <h2 class="text-sm font-bold text-charcoal">03 // Playfair Cipher</h2>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-cream border border-charcoal/20 text-charcoal">Digraph Substitution</span>
+                </div>
+                <div class="p-3 bg-cream-light border border-charcoal/20 rounded-xl font-mono text-xs text-charcoal">
+                    5×5 Grid (I/J Merged)<br/>
+                    Row / Col / Rectangle Shift
+                </div>
+                <p class="text-xs text-charcoal/80 leading-relaxed">
+                    First practical digraph substitution cipher (Wheatstone, 1854). Encrypts pairs across a 25-letter matrix (600 digraph states). Defeats single-letter frequency attacks, but succumbs to digraph frequency analysis.
+                </p>
+                <div class="mt-auto pt-2 border-t border-charcoal/10 flex items-center justify-between text-[11px] font-mono text-charcoal/60">
+                    <span>Pairs: 25×24 = 600</span>
+                    <span class="font-bold text-charcoal">Known-Digraph</span>
+                </div>
+            </article>
+
+            <!-- Card 4: Hill Cipher -->
+            <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between pb-2 border-b border-charcoal/10">
+                    <h2 class="text-sm font-bold text-charcoal">04 // Hill Cipher</h2>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-accent border border-charcoal/30 text-charcoal">Modular Linear Algebra</span>
+                </div>
+                <div class="p-3 bg-cream-light border border-charcoal/20 rounded-xl font-mono text-xs text-charcoal">
+                    c ≡ K · p (mod 26)<br/>
+                    p ≡ K⁻¹ · c (mod 26)
+                </div>
+                <p class="text-xs text-charcoal/80 leading-relaxed">
+                    Polygraphic cipher based on modular matrix-vector multiplication (Lester S. Hill, 1929). Invertibility strictly requires gcd(det(K), 26) = 1. Vulnerable to Known-Plaintext Attacks: intercepting n independent vectors yields K = C · P⁻¹.
+                </p>
+                <div class="mt-auto pt-2 border-t border-charcoal/10 flex items-center justify-between text-[11px] font-mono text-charcoal/60">
+                    <span>Condition: gcd(det,26)=1</span>
+                    <span class="font-bold text-charcoal">Linear KPA</span>
+                </div>
+            </article>
+
+            <!-- Card 5: Frequency Cryptanalysis -->
+            <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between pb-2 border-b border-charcoal/10">
+                    <h2 class="text-sm font-bold text-charcoal">05 // Frequency Analysis</h2>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-cream border border-charcoal/20 text-charcoal">Statistical Heuristic</span>
+                </div>
+                <div class="p-3 bg-cream-light border border-charcoal/20 rounded-xl font-mono text-xs text-charcoal">
+                    χ² = Σ [ (Oᵢ - Eᵢ)² / Eᵢ ]<br/>
+                    IoC = Σ [ fᵢ(fᵢ - 1) / (N(N - 1)) ]
+                </div>
+                <p class="text-xs text-charcoal/80 leading-relaxed">
+                    Exploits non-uniform unigram distribution in English (ETAOIN SHRDLU: 'E' ≈ 12.7%, 'T' ≈ 9.1%). Automates candidate scoring and distinguishes between monoalphabetic and polyalphabetic cipher payloads.
+                </p>
+                <div class="mt-auto pt-2 border-t border-charcoal/10 flex items-center justify-between text-[11px] font-mono text-charcoal/60">
+                    <span>Baseline: English ETAOIN</span>
+                    <span class="font-bold text-charcoal">Chi-Square Test</span>
+                </div>
+            </article>
+
+            <!-- Card 6: Modern Security Standards -->
+            <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-3">
+                <div class="flex items-center justify-between pb-2 border-b border-charcoal/10">
+                    <h2 class="text-sm font-bold text-charcoal">06 // Modern Standards</h2>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">Production</span>
+                </div>
+                <div class="space-y-1.5 font-mono text-xs text-charcoal pt-1">
+                    <div class="flex justify-between py-1 border-b border-charcoal/10">
+                        <span>AES-256-GCM</span>
+                        <span class="font-bold text-emerald-700">FIPS 197 Standard</span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-charcoal/10">
+                        <span>ChaCha20-Poly1305</span>
+                        <span class="font-bold text-emerald-700">RFC 8439 Authenticated</span>
+                    </div>
+                    <div class="flex justify-between py-1">
+                        <span>ML-KEM (Kyber)</span>
+                        <span class="font-bold text-emerald-700">NIST Post-Quantum</span>
+                    </div>
+                </div>
+                <p class="text-xs text-charcoal/80 leading-relaxed pt-1">
+                    Classical ciphers are valuable educational tools for algebraic foundations. All operational data and communications must utilize certified authenticated symmetric and post-quantum ciphers.
+                </p>
+                <div class="mt-auto pt-2 border-t border-charcoal/10 flex items-center justify-between text-[11px] font-mono text-charcoal/60">
+                    <span>Standard: 256-bit Key</span>
+                    <span class="font-bold text-emerald-800">Secure</span>
+                </div>
+            </article>
+
+        </main>
+    </div>
+
+    <!-- Web Audio & Page Transitions -->
+    <script src="static/js/sfx.js"></script>
+    <script src="static/js/interactions.js"></script>
+</body>
+</html>

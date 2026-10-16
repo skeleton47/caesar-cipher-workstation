@@ -78,8 +78,11 @@
         
         <!-- 1. HEADER / NAVIGATION -->
         <header class="relative flex items-center justify-between pb-6 border-b border-charcoal/15">
-            <!-- Left spacer for exact visual balance -->
-            <div class="hidden sm:block w-24"></div>
+            <!-- Left brand identifier -->
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-accent border border-charcoal"></span>
+                <span class="font-mono text-xs font-extrabold tracking-wider text-charcoal uppercase hidden sm:inline">CIPHER STUDIO</span>
+            </div>
             
             <!-- Centered Capsule Navigation Bar -->
             <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-charcoal shadow-brutal-sm gap-0.5 sm:gap-1 flex-wrap justify-center">
@@ -88,12 +91,18 @@
                 <a href="playfair.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Playfair</a>
                 <a href="hill.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Hill</a>
                 <a href="frequency.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Frequency</a>
+                <a href="about.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Specs</a>
             </nav>
             
-            <!-- Right Header Actions (Reset) -->
-            <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
-                <button class="px-5 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm" id="quick-reset-btn">
-                    Reset
+            <!-- Right Header Actions (SFX & Reset) -->
+            <div class="flex items-center gap-2 ml-auto sm:ml-0">
+                <button id="sfx-toggle-btn" class="px-3 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Toggle audio feedback">
+                    <span id="sfx-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                    <span id="sfx-label">SFX</span>
+                </button>
+                <button class="px-4 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" id="quick-reset-btn" title="Reset workspace">
+                    <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>Reset</span>
                 </button>
             </div>
         </header>
@@ -607,7 +616,7 @@
           }
         });
 
-        // Keyboard Shortcut ⌘K / Ctrl+K
+        // Keyboard Shortcut Ctrl+K / Cmd+K
         document.addEventListener('keydown', e => {
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
                 e.preventDefault();

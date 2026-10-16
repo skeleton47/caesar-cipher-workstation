@@ -24,6 +24,13 @@ const CyberSFX = {
     toggle() {
         this.enabled = !this.enabled;
         localStorage.setItem('cipher_sfx_enabled', this.enabled ? 'true' : 'false');
+        this.updateUi();
+        if (this.enabled) {
+            this.click();
+        }
+    },
+
+    updateUi() {
         const btn = document.getElementById('sfx-toggle');
         if (btn) {
             btn.innerHTML = `<span class="sfx-state-dot"></span> [SFX: ${this.enabled ? 'ON' : 'OFF'}]`;
@@ -36,9 +43,6 @@ const CyberSFX = {
         const sfxLabel = document.getElementById('sfx-label');
         if (sfxLabel) {
             sfxLabel.textContent = this.enabled ? "SFX" : "MUTED";
-        }
-        if (this.enabled) {
-            this.click();
         }
     },
 
@@ -275,12 +279,19 @@ const CyberSFX = {
 // ─── Setup UI SFX Listeners on Page Ready ────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     const curtain = document.getElementById('cyber-curtain');
-    const sfxBtn = document.getElementById('sfx-toggle');
+    CyberSFX.updateUi();
 
+    const sfxBtn = document.getElementById('sfx-toggle');
     if (sfxBtn) {
-        sfxBtn.innerHTML = `<span class="sfx-state-dot"></span> [SFX: ${CyberSFX.enabled ? 'ON' : 'OFF'}]`;
-        sfxBtn.classList.toggle('muted', !CyberSFX.enabled);
         sfxBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            CyberSFX.toggle();
+        });
+    }
+
+    const sfxToggleBtn = document.getElementById('sfx-toggle-btn');
+    if (sfxToggleBtn) {
+        sfxToggleBtn.addEventListener('click', (e) => {
             e.preventDefault();
             CyberSFX.toggle();
         });

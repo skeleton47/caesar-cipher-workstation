@@ -10,7 +10,7 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/interactions.css') }}"/>
+    <link rel="stylesheet" href="static/css/interactions.css"/>
     
     <!-- Tailwind CSS v3 with Plugins -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -68,7 +68,11 @@
         
         <!-- 1. HEADER / NAVIGATION -->
         <header class="relative flex items-center justify-between pb-6 border-b border-primary/15">
-            <div class="hidden sm:block w-24"></div>
+            <!-- Left brand identifier -->
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-secondary-container border border-primary"></span>
+                <span class="font-mono text-xs font-extrabold tracking-wider text-primary uppercase hidden sm:inline">CIPHER STUDIO</span>
+            </div>
             
             <!-- Centered Nav Capsule -->
             <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-surface-container-low p-1 rounded-full neo-border neo-shadow-sm gap-0.5 sm:gap-1 flex-wrap justify-center">
@@ -77,11 +81,16 @@
                 <a class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="/playfair">Playfair</a>
                 <a class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="/hill">Hill</a>
                 <a class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="/frequency">Frequency</a>
+                <a class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="/about">Specs</a>
             </nav>
             
-            <!-- Right Shortcut Pill & Reset -->
-            <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
-                <button class="px-5 py-1.5 rounded-full bg-surface hover:bg-surface-container neo-border font-mono text-xs font-bold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 shrink-0 whitespace-nowrap" id="nav-reset-btn">
+            <!-- Right Header Actions (SFX & Reset) -->
+            <div class="flex items-center gap-2 ml-auto sm:ml-0">
+                <button id="sfx-toggle-btn" class="px-3 py-1.5 rounded-full bg-surface hover:bg-surface-container neo-border font-mono text-xs font-bold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 shrink-0 whitespace-nowrap" title="Toggle audio feedback">
+                    <span id="sfx-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                    <span id="sfx-label">SFX</span>
+                </button>
+                <button class="px-4 py-1.5 rounded-full bg-surface hover:bg-surface-container neo-border font-mono text-xs font-bold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 shrink-0 whitespace-nowrap" id="nav-reset-btn" title="Reset workspace">
                     <span class="material-symbols-outlined text-[15px]">refresh</span>
                     <span>Reset</span>
                 </button>
@@ -287,7 +296,7 @@
     </div>
 
     <!-- Web Audio Synthesizer (Bubble Pop Typing SFX) -->
-    <script src="{{ url_for('static', filename='js/sfx.js') }}"></script>
+    <script src="static/js/sfx.js"></script>
 
     <!-- Vigenère Interactive Script -->
     <script>
@@ -586,6 +595,6 @@
         processCipher();
       })();
     </script>
-    <script src="{{ url_for('static', filename='js/interactions.js') }}"></script>
+    <script src="static/js/interactions.js"></script>
 </body>
 </html>

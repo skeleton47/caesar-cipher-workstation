@@ -56,7 +56,11 @@
         
         <!-- 1. HEADER / NAVIGATION -->
         <header class="relative flex items-center justify-between pb-6 border-b border-black/15">
-            <div class="hidden sm:block w-24"></div>
+            <!-- Left brand identifier -->
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-accent border border-black"></span>
+                <span class="font-mono text-xs font-extrabold tracking-wider text-black uppercase hidden sm:inline">CIPHER STUDIO</span>
+            </div>
             
             <!-- Centered Capsule Navigation Bar -->
             <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-black shadow-brutal-sm gap-0.5 sm:gap-1 flex-wrap justify-center">
@@ -65,12 +69,18 @@
                 <a class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-black hover:bg-black/5 text-xs font-semibold tracking-wide transition cursor-pointer" href="playfair.html">Playfair</a>
                 <a class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-black hover:bg-black/5 text-xs font-semibold tracking-wide transition cursor-pointer" href="hill.html">Hill</a>
                 <a class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full bg-black text-white text-xs font-semibold tracking-wide transition shadow-sm cursor-default active-studio" href="frequency.html">Frequency</a>
+                <a class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-black hover:bg-black/5 text-xs font-semibold tracking-wide transition cursor-pointer" href="about.html">Specs</a>
             </nav>
             
-            <!-- Right Header Actions (Reset) -->
-            <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
-                <button class="px-5 py-1.5 rounded-full border border-black bg-white hover:bg-cream text-xs font-bold text-black transition active:scale-95 shadow-brutal-sm" id="reset-all-btn">
-                    Reset
+            <!-- Right Header Actions (SFX & Reset) -->
+            <div class="flex items-center gap-2 ml-auto sm:ml-0">
+                <button id="sfx-toggle-btn" class="px-3 py-1.5 rounded-full border border-black bg-white hover:bg-cream text-xs font-mono font-bold text-black transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Toggle audio feedback">
+                    <span id="sfx-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                    <span id="sfx-label">SFX</span>
+                </button>
+                <button class="px-4 py-1.5 rounded-full border border-black bg-white hover:bg-cream text-xs font-bold text-black transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" id="reset-all-btn" title="Reset workspace">
+                    <svg class="w-3.5 h-3.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>Reset</span>
                 </button>
             </div>
         </header>
@@ -156,7 +166,7 @@
                     <!-- Action Button -->
                     <button class="w-full py-2.5 px-4 rounded-xl bg-black hover:bg-neutral-800 text-white font-mono text-xs font-bold tracking-wide transition active:scale-[0.99] flex items-center justify-center gap-2 shadow-brutal-sm" id="btn-apply-decrypt">
                         <span>Decrypt via Frequency Match</span>
-                        <span>⚡</span>
+                        <svg class="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
                 </section>
             </div>

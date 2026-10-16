@@ -10,7 +10,7 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/interactions.css') }}"/>
+    <link rel="stylesheet" href="static/css/interactions.css"/>
     
     <!-- Tailwind CSS v3 with Plugins -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -56,7 +56,11 @@
         
         <!-- 1. HEADER / NAVIGATION -->
         <header class="relative flex items-center justify-between pb-6 border-b border-charcoal/15">
-            <div class="hidden sm:block w-24"></div>
+            <!-- Left brand identifier -->
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-accent border border-charcoal"></span>
+                <span class="font-mono text-xs font-extrabold tracking-wider text-charcoal uppercase hidden sm:inline">CIPHER STUDIO</span>
+            </div>
             
             <!-- Centered Capsule Navigation Bar -->
             <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-charcoal shadow-brutal-sm gap-0.5 sm:gap-1 flex-wrap justify-center">
@@ -65,12 +69,18 @@
                 <a href="/playfair" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full bg-charcoal text-white text-xs font-bold tracking-wide transition shadow-sm cursor-default active-studio">Playfair</a>
                 <a href="/hill" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Hill</a>
                 <a href="/frequency" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Frequency</a>
+                <a href="/about" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Specs</a>
             </nav>
             
-            <!-- Right Header Actions (Reset) -->
-            <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
-                <button class="px-5 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm" id="playfair-reset-btn">
-                    Reset
+            <!-- Right Header Actions (SFX & Reset) -->
+            <div class="flex items-center gap-2 ml-auto sm:ml-0">
+                <button id="sfx-toggle-btn" class="px-3 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Toggle audio feedback">
+                    <span id="sfx-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                    <span id="sfx-label">SFX</span>
+                </button>
+                <button class="px-4 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" id="playfair-reset-btn" title="Reset workspace">
+                    <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>Reset</span>
                 </button>
             </div>
         </header>
@@ -82,11 +92,13 @@
             </div>
             <!-- Mode Switch: Studio vs Learning -->
             <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1 self-start sm:self-auto">
-                <button id="btn-mode-studio" class="px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm">
-                    ⚡ Studio Mode
+                <button id="btn-mode-studio" class="px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span>Studio Mode</span>
                 </button>
-                <button id="btn-mode-learning" class="px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
-                    🎓 Learning & Practice
+                <button id="btn-mode-learning" class="px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <span>Learning &amp; Practice</span>
                 </button>
             </div>
         </div>
@@ -95,10 +107,13 @@
         <div id="learning-panel" class="hidden border-2 border-charcoal rounded-2xl bg-panel p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-5">
             <div class="flex items-center justify-between pb-3 border-b border-charcoal/10">
                 <div class="flex items-center gap-2">
-                    <span class="text-base font-bold text-charcoal">🎓 Interactive Playfair Principles</span>
+                    <span class="text-base font-bold text-charcoal">Interactive Playfair Principles</span>
                     <span class="px-2.5 py-0.5 rounded-md bg-accent text-[11px] font-mono font-bold text-charcoal">Digraph Matrix</span>
                 </div>
-                <button id="btn-close-learning" class="text-xs font-mono font-bold text-charcoal/60 hover:text-charcoal">✕ Close</button>
+                <button id="btn-close-learning" class="text-xs font-mono font-bold text-charcoal/60 hover:text-charcoal flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <span>Close</span>
+                </button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -145,9 +160,10 @@
             <!-- Practice Challenge Box -->
             <div class="p-4 sm:p-5 rounded-xl border-2 border-charcoal bg-white flex flex-col gap-3 shadow-brutal-sm">
                 <div class="flex items-center justify-between flex-wrap gap-2">
-                    <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal">🎯 Practice Challenge: Predict the Digraph</span>
-                    <button id="btn-new-challenge" class="px-3 py-1 rounded-lg border border-charcoal bg-cream text-xs font-mono font-bold hover:bg-accent transition shadow-sm">
-                        🎲 New Pair
+                    <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal">Practice Challenge: Predict the Digraph</span>
+                    <button id="btn-new-challenge" class="px-3 py-1 rounded-lg border border-charcoal bg-cream text-xs font-mono font-bold hover:bg-accent transition shadow-sm flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        <span>New Pair</span>
                     </button>
                 </div>
                 <div class="flex flex-col sm:flex-row items-center gap-4">
@@ -185,8 +201,8 @@
                     <div class="flex flex-col gap-2">
                         <div class="flex items-center gap-2">
                             <input type="text" id="playfair-keyword" value="MONARCHY" placeholder="ENTER SECRET KEYWORD..." maxlength="25" spellcheck="false" class="w-full px-3.5 py-2 rounded-xl border-2 border-charcoal font-mono uppercase text-sm font-bold tracking-wider bg-cream-light focus:bg-white transition"/>
-                            <button id="btn-rand-key" class="px-3 py-2 rounded-xl border-2 border-charcoal bg-panel hover:bg-accent font-mono text-xs font-bold transition shadow-brutal-sm whitespace-nowrap" title="Generate random keyword">
-                                🎲
+                            <button id="btn-rand-key" class="px-3 py-2 rounded-xl border-2 border-charcoal bg-panel hover:bg-accent font-mono text-xs font-bold transition shadow-brutal-sm whitespace-nowrap flex items-center justify-center" title="Generate random keyword">
+                                <svg class="w-4 h-4 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                             </button>
                         </div>
 
@@ -269,23 +285,28 @@
                     <!-- Direction Switcher & Quick Actions -->
                     <div class="flex items-center justify-between flex-wrap gap-2 pb-1 border-b border-charcoal/10">
                         <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1">
-                            <button id="btn-direction-encrypt" class="px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm">
-                                🔒 Encrypt
+                            <button id="btn-direction-encrypt" class="px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                <span>Encrypt</span>
                             </button>
-                            <button id="btn-direction-decrypt" class="px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
-                                🔓 Decrypt
+                            <button id="btn-direction-decrypt" class="px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+                                <span>Decrypt</span>
                             </button>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <button id="btn-sample-msg" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
-                                ⚡ Sample
+                            <button id="btn-sample-msg" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-charcoal/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                <span>Sample</span>
                             </button>
-                            <button id="btn-swap-text" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm" title="Swap input and output">
-                                ⇄ Swap
+                            <button id="btn-swap-text" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1.5" title="Swap input and output">
+                                <svg class="w-3.5 h-3.5 text-charcoal/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+                                <span>Swap</span>
                             </button>
-                            <button id="btn-clear-text" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
-                                ✕ Clear
+                            <button id="btn-clear-text" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-charcoal/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <span>Clear</span>
                             </button>
                         </div>
                     </div>
@@ -303,8 +324,9 @@
                     <div class="flex flex-col gap-1.5 pt-1">
                         <div class="flex items-center justify-between text-xs font-mono font-semibold">
                             <span id="output-heading-label">CIPHERTEXT (OUTPUT)</span>
-                            <button id="btn-copy-output" class="px-3 py-1 rounded-lg border border-charcoal bg-panel hover:bg-accent text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
-                                📋 Copy
+                            <button id="btn-copy-output" class="px-3 py-1 rounded-lg border border-charcoal bg-panel hover:bg-accent text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                <span>Copy</span>
                             </button>
                         </div>
                         <div class="relative p-3.5 rounded-xl border-2 border-charcoal bg-cream-light flex flex-col gap-2 min-h-[72px]">
@@ -313,7 +335,10 @@
                             </div>
                             <div class="flex items-center justify-between pt-1 border-t border-charcoal/10 text-[11px] font-mono text-charcoal/60">
                                 <span>Spaced Pairs: <span id="output-spaced-preview" class="font-bold text-charcoal">—</span></span>
-                                <span id="copy-toast" class="text-emerald-700 font-bold transition-opacity duration-200 opacity-0">✓ Copied!</span>
+                                <span id="copy-toast" class="text-emerald-700 font-bold transition-opacity duration-200 opacity-0 flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                    <span>Copied!</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -327,13 +352,22 @@
                         </div>
                         <!-- Step Navigation Controls -->
                         <div class="flex items-center gap-1.5">
-                            <button id="step-first-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="First step">⏮</button>
-                            <button id="step-prev-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Previous step">◀</button>
-                            <button id="step-play-btn" class="px-3 py-1 rounded-lg border border-charcoal bg-accent hover:bg-accent-hover text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
-                                ▶ Play
+                            <button id="step-first-btn" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="First step">
+                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
                             </button>
-                            <button id="step-next-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Next step">▶</button>
-                            <button id="step-last-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Last step">⏭</button>
+                            <button id="step-prev-btn" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Previous step">
+                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button id="step-play-btn" class="px-3.5 py-1.5 rounded-lg border border-charcoal bg-accent hover:bg-accent-hover text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                <span>Play</span>
+                            </button>
+                            <button id="step-next-btn" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Next step">
+                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                            <button id="step-last-btn" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Last step">
+                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                            </button>
                         </div>
                     </div>
 
@@ -370,7 +404,7 @@
 
                 <!-- Card 5: Historical Security Advisory -->
                 <article class="p-4 rounded-xl border border-charcoal/20 bg-cream-light flex items-start gap-3">
-                    <span class="text-lg">🛡️</span>
+                    <svg class="w-5 h-5 text-charcoal/70 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     <div class="text-xs font-mono text-charcoal/70 leading-relaxed">
                         <strong class="text-charcoal">Classical Cryptography Notice:</strong> The Playfair cipher operates on digraph substitutions ($25 \times 25 = 600$ pairs) rather than single letters, resisting simple frequency analysis. However, it is fully vulnerable to known-plaintext and digraph frequency attacks. Modern software requires AES-256 or ChaCha20.
                     </div>
@@ -381,7 +415,7 @@
     </div>
 
     <!-- Web Audio Synthesizer (Bubble Pop Typing SFX) -->
-    <script src="{{ url_for('static', filename='js/sfx.js') }}"></script>
+    <script src="static/js/sfx.js"></script>
 
     <!-- Playfair Interactive Engine -->
     <script>
@@ -885,11 +919,17 @@
         if (isPlaying) {
           clearInterval(playInterval);
           isPlaying = false;
-          stepPlayBtn.textContent = '▶ Play';
+          stepPlayBtn.innerHTML = `
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+            <span>Play</span>
+          `;
         } else {
           if (steps.length === 0) return;
           isPlaying = true;
-          stepPlayBtn.textContent = '⏸ Pause';
+          stepPlayBtn.innerHTML = `
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+            <span>Pause</span>
+          `;
           playInterval = setInterval(() => {
             if (currentStepIndex < steps.length - 1) {
               currentStepIndex++;
@@ -898,7 +938,10 @@
             } else {
               clearInterval(playInterval);
               isPlaying = false;
-              stepPlayBtn.textContent = '▶ Play';
+              stepPlayBtn.innerHTML = `
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                <span>Play</span>
+              `;
             }
           }, 1100);
         }
@@ -907,15 +950,15 @@
       // Learning Mode Toggle
       btnModeStudio.addEventListener('click', () => {
         learningPanel.classList.add('hidden');
-        btnModeStudio.className = 'px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
-        btnModeLearning.className = 'px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+        btnModeStudio.className = 'px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5';
+        btnModeLearning.className = 'px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition flex items-center gap-1.5';
         if (window.CyberSFX) CyberSFX.click();
       });
 
       btnModeLearning.addEventListener('click', () => {
         learningPanel.classList.remove('hidden');
-        btnModeLearning.className = 'px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
-        btnModeStudio.className = 'px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+        btnModeLearning.className = 'px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5';
+        btnModeStudio.className = 'px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition flex items-center gap-1.5';
         generateNewChallenge();
         if (window.CyberSFX) CyberSFX.click();
       });
@@ -951,11 +994,11 @@
       btnCheckChallenge.addEventListener('click', () => {
         const userAns = challengeInput.value.trim().toUpperCase();
         if (userAns === currentChallengeAnswer) {
-          challengeFeedback.textContent = `✓ Correct! ${currentChallengePair.join('')} → ${currentChallengeAnswer}`;
+          challengeFeedback.textContent = `Correct: ${currentChallengePair.join('')} → ${currentChallengeAnswer}`;
           challengeFeedback.className = 'text-xs font-mono font-bold text-emerald-700';
           if (window.CyberSFX) CyberSFX.success();
         } else {
-          challengeFeedback.textContent = `✕ Not quite! Expected: ${currentChallengeAnswer}`;
+          challengeFeedback.textContent = `Incorrect: Expected ${currentChallengeAnswer}`;
           challengeFeedback.className = 'text-xs font-mono font-bold text-red-600';
           if (window.CyberSFX) CyberSFX.click();
         }
@@ -972,6 +1015,6 @@
       });
     })();
     </script>
-    <script src="{{ url_for('static', filename='js/interactions.js') }}"></script>
+    <script src="static/js/interactions.js"></script>
 </body>
 </html>
