@@ -6,6 +6,8 @@ Warm Bento Brutalism Edition: Caesar Cipher, Vigenère Cipher, Frequency Analysi
 from flask import Flask, render_template, request, jsonify
 import string
 import math
+import crypto_playfair
+import crypto_hill
 
 app = Flask(__name__)
 
@@ -104,6 +106,18 @@ def vigenere_page():
     return render_template('vigenere.html', active_tab='vigenere')
 
 
+@app.route('/playfair')
+@app.route('/playfair.html')
+def playfair_page():
+    return render_template('playfair.html', active_tab='playfair')
+
+
+@app.route('/hill')
+@app.route('/hill.html')
+def hill_page():
+    return render_template('hill.html', active_tab='hill')
+
+
 @app.route('/frequency')
 @app.route('/frequency.html')
 def frequency_page():
@@ -187,6 +201,72 @@ def api_frequency():
         'counts': counts,
         'percentages': percentages
     })
+
+
+# ─── Playfair Cipher APIs ───────────────────────────────────────────────────
+@app.route('/api/playfair/encrypt', methods=['POST'])
+def api_playfair_encrypt():
+    data = request.get_json(force=True)
+    text = data.get('text', '')
+    keyword = data.get('keyword', 'MONARCHY')
+    filler = data.get('filler', 'X')
+    result = crypto_playfair.playfair_encrypt(text, keyword, filler)
+    return jsonify(result)
+
+
+@app.route('/api/playfair/decrypt', methods=['POST'])
+def api_playfair_decrypt():
+    data = request.get_json(force=True)
+    text = data.get('text', '')
+    keyword = data.get('keyword', 'MONARCHY')
+    result = crypto_playfair.playfair_decrypt(text, keyword)
+    return jsonify(result)
+
+
+# ─── Hill Cipher APIs ───────────────────────────────────────────────────────
+@app.route('/api/hill/validate', methods=['POST'])
+def api_hill_validate():
+    data = request.get_json(force=True)
+    matrix = data.get('matrix', [[3, 3], [2, 5]])
+    is_valid, inv_mat, diag = crypto_hill.matrix_inverse_mod26(matrix)
+    return jsonify({
+        'valid': is_valid,
+        'inverse': inv_mat,
+        'diagnostics': diag
+    })
+
+
+@app.route('/api/hill/generate', methods=['POST'])
+def api_hill_generate():
+    data = request.get_json(force=True) if request.data else {}
+    n = int(data.get('dimension', 2))
+    matrix = crypto_hill.generate_invertible_matrix(n)
+    is_valid, inv_mat, diag = crypto_hill.matrix_inverse_mod26(matrix)
+    return jsonify({
+        'matrix': matrix,
+        'inverse': inv_mat,
+        'diagnostics': diag
+    })
+
+
+@app.route('/api/hill/encrypt', methods=['POST'])
+def api_hill_encrypt():
+    data = request.get_json(force=True)
+    text = data.get('text', '')
+    matrix = data.get('matrix', [[3, 3], [2, 5]])
+    pad_char = data.get('pad_char', 'X')
+    result = crypto_hill.hill_transform(text, matrix, decrypt=False, pad_char=pad_char)
+    return jsonify(result)
+
+
+@app.route('/api/hill/decrypt', methods=['POST'])
+def api_hill_decrypt():
+    data = request.get_json(force=True)
+    text = data.get('text', '')
+    matrix = data.get('matrix', [[3, 3], [2, 5]])
+    pad_char = data.get('pad_char', 'X')
+    result = crypto_hill.hill_transform(text, matrix, decrypt=True, pad_char=pad_char)
+    return jsonify(result)
 
 
 # ─── Run ────────────────────────────────────────────────────────────────────

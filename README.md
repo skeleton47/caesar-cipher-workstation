@@ -2,11 +2,11 @@
 
 A modern, high-precision Cryptographic Suite designed with **Warm Bento Brutalism** (`#FCF9F4` paper canvas, crisp charcoal borders, citron lime accents `#D8EE48`, and tactile neo-brutalist shadows).
 
-Engineered with three fully featured cryptographic studios, real-time mathematical analysis, zero-dependency Web Audio bubble typing synthesis, and a unified Python Flask REST backend (with 100% standalone static web compatibility).
+Engineered with five fully featured cryptographic studios, real-time mathematical analysis, step-by-step visualizers, zero-dependency Web Audio bubble typing synthesis, and a unified Python Flask REST backend (with 100% standalone static web and GitHub Pages compatibility).
 
 ---
 
-## 🏛️ The Three Harmonized Studios
+## 🏛️ The Five Harmonized Studios
 
 ### 1. 🔤 Caesar Cipher Studio (`/` or `index.html`)
 - **Interactive Shift Controller:** Responsive stepper buttons, fine-grained range slider (1 to 25), and key badge telemetry.
@@ -21,7 +21,31 @@ Engineered with three fully featured cryptographic studios, real-time mathematic
 - **Interactive Tabula Recta Inspection:** Miniature 26×26 Vigenère square showing the exact coordinate intersection of the current cipher character.
 - **Kasiski & Cryptanalysis Telemetry:** Live calculation of estimated period length, Index of Coincidence ($I_c$), and keyspace entropy ($26^L$ states).
 
-### 3. 📊 Frequency Analysis Studio (`/frequency` or `frequency.html`)
+### 3. 🎯 Playfair Cipher Studio (`/playfair` or `playfair.html`)
+- **Interactive 5×5 Matrix:** Dynamic key matrix generator merging `I/J` into `I`, deduplicating keyword letters, and filling remaining cells alphabetically.
+- **Cell Inspection:** Clickable matrix cells showing exact row/col coordinates and letter index.
+- **Intelligent Digraph Preparation:** Live text normalization card explaining pair breakdown, duplicate letter splitting with filler `'X'` (or `'Q'` if the duplicate is `'X'`), and odd-length trailing padding `'X'` (or `'Z'`).
+- **Step-by-Step Visualizer:** Play/Pause automatic playback and Next/Prev step stepper animating the exact Playfair geometric rules:
+  - *Same Row Rule:* Right shift (+1 mod 5) for encryption, left shift (-1 mod 5) for decryption.
+  - *Same Column Rule:* Down shift (+1 mod 5) for encryption, up shift (-1 mod 5) for decryption.
+  - *Rectangle Rule:* Opposite corner column swap across the matrix.
+- **Learning & Practice Mode:** Dedicated interactive learning panel explaining rules with visual examples, plus an interactive prediction challenge to test digraph encryption skills.
+
+### 4. 📐 Hill Cipher Laboratory (`/hill` or `hill.html`)
+- **Multi-Dimension Support:** Full support for both **2×2** and **3×3** linear transformation matrices.
+- **Exact Modular Inversion Engine:**
+  - Determinant calculation $\det(K) \pmod{26}$.
+  - Strict invertibility validation: $\gcd(\det(K), 26) = 1$. Rejects singular and non-coprime matrices with immediate diagnostics.
+  - Multiplicative inverse calculation $\det(K)^{-1} \pmod{26}$ using the Extended Euclidean Algorithm.
+  - Adjugate matrix $\operatorname{adj}(K)$ and modular inverse matrix $K^{-1} \equiv \det(K)^{-1} \cdot \operatorname{adj}(K) \pmod{26}$.
+  - Modular identity verification checking $K \cdot K^{-1} \equiv I \pmod{26}$.
+- **Interactive Matrix Grid:** Direct numeric cell editing with auto-normalization modulo 26, live validation status pill, determinant readout, and inverse preview.
+- **Random Invertible Key Generator:** Deterministic sampling until a valid invertible matrix is produced.
+- **Vector Arithmetic Walkthrough:** Step-by-step matrix-vector multiplication breakdown:
+  $$\mathbf{c} = K \cdot \mathbf{p} \pmod{26} \quad \text{and} \quad \mathbf{p} = K^{-1} \cdot \mathbf{c} \pmod{26}$$
+  Shows vector mapping ($A=0, \dots, Z=25$), dot products, modulo reduction, and resulting ciphertext blocks with visual highlight synchronization.
+
+### 5. 📊 Frequency Analysis Studio (`/frequency` or `frequency.html`)
 - **Monogram Cryptanalysis Distribution:** Dual-bar comparative histogram plotting observed character frequency against standard English language distribution (`ETAOIN SHRDLU`).
 - **Statistical Metric Cards:** Chi-Square ($\chi^2$) goodness-of-fit fitness score, payload character count, and unique letter diversity.
 - **Automated Detection Heuristics:** Automated classification detecting whether ciphertext is likely Monoalphabetic (Caesar) or Polyalphabetic (Vigenère).
@@ -33,7 +57,7 @@ Engineered with three fully featured cryptographic studios, real-time mathematic
 
 Built-in zero-latency Web Audio API engine (`static/js/sfx.js`):
 - **Bubble Pop Typing ASMR:** Organic, fluid droplet sound on every keystroke in input fields.
-- **Tactile UI Clicks:** Crisp mechanical feedback for mode switches, presets, and steppers.
+- **Tactile UI Clicks:** Crisp mechanical feedback for mode switches, presets, steppers, and matrix dimension toggles.
 - **Clipboard Sound:** Positive audio confirmation upon copying text.
 - **Global SFX Toggle:** Clickable pill in the header with persistent state memory (`localStorage`).
 
@@ -50,6 +74,12 @@ Built-in zero-latency Web Audio API engine (`static/js/sfx.js`):
   - `POST /api/crack` — Frequency-based Caesar brute-force scoring
   - `POST /api/vigenere/encrypt` — Vigenère cipher encryption
   - `POST /api/vigenere/decrypt` — Vigenère cipher decryption
+  - `POST /api/playfair/encrypt` — Playfair cipher encryption with step telemetry
+  - `POST /api/playfair/decrypt` — Playfair cipher decryption with step telemetry
+  - `POST /api/hill/validate` — Hill matrix determinant & invertibility validation
+  - `POST /api/hill/generate` — Generate random invertible 2×2 or 3×3 matrix
+  - `POST /api/hill/encrypt` — Hill cipher encryption with vector calculations
+  - `POST /api/hill/decrypt` — Hill cipher decryption with inverse matrix vectors
   - `POST /api/frequency` — Character distribution & frequency percentage metrics
 
 ---
@@ -71,7 +101,7 @@ python app.py
 Open **http://127.0.0.1:5000** in your web browser.
 
 ### Option B: Standalone Static Web / GitHub Pages
-Double-click `index.html` directly or host with GitHub Pages. All three studios (`index.html`, `vigenere.html`, `frequency.html`) run fully client-side with zero external servers required.
+Double-click `index.html` directly or host with GitHub Pages. All five studios (`index.html`, `vigenere.html`, `playfair.html`, `hill.html`, `frequency.html`) run fully client-side with zero external servers required.
 
 ---
 

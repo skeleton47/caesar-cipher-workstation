@@ -229,3 +229,122 @@ nav .nav-tab:hover:not(.active-studio) {
   background-color: rgba(0, 0, 0, 0.05);
   color: #181818;
 }
+
+/* ── 6. Playfair & Hill Matrix Cryptography Styles ───────────────────────── */
+.playfair-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.playfair-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  border: 1.5px solid #181818;
+  border-radius: 0.75rem;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  user-select: none;
+}
+
+.playfair-cell:hover {
+  transform: translateY(-2px) scale(1.05);
+  background-color: #F7F5EE;
+  box-shadow: 2px 2px 0px #181818;
+}
+
+.playfair-cell.cell-source-1 {
+  background-color: #D8EE48 !important;
+  color: #181818 !important;
+  font-weight: 800;
+  transform: scale(1.06);
+  box-shadow: 2.5px 2.5px 0px #181818;
+  z-index: 2;
+}
+
+.playfair-cell.cell-source-2 {
+  background-color: #A3E635 !important;
+  color: #181818 !important;
+  font-weight: 800;
+  transform: scale(1.06);
+  box-shadow: 2.5px 2.5px 0px #181818;
+  z-index: 2;
+}
+
+.playfair-cell.cell-target {
+  background-color: #FEF08A !important;
+  color: #181818 !important;
+  font-weight: 800;
+  border-style: dashed;
+  box-shadow: 2px 2px 0px #181818;
+  animation: pulseTarget 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes pulseTarget {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.04); }
+}
+
+.playfair-cell.cell-band {
+  background-color: rgba(216, 238, 72, 0.18) !important;
+}
+
+.playfair-cell.cell-rect-perimeter {
+  background-color: rgba(254, 240, 138, 0.22) !important;
+  border-color: #181818;
+}
+
+/* Hide number input spinners in Hill matrix */
+input[type="number"].matrix-spin-none::-webkit-inner-spin-button,
+input[type="number"].matrix-spin-none::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"].matrix-spin-none {
+  -moz-appearance: textfield;
+}
+
+.hill-matrix-grid {
+  display: inline-grid;
+  gap: 0.45rem;
+  padding: 0.5rem;
+  background-color: #F4F1EA;
+  border: 2px solid #181818;
+  border-radius: 1rem;
+  box-shadow: 3px 3px 0px #181818;
+}
+
+.hill-matrix-bracket {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.hill-matrix-bracket::before,
+.hill-matrix-bracket::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 7px;
+  border-top: 2.5px solid #181818;
+  border-bottom: 2.5px solid #181818;
+}
+.hill-matrix-bracket::before {
+  left: -9px;
+  border-left: 2.5px solid #181818;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.hill-matrix-bracket::after {
+  right: -9px;
+  border-right: 2.5px solid #181818;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}

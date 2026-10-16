@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Hill Cipher Lab — Warm Bento Edition</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="static/css/interactions.css"/>
+    
+    <!-- Tailwind CSS v3 with Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                charcoal: '#181818',
+                paper: '#FCF9F4',
+                panel: '#FFFFFF',
+                accent: '#D8EE48',
+                'accent-hover': '#CBE037',
+                cream: '#F4F1EA',
+                'cream-light': '#F7F5EE',
+                'subtle-border': '#E4E0D6'
+              },
+              fontFamily: {
+                sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+                mono: ['"JetBrains Mono"', 'monospace']
+              },
+              boxShadow: {
+                'brutal-sm': '2px 2px 0px #181818',
+                'brutal': '3px 3px 0px #181818',
+                'brutal-lg': '4px 4px 0px #181818'
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        body {
+          background-color: #F6F3EE;
+          color: #181818;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-6 sm:py-10 px-4 sm:px-6 md:px-8 flex justify-center items-center selection:bg-accent selection:text-charcoal">
+    <!-- Main Bento Container Shell -->
+    <div class="w-full max-w-5xl bg-paper border-2 border-charcoal rounded-[2rem] p-6 sm:p-9 shadow-brutal-lg flex flex-col gap-7">
+        
+        <!-- 1. HEADER / NAVIGATION -->
+        <header class="relative flex items-center justify-between pb-6 border-b border-charcoal/15">
+            <div class="hidden sm:block w-24"></div>
+            
+            <!-- Centered Capsule Navigation Bar -->
+            <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-charcoal shadow-brutal-sm gap-0.5 sm:gap-1 flex-wrap justify-center">
+                <a href="index.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Caesar</a>
+                <a href="vigenere.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Vigenère</a>
+                <a href="playfair.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Playfair</a>
+                <a href="hill.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full bg-charcoal text-white text-xs font-bold tracking-wide transition shadow-sm cursor-default active-studio">Hill</a>
+                <a href="frequency.html" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Frequency</a>
+            </nav>
+            
+            <!-- Right Header Actions (Reset) -->
+            <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
+                <button class="px-5 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm" id="hill-reset-btn">
+                    Reset
+                </button>
+            </div>
+        </header>
+
+        <!-- 2. TITLE AREA -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
+            <div class="flex flex-col gap-1">
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Hill Cipher Lab</h1>
+            </div>
+            
+            <!-- Dimension Selector Tabs (2x2 vs 3x3) -->
+            <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1 self-start sm:self-auto">
+                <button id="btn-dim-2" class="px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm">
+                    2×2 Matrix
+                </button>
+                <button id="btn-dim-3" class="px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
+                    3×3 Matrix
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. MAIN WORKSPACE / BENTO GRID -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- ==========================================
+                 LEFT COLUMN: Matrix Configuration & Math Validation
+                 ========================================== -->
+            <section class="lg:col-span-5 flex flex-col gap-5">
+                
+                <!-- Card 1: Key Matrix Input -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">KEY MATRIX K (MOD 26)</span>
+                        <span id="matrix-dim-badge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-cream border border-charcoal/20 text-charcoal">Dim: 2×2</span>
+                    </div>
+
+                    <!-- Matrix Input Grid in Math Brackets -->
+                    <div class="flex justify-center py-2">
+                        <div class="hill-matrix-bracket">
+                            <div class="hill-matrix-grid" id="matrix-inputs-container">
+                                <!-- Injected dynamically by JavaScript (2x2 or 3x3) -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Generator & Action Bar -->
+                    <div class="flex items-center justify-between gap-2 pt-1 border-t border-charcoal/10 flex-wrap">
+                        <button id="btn-gen-invertible" class="px-3.5 py-1.5 rounded-lg border-2 border-charcoal bg-accent hover:bg-accent-hover font-mono text-xs font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1.5">
+                            <span>⚡</span>
+                            <span>Generate Valid Key</span>
+                        </button>
+                        <div class="flex items-center gap-1.5">
+                            <button id="btn-preset-key-1" class="px-2.5 py-1 rounded-md border border-charcoal bg-panel hover:bg-cream text-[11px] font-mono font-semibold text-charcoal transition">
+                                Preset 1
+                            </button>
+                            <button id="btn-preset-key-2" class="px-2.5 py-1 rounded-md border border-charcoal bg-panel hover:bg-cream text-[11px] font-mono font-semibold text-charcoal transition">
+                                Preset 2
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 2: Modular Linear Algebra Diagnostics & Inverse Matrix -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-3.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">MODULAR VALIDATION &amp; INVERSE</span>
+                        <span id="validation-pill" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-400">
+                            ✓ Invertible mod 26
+                        </span>
+                    </div>
+
+                    <!-- Validation metrics grid -->
+                    <div class="grid grid-cols-3 gap-2 font-mono text-center">
+                        <div class="p-2.5 rounded-xl bg-cream-light border border-charcoal/20 flex flex-col">
+                            <span class="text-[10px] text-charcoal/60 uppercase font-semibold">det(K)</span>
+                            <span id="metric-det" class="text-base font-bold text-charcoal">9</span>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-cream-light border border-charcoal/20 flex flex-col">
+                            <span class="text-[10px] text-charcoal/60 uppercase font-semibold">gcd(det, 26)</span>
+                            <span id="metric-gcd" class="text-base font-bold text-charcoal">1</span>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-cream-light border border-charcoal/20 flex flex-col">
+                            <span class="text-[10px] text-charcoal/60 uppercase font-semibold">det⁻¹ mod 26</span>
+                            <span id="metric-det-inv" class="text-base font-bold text-charcoal">3</span>
+                        </div>
+                    </div>
+
+                    <!-- Invalid Matrix Error Alert Box (Hidden when valid) -->
+                    <div id="matrix-error-box" class="hidden p-3.5 rounded-xl bg-red-50 border-2 border-red-500 text-red-900 text-xs font-mono space-y-2">
+                        <div class="flex items-start gap-2">
+                            <span class="text-base">⚠️</span>
+                            <div>
+                                <strong class="font-bold">Matrix is not invertible modulo 26!</strong>
+                                <p id="matrix-error-text" class="text-[11px] mt-0.5 text-red-800 leading-relaxed"></p>
+                            </div>
+                        </div>
+                        <button id="btn-fix-matrix" class="w-full py-1.5 rounded-lg bg-red-600 text-white font-mono text-xs font-bold hover:bg-red-700 transition shadow-sm">
+                            Generate Invertible Replacement
+                        </button>
+                    </div>
+
+                    <!-- Computed Inverse Matrix Container -->
+                    <div id="inverse-matrix-wrapper" class="flex flex-col gap-2 pt-1 border-t border-charcoal/10">
+                        <div class="flex items-center justify-between text-[11px] font-mono text-charcoal/60">
+                            <span>Inverse Matrix K⁻¹ mod 26:</span>
+                            <span id="identity-check-badge" class="text-emerald-700 font-bold">✓ K · K⁻¹ ≡ I₂₆</span>
+                        </div>
+                        <div class="flex justify-center py-1">
+                            <div class="hill-matrix-bracket">
+                                <div class="hill-matrix-grid bg-white" id="inverse-matrix-display">
+                                    <!-- Injected by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ==========================================
+                 RIGHT COLUMN: Workspace Console & Vector Inspector
+                 ========================================== -->
+            <section class="lg:col-span-7 flex flex-col gap-5">
+                
+                <!-- Card 3: Input / Output Console -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-4">
+                    
+                    <!-- Direction Switcher & Actions -->
+                    <div class="flex items-center justify-between flex-wrap gap-2 pb-1 border-b border-charcoal/10">
+                        <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1">
+                            <button id="btn-direction-encrypt" class="px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm">
+                                🔒 Encrypt
+                            </button>
+                            <button id="btn-direction-decrypt" class="px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
+                                🔓 Decrypt
+                            </button>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button id="btn-sample-msg" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
+                                ⚡ Sample
+                            </button>
+                            <button id="btn-swap-text" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm" title="Swap input and output">
+                                ⇄ Swap
+                            </button>
+                            <button id="btn-clear-text" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
+                                ✕ Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input Textarea -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex items-center justify-between text-xs font-mono font-semibold">
+                            <span id="input-heading-label">PLAINTEXT (INPUT)</span>
+                            <span class="text-charcoal/60"><span id="input-char-count">0</span> characters</span>
+                        </div>
+                        <textarea id="hill-input" rows="3" placeholder="Enter plaintext to transform..." class="w-full p-3.5 rounded-xl border-2 border-charcoal font-mono uppercase text-sm font-semibold tracking-wider bg-cream-light focus:bg-white transition resize-none"></textarea>
+                    </div>
+
+                    <!-- Block Segmentation Ribbon -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex items-center justify-between text-[11px] font-mono text-charcoal/60">
+                            <span>Block Grouping (n = <span id="block-n-val">2</span>):</span>
+                            <span id="pad-info-text">Pad: none</span>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap min-h-[36px] p-2 rounded-xl bg-cream-light border border-charcoal/20" id="block-pills-container">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Output Area -->
+                    <div class="flex flex-col gap-1.5 pt-1 border-t border-charcoal/10">
+                        <div class="flex items-center justify-between text-xs font-mono font-semibold">
+                            <span id="output-heading-label">CIPHERTEXT (OUTPUT)</span>
+                            <button id="btn-copy-output" class="px-3 py-1 rounded-lg border border-charcoal bg-panel hover:bg-accent text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
+                                📋 Copy
+                            </button>
+                        </div>
+                        <div class="relative p-3.5 rounded-xl border-2 border-charcoal bg-cream-light flex flex-col gap-2 min-h-[72px]">
+                            <div id="hill-output" class="font-mono text-sm sm:text-base font-bold text-charcoal tracking-widest break-all select-all">
+                                —
+                            </div>
+                            <div class="flex items-center justify-between pt-1 border-t border-charcoal/10 text-[11px] font-mono text-charcoal/60">
+                                <span>Spaced Blocks: <span id="output-spaced-preview" class="font-bold text-charcoal">—</span></span>
+                                <span id="copy-toast" class="text-emerald-700 font-bold transition-opacity duration-200 opacity-0">✓ Copied!</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 4: Step-by-Step Vector Multiplication Inspector -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-4">
+                    <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-charcoal/10">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">VECTOR MULTIPLICATION ENGINE</span>
+                        </div>
+                        <!-- Step Navigation Controls -->
+                        <div class="flex items-center gap-1.5">
+                            <button id="step-first-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="First step">⏮</button>
+                            <button id="step-prev-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Previous step">◀</button>
+                            <button id="step-play-btn" class="px-3 py-1 rounded-lg border border-charcoal bg-accent hover:bg-accent-hover text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
+                                ▶ Play
+                            </button>
+                            <button id="step-next-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Next step">▶</button>
+                            <button id="step-last-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Last step">⏭</button>
+                        </div>
+                    </div>
+
+                    <!-- Step Telemetry Banner -->
+                    <div class="p-3.5 rounded-xl bg-cream-light border border-charcoal flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span id="step-counter-badge" class="px-3 py-1 rounded-md bg-charcoal text-white font-mono text-xs font-bold shadow-sm">
+                                Block 1 of 1
+                            </span>
+                            <div class="flex items-center gap-2 font-mono text-sm font-bold text-charcoal">
+                                <span id="step-in-chars" class="px-2.5 py-0.5 rounded bg-white border border-charcoal">H E</span>
+                                <span>→</span>
+                                <span id="step-out-chars" class="px-2.5 py-0.5 rounded bg-accent border border-charcoal">H I</span>
+                            </div>
+                        </div>
+
+                        <!-- Vector formula indicator -->
+                        <span class="px-3 py-1 rounded-full border border-charcoal bg-panel font-mono text-xs font-bold text-charcoal shadow-sm">
+                            c = K · p (mod 26)
+                        </span>
+                    </div>
+
+                    <!-- Linear Algebra Arithmetic Calculation Breakdown Box -->
+                    <div class="p-4 rounded-xl border border-charcoal/20 bg-white flex flex-col gap-3 font-mono text-xs">
+                        <span class="text-charcoal/60 text-[11px] font-bold uppercase tracking-wider">Exact Modular Vector Arithmetic:</span>
+                        <div id="step-breakdown-lines" class="space-y-2">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 5: Historical Security Advisory -->
+                <article class="p-4 rounded-xl border border-charcoal/20 bg-cream-light flex items-start gap-3">
+                    <span class="text-lg">🛡️</span>
+                    <div class="text-xs font-mono text-charcoal/70 leading-relaxed">
+                        <strong class="text-charcoal">Classical Cryptography Notice:</strong> The Hill cipher (Lester S. Hill, 1929) is linearly algebraic. While it conceals single-letter frequencies, it is completely broken by a Known-Plaintext Attack if $n$ linearly independent plaintext-ciphertext vector pairs are intercepted ($K = C \cdot P^{-1} \pmod{26}$). For real-world security, use AES-256 or ChaCha20.
+                    </div>
+                </article>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- Web Audio Synthesizer (Bubble Pop Typing SFX) -->
+    <script src="static/js/sfx.js"></script>
+
+    <!-- Hill Cipher Interactive Engine -->
+    <script>
+    (function () {
+      'use strict';
+
+      // State
+      let dimension = 2; // 2 or 3
+      let keyMatrix = [[3, 3], [2, 5]];
+      let isDecrypt = false;
+      let blocks = [];
+      let steps = [];
+      let currentStepIndex = 0;
+      let isPlaying = false;
+      let playInterval = null;
+
+      // Presets
+      const PRESETS_2X2 = {
+        p1: [[3, 3], [2, 5]], // det=9, detInv=3
+        p2: [[5, 17], [8, 3]] // det=3, detInv=9
+      };
+
+      const PRESETS_3X3 = {
+        p1: [[6, 24, 1], [13, 16, 10], [20, 17, 15]], // det=25, detInv=25
+        p2: [[1, 2, 3], [0, 1, 4], [5, 6, 0]]
+      };
+
+      // Sample messages
+      const SAMPLES = [
+        "HELP",
+        "ACTING",
+        "ATTACK AT DAWN",
+        "RETREAT TO WEST WALL",
+        "TOP SECRET CLEARANCE"
+      ];
+      let sampleIdx = 0;
+
+      // DOM Elements
+      const btnDim2 = document.getElementById('btn-dim-2');
+      const btnDim3 = document.getElementById('btn-dim-3');
+      const matrixDimBadge = document.getElementById('matrix-dim-badge');
+      const matrixInputsContainer = document.getElementById('matrix-inputs-container');
+      const btnGenInvertible = document.getElementById('btn-gen-invertible');
+      const btnPresetKey1 = document.getElementById('btn-preset-key-1');
+      const btnPresetKey2 = document.getElementById('btn-preset-key-2');
+
+      const validationPill = document.getElementById('validation-pill');
+      const metricDet = document.getElementById('metric-det');
+      const metricGcd = document.getElementById('metric-gcd');
+      const metricDetInv = document.getElementById('metric-det-inv');
+      const matrixErrorBox = document.getElementById('matrix-error-box');
+      const matrixErrorText = document.getElementById('matrix-error-text');
+      const btnFixMatrix = document.getElementById('btn-fix-matrix');
+      const inverseMatrixWrapper = document.getElementById('inverse-matrix-wrapper');
+      const inverseMatrixDisplay = document.getElementById('inverse-matrix-display');
+
+      const btnDirectionEncrypt = document.getElementById('btn-direction-encrypt');
+      const btnDirectionDecrypt = document.getElementById('btn-direction-decrypt');
+      const inputHeading = document.getElementById('input-heading-label');
+      const outputHeading = document.getElementById('output-heading-label');
+      const textInput = document.getElementById('hill-input');
+      const textOutput = document.getElementById('hill-output');
+      const outputSpaced = document.getElementById('output-spaced-preview');
+      const inputCharCount = document.getElementById('input-char-count');
+      const blockPillsContainer = document.getElementById('block-pills-container');
+      const blockNVal = document.getElementById('block-n-val');
+      const padInfoText = document.getElementById('pad-info-text');
+
+      const btnSampleMsg = document.getElementById('btn-sample-msg');
+      const btnSwapText = document.getElementById('btn-swap-text');
+      const btnClearText = document.getElementById('btn-clear-text');
+      const btnCopyOutput = document.getElementById('btn-copy-output');
+      const copyToast = document.getElementById('copy-toast');
+      const resetBtn = document.getElementById('hill-reset-btn');
+
+      // Stepper
+      const stepCounterBadge = document.getElementById('step-counter-badge');
+      const stepInChars = document.getElementById('step-in-chars');
+      const stepOutChars = document.getElementById('step-out-chars');
+      const stepBreakdownLines = document.getElementById('step-breakdown-lines');
+      const stepFirstBtn = document.getElementById('step-first-btn');
+      const stepPrevBtn = document.getElementById('step-prev-btn');
+      const stepPlayBtn = document.getElementById('step-play-btn');
+      const stepNextBtn = document.getElementById('step-next-btn');
+      const stepLastBtn = document.getElementById('step-last-btn');
+
+      // ── Math Helpers ───────────────────────────────────────────────────────
+      function egcd(a, b) {
+        if (a === 0) return { gcd: b, x: 0, y: 1 };
+        const res = egcd(b % a, a);
+        const x = res.y - Math.floor(b / a) * res.x;
+        const y = res.x;
+        return { gcd: res.gcd, x: x, y: y };
+      }
+
+      function modInverse(a, m = 26) {
+        const positiveA = ((a % m) + m) % m;
+        const res = egcd(positiveA, m);
+        if (res.gcd !== 1) return null;
+        return ((res.x % m) + m) % m;
+      }
+
+      function gcd(a, b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
+        while (b) {
+          const t = b;
+          b = a % b;
+          a = t;
+        }
+        return a;
+      }
+
+      function det2x2(m) {
+        return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+      }
+
+      function det3x3(m) {
+        const c0 = m[1][1] * m[2][2] - m[1][2] * m[2][1];
+        const c1 = m[1][0] * m[2][2] - m[1][2] * m[2][0];
+        const c2 = m[1][0] * m[2][1] - m[1][1] * m[2][0];
+        return m[0][0] * c0 - m[0][1] * c1 + m[0][2] * c2;
+      }
+
+      function calcDet(m) {
+        return m.length === 2 ? det2x2(m) : det3x3(m);
+      }
+
+      function adjugate2x2(m) {
+        return [
+          [((m[1][1] % 26) + 26) % 26, ((-m[0][1] % 26) + 26) % 26],
+          [((-m[1][0] % 26) + 26) % 26, ((m[0][0] % 26) + 26) % 26]
+        ];
+      }
+
+      function adjugate3x3(m) {
+        const adj = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const minor = [];
+            for (let i = 0; i < 3; i++) {
+              if (i === r) continue;
+              const row = [];
+              for (let j = 0; j < 3; j++) {
+                if (j === c) continue;
+                row.push(m[i][j]);
+              }
+              minor.push(row);
+            }
+            const detMinor = det2x2(minor);
+            const cofactor = Math.pow(-1, r + c) * detMinor;
+            adj[c][r] = ((cofactor % 26) + 26) % 26; // transpose
+          }
+        }
+        return adj;
+      }
+
+      function computeMatrixInverse(m) {
+        const n = m.length;
+        const rawDet = calcDet(m);
+        const modDet = ((rawDet % 26) + 26) % 26;
+        const g = gcd(modDet, 26);
+        const detInv = modInverse(modDet, 26);
+
+        if (g !== 1 || detInv === null) {
+          let reason = `gcd(${modDet}, 26) = ${g} ≠ 1. `;
+          if (modDet % 2 === 0) reason += "Determinant is even (shares factor 2 with 26). ";
+          if (modDet % 13 === 0) reason += "Determinant is divisible by 13. ";
+          return {
+            valid: false,
+            rawDet,
+            modDet,
+            gcd: g,
+            detInv: null,
+            inv: null,
+            error: reason
+          };
+        }
+
+        const adj = (n === 2) ? adjugate2x2(m) : adjugate3x3(m);
+        const inv = [];
+        for (let r = 0; r < n; r++) {
+          const row = [];
+          for (let c = 0; c < n; c++) {
+            row.push(((detInv * adj[r][c]) % 26 + 26) % 26);
+          }
+          inv.push(row);
+        }
+
+        return {
+          valid: true,
+          rawDet,
+          modDet,
+          gcd: g,
+          detInv,
+          inv,
+          error: null
+        };
+      }
+
+      function generateInvertibleKey(n) {
+        while (true) {
+          const candidate = [];
+          for (let r = 0; r < n; r++) {
+            const row = [];
+            for (let c = 0; c < n; c++) {
+              row.push(Math.floor(Math.random() * 26));
+            }
+            candidate.push(row);
+          }
+          const det = ((calcDet(candidate) % 26) + 26) % 26;
+          if (gcd(det, 26) === 1) return candidate;
+        }
+      }
+
+      // ── UI Renderers ───────────────────────────────────────────────────────
+      function renderMatrixInputs() {
+        matrixInputsContainer.innerHTML = '';
+        matrixInputsContainer.style.gridTemplateColumns = `repeat(${dimension}, minmax(0, 1fr))`;
+
+        for (let r = 0; r < dimension; r++) {
+          for (let c = 0; c < dimension; c++) {
+            const inp = document.createElement('input');
+            inp.type = 'number';
+            inp.min = '0';
+            inp.max = '25';
+            inp.value = keyMatrix[r][c];
+            inp.dataset.r = r;
+            inp.dataset.c = c;
+            inp.className = 'w-12 h-12 text-center border-2 border-charcoal rounded-lg font-mono text-base font-bold bg-white focus:bg-accent matrix-spin-none transition';
+
+            inp.addEventListener('input', () => {
+              const val = parseInt(inp.value, 10);
+              keyMatrix[r][c] = isNaN(val) ? 0 : ((val % 26) + 26) % 26;
+              processCipher();
+              if (window.CyberSFX) CyberSFX.bubblePop();
+            });
+
+            matrixInputsContainer.appendChild(inp);
+          }
+        }
+      }
+
+      function renderInverseMatrix(inv) {
+        inverseMatrixDisplay.innerHTML = '';
+        if (!inv) return;
+        inverseMatrixDisplay.style.gridTemplateColumns = `repeat(${dimension}, minmax(0, 1fr))`;
+
+        for (let r = 0; r < dimension; r++) {
+          for (let c = 0; c < dimension; c++) {
+            const cell = document.createElement('div');
+            cell.className = 'w-10 h-10 flex items-center justify-center font-mono text-sm font-bold border border-charcoal/30 rounded bg-cream-light text-charcoal';
+            cell.textContent = inv[r][c];
+            inverseMatrixDisplay.appendChild(cell);
+          }
+        }
+      }
+
+      function updateBlockPills(blks, padCount) {
+        blockPillsContainer.innerHTML = '';
+        blockNVal.textContent = dimension;
+        padInfoText.textContent = padCount > 0 ? `+${padCount} 'X' pad added` : `Exact length (no pad)`;
+
+        if (blks.length === 0) {
+          blockPillsContainer.innerHTML = '<span class="text-xs font-mono text-charcoal/50">Enter message to see block segmentation</span>';
+          return;
+        }
+
+        blks.forEach((b, idx) => {
+          const pill = document.createElement('button');
+          const isCurrent = idx === currentStepIndex;
+          pill.className = `px-2.5 py-1 rounded-lg border font-mono text-xs font-bold transition ${
+            isCurrent
+              ? 'bg-charcoal text-white border-charcoal shadow-sm scale-105'
+              : 'bg-white border-charcoal/30 text-charcoal hover:bg-cream'
+          }`;
+          pill.textContent = b;
+          pill.addEventListener('click', () => {
+            currentStepIndex = idx;
+            renderCurrentStep();
+            if (window.CyberSFX) CyberSFX.click();
+          });
+          blockPillsContainer.appendChild(pill);
+        });
+      }
+
+      function renderCurrentStep() {
+        if (steps.length === 0) {
+          stepCounterBadge.textContent = 'Block 0 of 0';
+          stepInChars.textContent = '—';
+          stepOutChars.textContent = '—';
+          stepBreakdownLines.innerHTML = '<p class="text-charcoal/50">Type a message with an invertible key to view vector step calculations.</p>';
+          return;
+        }
+
+        if (currentStepIndex >= steps.length) currentStepIndex = steps.length - 1;
+        if (currentStepIndex < 0) currentStepIndex = 0;
+
+        const s = steps[currentStepIndex];
+        stepCounterBadge.textContent = `Block ${currentStepIndex + 1} of ${steps.length}`;
+        stepInChars.textContent = s.inChars;
+        stepOutChars.textContent = s.outChars;
+
+        stepBreakdownLines.innerHTML = '';
+        s.breakdown.forEach(row => {
+          const line = document.createElement('div');
+          line.className = 'p-2 rounded-lg bg-cream-light border border-charcoal/15 flex items-center justify-between text-xs';
+          line.innerHTML = `
+            <span>Row ${row.r}: <span class="font-bold">${row.expression}</span></span>
+            <span class="text-charcoal/70">Sum: ${row.sum} ≡ <strong class="text-charcoal font-bold">${row.mod26}</strong> ('${row.char}')</span>
+          `;
+          stepBreakdownLines.appendChild(line);
+        });
+
+        updateBlockPills(blocks, s.padCount || 0);
+      }
+
+      function processCipher() {
+        const resMath = computeMatrixInverse(keyMatrix);
+
+        metricDet.textContent = resMath.modDet;
+        metricGcd.textContent = resMath.gcd;
+        metricDetInv.textContent = resMath.detInv !== null ? resMath.detInv : 'None';
+
+        if (resMath.valid) {
+          validationPill.textContent = '✓ Invertible mod 26';
+          validationPill.className = 'text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-400';
+          matrixErrorBox.classList.add('hidden');
+          inverseMatrixWrapper.classList.remove('hidden');
+          renderInverseMatrix(resMath.inv);
+        } else {
+          validationPill.textContent = '✕ Non-Invertible';
+          validationPill.className = 'text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-red-100 text-red-800 border border-red-400';
+          matrixErrorText.textContent = resMath.error;
+          matrixErrorBox.classList.remove('hidden');
+          inverseMatrixWrapper.classList.add('hidden');
+        }
+
+        const rawText = textInput.value;
+        inputCharCount.textContent = rawText.length;
+
+        if (!rawText.trim() || !resMath.valid) {
+          blocks = [];
+          steps = [];
+          textOutput.textContent = '—';
+          outputSpaced.textContent = '—';
+          renderCurrentStep();
+          return;
+        }
+
+        const activeMat = isDecrypt ? resMath.inv : keyMatrix;
+        const clean = rawText.toUpperCase().replace(/[^A-Z]/g, '');
+
+        // Padding
+        const rem = clean.length % dimension;
+        const padCount = rem === 0 ? 0 : (dimension - rem);
+        const padded = clean + ('X'.repeat(padCount));
+
+        blocks = [];
+        for (let i = 0; i < padded.length; i += dimension) {
+          blocks.push(padded.slice(i, i + dimension));
+        }
+
+        steps = [];
+        const outList = [];
+
+        blocks.forEach((blk, bIdx) => {
+          const pVec = [];
+          for (let i = 0; i < dimension; i++) {
+            pVec.push(blk.charCodeAt(i) - 65);
+          }
+
+          const cVec = [];
+          const breakdown = [];
+
+          for (let r = 0; r < dimension; r++) {
+            let rowSum = 0;
+            const terms = [];
+            for (let c = 0; c < dimension; c++) {
+              const kVal = activeMat[r][c];
+              const pVal = pVec[c];
+              const prod = kVal * pVal;
+              rowSum += prod;
+              terms.push(`(${kVal} × ${pVal})`);
+            }
+            const cVal = ((rowSum % 26) + 26) % 26;
+            cVec.push(cVal);
+            breakdown.push({
+              r: r,
+              expression: terms.join(' + '),
+              sum: rowSum,
+              mod26: cVal,
+              char: String.fromCharCode(65 + cVal)
+            });
+          }
+
+          const outChars = cVec.map(v => String.fromCharCode(65 + v)).join('');
+          outList.push(outChars);
+
+          steps.push({
+            bIdx,
+            inChars: blk,
+            outChars,
+            breakdown,
+            padCount
+          });
+        });
+
+        textOutput.textContent = outList.join('');
+        outputSpaced.textContent = outList.join(' ');
+
+        if (currentStepIndex >= steps.length) currentStepIndex = 0;
+        renderCurrentStep();
+      }
+
+      // ── Event Handlers ────────────────────────────────────────────────────
+      function setDimension(dim) {
+        dimension = dim;
+        matrixDimBadge.textContent = `Dim: ${dim}×${dim}`;
+        if (dim === 2) {
+          btnDim2.className = 'px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+          btnDim3.className = 'px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+          keyMatrix = PRESETS_2X2.p1.map(r => [...r]);
+        } else {
+          btnDim3.className = 'px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+          btnDim2.className = 'px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+          keyMatrix = PRESETS_3X3.p1.map(r => [...r]);
+        }
+        renderMatrixInputs();
+        processCipher();
+        if (window.CyberSFX) CyberSFX.click();
+      }
+
+      btnDim2.addEventListener('click', () => setDimension(2));
+      btnDim3.addEventListener('click', () => setDimension(3));
+
+      btnGenInvertible.addEventListener('click', () => {
+        keyMatrix = generateInvertibleKey(dimension);
+        renderMatrixInputs();
+        processCipher();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnFixMatrix.addEventListener('click', () => {
+        btnGenInvertible.click();
+      });
+
+      btnPresetKey1.addEventListener('click', () => {
+        keyMatrix = (dimension === 2 ? PRESETS_2X2.p1 : PRESETS_3X3.p1).map(r => [...r]);
+        renderMatrixInputs();
+        processCipher();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnPresetKey2.addEventListener('click', () => {
+        keyMatrix = (dimension === 2 ? PRESETS_2X2.p2 : PRESETS_3X3.p2).map(r => [...r]);
+        renderMatrixInputs();
+        processCipher();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      function setDirection(dec) {
+        isDecrypt = dec;
+        if (dec) {
+          btnDirectionDecrypt.className = 'px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+          btnDirectionEncrypt.className = 'px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+          inputHeading.textContent = 'CIPHERTEXT (INPUT)';
+          outputHeading.textContent = 'DECRYPTED PLAINTEXT (OUTPUT)';
+        } else {
+          btnDirectionEncrypt.className = 'px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+          btnDirectionDecrypt.className = 'px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+          inputHeading.textContent = 'PLAINTEXT (INPUT)';
+          outputHeading.textContent = 'CIPHERTEXT (OUTPUT)';
+        }
+        processCipher();
+        if (window.CyberSFX) CyberSFX.click();
+      }
+
+      btnDirectionEncrypt.addEventListener('click', () => setDirection(false));
+      btnDirectionDecrypt.addEventListener('click', () => setDirection(true));
+
+      textInput.addEventListener('input', () => {
+        processCipher();
+        if (window.CyberSFX) CyberSFX.bubblePop();
+      });
+
+      btnSampleMsg.addEventListener('click', () => {
+        textInput.value = SAMPLES[sampleIdx % SAMPLES.length];
+        sampleIdx++;
+        setDirection(false);
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnSwapText.addEventListener('click', () => {
+        const out = textOutput.textContent.trim();
+        if (out && out !== '—') {
+          textInput.value = out;
+          setDirection(!isDecrypt);
+        }
+      });
+
+      btnClearText.addEventListener('click', () => {
+        textInput.value = '';
+        processCipher();
+        textInput.focus();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnCopyOutput.addEventListener('click', async () => {
+        const text = textOutput.textContent.trim();
+        if (!text || text === '—') return;
+        try {
+          await navigator.clipboard.writeText(text);
+          copyToast.style.opacity = '1';
+          setTimeout(() => { copyToast.style.opacity = '0'; }, 1600);
+          if (window.CyberSFX) CyberSFX.copy();
+        } catch (e) {
+          const el = document.createElement('textarea');
+          el.value = text;
+          document.body.appendChild(el);
+          el.select();
+          document.execCommand('copy');
+          document.body.removeChild(el);
+          copyToast.style.opacity = '1';
+          setTimeout(() => { copyToast.style.opacity = '0'; }, 1600);
+          if (window.CyberSFX) CyberSFX.copy();
+        }
+      });
+
+      resetBtn.addEventListener('click', () => {
+        setDimension(2);
+        keyMatrix = [[3, 3], [2, 5]];
+        textInput.value = "HELP";
+        setDirection(false);
+        renderMatrixInputs();
+        processCipher();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      // Stepper
+      stepFirstBtn.addEventListener('click', () => {
+        currentStepIndex = 0;
+        renderCurrentStep();
+        if (window.CyberSFX) CyberSFX.shift();
+      });
+      stepPrevBtn.addEventListener('click', () => {
+        if (currentStepIndex > 0) currentStepIndex--;
+        renderCurrentStep();
+        if (window.CyberSFX) CyberSFX.shift();
+      });
+      stepNextBtn.addEventListener('click', () => {
+        if (currentStepIndex < steps.length - 1) currentStepIndex++;
+        renderCurrentStep();
+        if (window.CyberSFX) CyberSFX.shift();
+      });
+      stepLastBtn.addEventListener('click', () => {
+        currentStepIndex = Math.max(0, steps.length - 1);
+        renderCurrentStep();
+        if (window.CyberSFX) CyberSFX.shift();
+      });
+
+      stepPlayBtn.addEventListener('click', () => {
+        if (isPlaying) {
+          clearInterval(playInterval);
+          isPlaying = false;
+          stepPlayBtn.textContent = '▶ Play';
+        } else {
+          if (steps.length === 0) return;
+          isPlaying = true;
+          stepPlayBtn.textContent = '⏸ Pause';
+          playInterval = setInterval(() => {
+            if (currentStepIndex < steps.length - 1) {
+              currentStepIndex++;
+              renderCurrentStep();
+              if (window.CyberSFX) CyberSFX.shift();
+            } else {
+              clearInterval(playInterval);
+              isPlaying = false;
+              stepPlayBtn.textContent = '▶ Play';
+            }
+          }, 1100);
+        }
+      });
+
+      // Initial Launch
+      window.addEventListener('DOMContentLoaded', () => {
+        renderMatrixInputs();
+        textInput.value = "HELP";
+        processCipher();
+      });
+    })();
+    </script>
+    <script src="static/js/interactions.js"></script>
+</body>
+</html>

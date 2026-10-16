@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Playfair Cipher Studio — Warm Bento Edition</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/interactions.css') }}"/>
+    
+    <!-- Tailwind CSS v3 with Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                charcoal: '#181818',
+                paper: '#FCF9F4',
+                panel: '#FFFFFF',
+                accent: '#D8EE48',
+                'accent-hover': '#CBE037',
+                cream: '#F4F1EA',
+                'cream-light': '#F7F5EE',
+                'subtle-border': '#E4E0D6'
+              },
+              fontFamily: {
+                sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+                mono: ['"JetBrains Mono"', 'monospace']
+              },
+              boxShadow: {
+                'brutal-sm': '2px 2px 0px #181818',
+                'brutal': '3px 3px 0px #181818',
+                'brutal-lg': '4px 4px 0px #181818'
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        body {
+          background-color: #F6F3EE;
+          color: #181818;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-6 sm:py-10 px-4 sm:px-6 md:px-8 flex justify-center items-center selection:bg-accent selection:text-charcoal">
+    <!-- Main Bento Container Shell -->
+    <div class="w-full max-w-5xl bg-paper border-2 border-charcoal rounded-[2rem] p-6 sm:p-9 shadow-brutal-lg flex flex-col gap-7">
+        
+        <!-- 1. HEADER / NAVIGATION -->
+        <header class="relative flex items-center justify-between pb-6 border-b border-charcoal/15">
+            <div class="hidden sm:block w-24"></div>
+            
+            <!-- Centered Capsule Navigation Bar -->
+            <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-charcoal shadow-brutal-sm gap-0.5 sm:gap-1 flex-wrap justify-center">
+                <a href="/" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Caesar</a>
+                <a href="/vigenere" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Vigenère</a>
+                <a href="/playfair" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full bg-charcoal text-white text-xs font-bold tracking-wide transition shadow-sm cursor-default active-studio">Playfair</a>
+                <a href="/hill" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Hill</a>
+                <a href="/frequency" class="nav-tab px-3.5 sm:px-4 py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition">Frequency</a>
+            </nav>
+            
+            <!-- Right Header Actions (Reset) -->
+            <div class="flex items-center gap-2.5 ml-auto sm:ml-0">
+                <button class="px-5 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm" id="playfair-reset-btn">
+                    Reset
+                </button>
+            </div>
+        </header>
+
+        <!-- 2. TITLE AREA -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
+            <div class="flex flex-col gap-1">
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Playfair Cipher</h1>
+            </div>
+            <!-- Mode Switch: Studio vs Learning -->
+            <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1 self-start sm:self-auto">
+                <button id="btn-mode-studio" class="px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm">
+                    ⚡ Studio Mode
+                </button>
+                <button id="btn-mode-learning" class="px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
+                    🎓 Learning & Practice
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. LEARNING MODE PANEL (Hidden by Default) -->
+        <div id="learning-panel" class="hidden border-2 border-charcoal rounded-2xl bg-panel p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-5">
+            <div class="flex items-center justify-between pb-3 border-b border-charcoal/10">
+                <div class="flex items-center gap-2">
+                    <span class="text-base font-bold text-charcoal">🎓 Interactive Playfair Principles</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-accent text-[11px] font-mono font-bold text-charcoal">Digraph Matrix</span>
+                </div>
+                <button id="btn-close-learning" class="text-xs font-mono font-bold text-charcoal/60 hover:text-charcoal">✕ Close</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 rounded-xl bg-cream-light border border-charcoal/20 flex flex-col gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-md bg-charcoal text-white font-mono text-xs flex items-center justify-center font-bold">1</span>
+                        <h3 class="text-xs font-bold uppercase tracking-wide text-charcoal">Rectangle Rule</h3>
+                    </div>
+                    <p class="text-xs text-charcoal/70 leading-relaxed">
+                        If the two letters are in <strong>different rows and columns</strong>, form a rectangle. Replace each letter with the letter in its own row and the other letter's column.
+                    </p>
+                    <div class="mt-auto p-2 bg-white rounded border border-charcoal/10 font-mono text-[11px] text-charcoal font-semibold">
+                        (r1, c1) &amp; (r2, c2) → (r1, c2) &amp; (r2, c1)
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-cream-light border border-charcoal/20 flex flex-col gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-md bg-charcoal text-white font-mono text-xs flex items-center justify-center font-bold">2</span>
+                        <h3 class="text-xs font-bold uppercase tracking-wide text-charcoal">Same Row Rule</h3>
+                    </div>
+                    <p class="text-xs text-charcoal/70 leading-relaxed">
+                        If both letters are in the <strong>same row</strong>, shift each one position to the right (wrap to start on overflow). For decryption, shift left.
+                    </p>
+                    <div class="mt-auto p-2 bg-white rounded border border-charcoal/10 font-mono text-[11px] text-charcoal font-semibold">
+                        Shift: (col + 1) mod 5
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-cream-light border border-charcoal/20 flex flex-col gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-md bg-charcoal text-white font-mono text-xs flex items-center justify-center font-bold">3</span>
+                        <h3 class="text-xs font-bold uppercase tracking-wide text-charcoal">Same Column Rule</h3>
+                    </div>
+                    <p class="text-xs text-charcoal/70 leading-relaxed">
+                        If both letters are in the <strong>same column</strong>, shift each one position down (wrap to top on overflow). For decryption, shift up.
+                    </p>
+                    <div class="mt-auto p-2 bg-white rounded border border-charcoal/10 font-mono text-[11px] text-charcoal font-semibold">
+                        Shift: (row + 1) mod 5
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice Challenge Box -->
+            <div class="p-4 sm:p-5 rounded-xl border-2 border-charcoal bg-white flex flex-col gap-3 shadow-brutal-sm">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal">🎯 Practice Challenge: Predict the Digraph</span>
+                    <button id="btn-new-challenge" class="px-3 py-1 rounded-lg border border-charcoal bg-cream text-xs font-mono font-bold hover:bg-accent transition shadow-sm">
+                        🎲 New Pair
+                    </button>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-mono text-charcoal/70">Given Pair:</span>
+                        <span id="challenge-pair-display" class="px-4 py-1.5 rounded-lg bg-charcoal text-white font-mono text-base font-bold shadow-sm">B A</span>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <input type="text" id="challenge-input" placeholder="Enter encrypted pair (e.g. IB)" maxlength="2" class="px-3 py-1.5 rounded-lg border-2 border-charcoal font-mono uppercase text-sm font-bold w-36 text-center focus:ring-0"/>
+                        <button id="btn-check-challenge" class="px-4 py-1.5 rounded-lg bg-accent border-2 border-charcoal font-mono text-xs font-bold hover:bg-accent-hover transition shadow-sm">
+                            Check
+                        </button>
+                    </div>
+                    <div id="challenge-feedback" class="text-xs font-mono font-semibold"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. MAIN WORKSPACE / BENTO GRID -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- ==========================================
+                 LEFT COLUMN: Key Matrix & Text Preparation
+                 ========================================== -->
+            <section class="lg:col-span-5 flex flex-col gap-5">
+                
+                <!-- Card 1: 5x5 Key Matrix -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">KEYWORD &amp; 5×5 MATRIX</span>
+                        <span class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-cream border border-charcoal/20 text-charcoal">I/J Combined</span>
+                    </div>
+
+                    <!-- Keyword input -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="playfair-keyword" value="MONARCHY" placeholder="ENTER SECRET KEYWORD..." maxlength="25" spellcheck="false" class="w-full px-3.5 py-2 rounded-xl border-2 border-charcoal font-mono uppercase text-sm font-bold tracking-wider bg-cream-light focus:bg-white transition"/>
+                            <button id="btn-rand-key" class="px-3 py-2 rounded-xl border-2 border-charcoal bg-panel hover:bg-accent font-mono text-xs font-bold transition shadow-brutal-sm whitespace-nowrap" title="Generate random keyword">
+                                🎲
+                            </button>
+                        </div>
+
+                        <!-- Keyword presets -->
+                        <div class="flex items-center gap-1.5 flex-wrap pt-1">
+                            <span class="text-[10px] font-mono text-charcoal/60 font-semibold mr-1">PRESETS:</span>
+                            <button class="preset-chip px-2.5 py-0.5 rounded-md border border-charcoal bg-panel hover:bg-accent text-[11px] font-mono font-semibold text-charcoal transition" data-key="MONARCHY">MONARCHY</button>
+                            <button class="preset-chip px-2.5 py-0.5 rounded-md border border-charcoal bg-panel hover:bg-accent text-[11px] font-mono font-semibold text-charcoal transition" data-key="PLAYFAIR">PLAYFAIR</button>
+                            <button class="preset-chip px-2.5 py-0.5 rounded-md border border-charcoal bg-panel hover:bg-accent text-[11px] font-mono font-semibold text-charcoal transition" data-key="CIPHER LAB">CIPHER LAB</button>
+                            <button class="preset-chip px-2.5 py-0.5 rounded-md border border-charcoal bg-panel hover:bg-accent text-[11px] font-mono font-semibold text-charcoal transition" data-key="SECRET KEY">SECRET KEY</button>
+                        </div>
+                    </div>
+
+                    <!-- 5x5 Interactive Matrix View -->
+                    <div class="flex flex-col gap-1.5 pt-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono text-charcoal/60 px-1">
+                            <span>Matrix Grid (Row × Col)</span>
+                            <span id="matrix-cell-inspect">Click cell to inspect</span>
+                        </div>
+                        <div class="playfair-grid p-2.5 bg-cream-light border-2 border-charcoal rounded-xl shadow-sm" id="playfair-matrix-container">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Matrix Legend -->
+                    <div class="flex items-center justify-between pt-2 border-t border-charcoal/10 text-[11px] font-mono text-charcoal/70 flex-wrap gap-2">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-accent border border-charcoal inline-block"></span>
+                            <span>Letter 1</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-[#A3E635] border border-charcoal inline-block"></span>
+                            <span>Letter 2</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-[#FEF08A] border border-charcoal inline-block"></span>
+                            <span>Result</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 2: Intelligent Digraph Preparation Inspector -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-3.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">DIGRAPH SEGMENTATION</span>
+                        <div class="flex items-center gap-1.5 text-xs font-mono font-semibold">
+                            <span>Filler:</span>
+                            <select id="filler-select" class="px-2 py-0.5 rounded-md border border-charcoal bg-cream text-xs font-mono font-bold">
+                                <option value="X" selected>X (Std)</option>
+                                <option value="Q">Q</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Digraph visual blocks -->
+                    <div class="flex flex-col gap-2">
+                        <span class="text-[11px] font-mono text-charcoal/60">Prepared Pairs:</span>
+                        <div class="flex items-center gap-2 flex-wrap min-h-[38px] p-2 rounded-xl bg-cream-light border border-charcoal/20" id="digraph-pills-container">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Policy explanation -->
+                    <div class="text-[11px] font-mono text-charcoal/60 leading-relaxed space-y-1 pt-1 border-t border-charcoal/10">
+                        <p>• Duplicate letters in a pair (e.g. LL) are split with filler '<span id="active-filler-label">X</span>'.</p>
+                        <p>• Odd-length message is padded at the end with '<span id="active-pad-label">X</span>'.</p>
+                        <p>• Decryption recovers digraphs; original punctuation and spaces are preserved separately.</p>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ==========================================
+                 RIGHT COLUMN: Core Console & Step Visualizer
+                 ========================================== -->
+            <section class="lg:col-span-7 flex flex-col gap-5">
+                
+                <!-- Card 3: Input & Output Console -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-4">
+                    
+                    <!-- Direction Switcher & Quick Actions -->
+                    <div class="flex items-center justify-between flex-wrap gap-2 pb-1 border-b border-charcoal/10">
+                        <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1">
+                            <button id="btn-direction-encrypt" class="px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm">
+                                🔒 Encrypt
+                            </button>
+                            <button id="btn-direction-decrypt" class="px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
+                                🔓 Decrypt
+                            </button>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button id="btn-sample-msg" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
+                                ⚡ Sample
+                            </button>
+                            <button id="btn-swap-text" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm" title="Swap input and output">
+                                ⇄ Swap
+                            </button>
+                            <button id="btn-clear-text" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
+                                ✕ Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Message Textarea -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex items-center justify-between text-xs font-mono font-semibold">
+                            <span id="input-heading-label">PLAINTEXT (INPUT)</span>
+                            <span class="text-charcoal/60"><span id="input-char-count">0</span> characters</span>
+                        </div>
+                        <textarea id="playfair-input" rows="3" placeholder="Type secret message to process..." class="w-full p-3.5 rounded-xl border-2 border-charcoal font-mono uppercase text-sm font-semibold tracking-wider bg-cream-light focus:bg-white transition resize-none"></textarea>
+                    </div>
+
+                    <!-- Output Area -->
+                    <div class="flex flex-col gap-1.5 pt-1">
+                        <div class="flex items-center justify-between text-xs font-mono font-semibold">
+                            <span id="output-heading-label">CIPHERTEXT (OUTPUT)</span>
+                            <button id="btn-copy-output" class="px-3 py-1 rounded-lg border border-charcoal bg-panel hover:bg-accent text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
+                                📋 Copy
+                            </button>
+                        </div>
+                        <div class="relative p-3.5 rounded-xl border-2 border-charcoal bg-cream-light flex flex-col gap-2 min-h-[72px]">
+                            <div id="playfair-output" class="font-mono text-sm sm:text-base font-bold text-charcoal tracking-widest break-all select-all">
+                                —
+                            </div>
+                            <div class="flex items-center justify-between pt-1 border-t border-charcoal/10 text-[11px] font-mono text-charcoal/60">
+                                <span>Spaced Pairs: <span id="output-spaced-preview" class="font-bold text-charcoal">—</span></span>
+                                <span id="copy-toast" class="text-emerald-700 font-bold transition-opacity duration-200 opacity-0">✓ Copied!</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 4: Step-by-Step Digraph Visualizer -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-4">
+                    <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-charcoal/10">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">STEP-BY-STEP DIGRAPH ENGINE</span>
+                        </div>
+                        <!-- Step Navigation Controls -->
+                        <div class="flex items-center gap-1.5">
+                            <button id="step-first-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="First step">⏮</button>
+                            <button id="step-prev-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Previous step">◀</button>
+                            <button id="step-play-btn" class="px-3 py-1 rounded-lg border border-charcoal bg-accent hover:bg-accent-hover text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
+                                ▶ Play
+                            </button>
+                            <button id="step-next-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Next step">▶</button>
+                            <button id="step-last-btn" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Last step">⏭</button>
+                        </div>
+                    </div>
+
+                    <!-- Step Telemetry Banner -->
+                    <div class="p-3.5 rounded-xl bg-cream-light border border-charcoal flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span id="step-counter-badge" class="px-3 py-1 rounded-md bg-charcoal text-white font-mono text-xs font-bold shadow-sm">
+                                Step 1 of 1
+                            </span>
+                            <div class="flex items-center gap-2 font-mono text-sm font-bold text-charcoal">
+                                <span id="step-in-pair" class="px-2.5 py-0.5 rounded bg-white border border-charcoal">B A</span>
+                                <span>→</span>
+                                <span id="step-out-pair" class="px-2.5 py-0.5 rounded bg-accent border border-charcoal">I B</span>
+                            </div>
+                        </div>
+
+                        <!-- Rule badge -->
+                        <span id="step-rule-badge" class="px-3 py-1 rounded-full border border-charcoal bg-panel font-mono text-xs font-bold text-charcoal shadow-sm">
+                            Rectangle Rule
+                        </span>
+                    </div>
+
+                    <!-- Step Explanation Box -->
+                    <div class="p-3.5 rounded-xl border border-charcoal/20 bg-white flex flex-col gap-1.5 font-mono text-xs">
+                        <div class="flex items-center justify-between text-charcoal/60 text-[11px]">
+                            <span id="step-coords-text">Coords: (0, 1) &amp; (0, 0)</span>
+                            <span>Geometric Shift</span>
+                        </div>
+                        <p id="step-explanation-text" class="text-charcoal font-medium leading-relaxed">
+                            Forming rectangle: 'B' takes column of 'A' (Col 0), 'A' takes column of 'B' (Col 1).
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Card 5: Historical Security Advisory -->
+                <article class="p-4 rounded-xl border border-charcoal/20 bg-cream-light flex items-start gap-3">
+                    <span class="text-lg">🛡️</span>
+                    <div class="text-xs font-mono text-charcoal/70 leading-relaxed">
+                        <strong class="text-charcoal">Classical Cryptography Notice:</strong> The Playfair cipher operates on digraph substitutions ($25 \times 25 = 600$ pairs) rather than single letters, resisting simple frequency analysis. However, it is fully vulnerable to known-plaintext and digraph frequency attacks. Modern software requires AES-256 or ChaCha20.
+                    </div>
+                </article>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- Web Audio Synthesizer (Bubble Pop Typing SFX) -->
+    <script src="{{ url_for('static', filename='js/sfx.js') }}"></script>
+
+    <!-- Playfair Interactive Engine -->
+    <script>
+    (function () {
+      'use strict';
+
+      // State
+      let matrix = [];
+      let digraphs = [];
+      let steps = [];
+      let currentStepIndex = 0;
+      let isPlaying = false;
+      let playInterval = null;
+      let isDecrypt = false;
+      let activeFiller = 'X';
+
+      // Sample Messages
+      const SAMPLES = [
+        "MEET AT THE FORUM BY MIDNIGHT",
+        "BALLOON FLIES OVER THE NORTH WALL",
+        "ATTACK AT DAWN ON THE HIDDEN BRIDGE",
+        "SECRET PASSWORD IS GOLDEN EAGLE"
+      ];
+      let sampleIdx = 0;
+
+      // DOM Elements
+      const keywordInput = document.getElementById('playfair-keyword');
+      const matrixContainer = document.getElementById('playfair-matrix-container');
+      const textInput = document.getElementById('playfair-input');
+      const textOutput = document.getElementById('playfair-output');
+      const outputSpaced = document.getElementById('output-spaced-preview');
+      const inputCount = document.getElementById('input-char-count');
+      const digraphsContainer = document.getElementById('digraph-pills-container');
+      const matrixInspect = document.getElementById('matrix-cell-inspect');
+      const fillerSelect = document.getElementById('filler-select');
+      const activeFillerLabel = document.getElementById('active-filler-label');
+      const activePadLabel = document.getElementById('active-pad-label');
+
+      // Controls
+      const btnDirectionEncrypt = document.getElementById('btn-direction-encrypt');
+      const btnDirectionDecrypt = document.getElementById('btn-direction-decrypt');
+      const inputHeading = document.getElementById('input-heading-label');
+      const outputHeading = document.getElementById('output-heading-label');
+      const btnSample = document.getElementById('btn-sample-msg');
+      const btnSwap = document.getElementById('btn-swap-text');
+      const btnClear = document.getElementById('btn-clear-text');
+      const btnCopy = document.getElementById('btn-copy-output');
+      const copyToast = document.getElementById('copy-toast');
+      const resetBtn = document.getElementById('playfair-reset-btn');
+      const btnRandKey = document.getElementById('btn-rand-key');
+
+      // Stepper elements
+      const stepCounter = document.getElementById('step-counter-badge');
+      const stepInPair = document.getElementById('step-in-pair');
+      const stepOutPair = document.getElementById('step-out-pair');
+      const stepRuleBadge = document.getElementById('step-rule-badge');
+      const stepCoordsText = document.getElementById('step-coords-text');
+      const stepExplanationText = document.getElementById('step-explanation-text');
+      const stepFirstBtn = document.getElementById('step-first-btn');
+      const stepPrevBtn = document.getElementById('step-prev-btn');
+      const stepPlayBtn = document.getElementById('step-play-btn');
+      const stepNextBtn = document.getElementById('step-next-btn');
+      const stepLastBtn = document.getElementById('step-last-btn');
+
+      // Learning Panel
+      const btnModeStudio = document.getElementById('btn-mode-studio');
+      const btnModeLearning = document.getElementById('btn-mode-learning');
+      const learningPanel = document.getElementById('learning-panel');
+      const btnCloseLearning = document.getElementById('btn-close-learning');
+      const challengePairDisplay = document.getElementById('challenge-pair-display');
+      const challengeInput = document.getElementById('challenge-input');
+      const btnCheckChallenge = document.getElementById('btn-check-challenge');
+      const btnNewChallenge = document.getElementById('btn-new-challenge');
+      const challengeFeedback = document.getElementById('challenge-feedback');
+
+      // ── Core Algorithm in Browser ──────────────────────────────────────────
+      function generateMatrix(kw) {
+        const clean = kw.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+        const seen = new Set();
+        const letters = [];
+
+        for (const ch of clean) {
+          if (!seen.has(ch)) {
+            seen.add(ch);
+            letters.append ? letters.append(ch) : letters.push(ch);
+          }
+        }
+
+        const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // 25 letters, J omitted
+        for (const ch of alphabet) {
+          if (!seen.has(ch)) {
+            seen.add(ch);
+            letters.push(ch);
+          }
+        }
+
+        const grid = [];
+        for (let r = 0; r < 5; r++) {
+          grid.push(letters.slice(r * 5, (r + 1) * 5));
+        }
+        return grid;
+      }
+
+      function findPos(char, mat) {
+        const c = char === 'J' ? 'I' : char;
+        for (let r = 0; r < 5; r++) {
+          for (let col = 0; col < 5; col++) {
+            if (mat[r][col] === c) return { r, col };
+          }
+        }
+        return { r: 0, col: 0 };
+      }
+
+      function prepareText(text, filler) {
+        const clean = text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+        const pairs = [];
+        let i = 0;
+        const f = filler || 'X';
+
+        while (i < clean.length) {
+          const c1 = clean[i];
+          if (i + 1 < clean.length) {
+            const c2 = clean[i + 1];
+            if (c1 === c2) {
+              const insertF = (c1 === f) ? 'Q' : f;
+              pairs.push([c1, insertF]);
+              i += 1;
+            } else {
+              pairs.push([c1, c2]);
+              i += 2;
+            }
+          } else {
+            const padF = (c1 === f) ? 'Z' : f;
+            pairs.push([c1, padF]);
+            i += 1;
+          }
+        }
+        return pairs;
+      }
+
+      function transformPair(p1, p2, mat, dec) {
+        const pos1 = findPos(p1, mat);
+        const pos2 = findPos(p2, mat);
+        const shift = dec ? -1 : 1;
+        let out1, out2, rule, outPos1, outPos2;
+
+        if (pos1.r === pos2.r) {
+          rule = 'same_row';
+          const newC1 = (pos1.col + shift + 5) % 5;
+          const newC2 = (pos2.col + shift + 5) % 5;
+          out1 = mat[pos1.r][newC1];
+          out2 = mat[pos2.r][newC2];
+          outPos1 = { r: pos1.r, col: newC1 };
+          outPos2 = { r: pos2.r, col: newC2 };
+        } else if (pos1.col === pos2.col) {
+          rule = 'same_column';
+          const newR1 = (pos1.r + shift + 5) % 5;
+          const newR2 = (pos2.r + shift + 5) % 5;
+          out1 = mat[newR1][pos1.col];
+          out2 = mat[newR2][pos2.col];
+          outPos1 = { r: newR1, col: pos1.col };
+          outPos2 = { r: newR2, col: pos2.col };
+        } else {
+          rule = 'rectangle';
+          out1 = mat[pos1.r][pos2.col];
+          out2 = mat[pos2.r][pos1.col];
+          outPos1 = { r: pos1.r, col: pos2.col };
+          outPos2 = { r: pos2.r, col: pos1.col };
+        }
+
+        return {
+          inPair: [p1, p2],
+          outPair: [out1, out2],
+          rule: rule,
+          inCoords: [pos1, pos2],
+          outCoords: [outPos1, outPos2]
+        };
+      }
+
+      // ── UI Renderers ───────────────────────────────────────────────────────
+      function renderMatrix() {
+        matrixContainer.innerHTML = '';
+        for (let r = 0; r < 5; r++) {
+          for (let c = 0; c < 5; c++) {
+            const cell = document.createElement('div');
+            const letter = matrix[r][c];
+            cell.className = 'playfair-cell';
+            cell.dataset.row = r;
+            cell.dataset.col = c;
+            cell.dataset.letter = letter;
+            cell.innerHTML = `
+              <span class="text-sm sm:text-base font-bold">${letter}</span>
+              <span class="text-[9px] font-mono text-charcoal/40">${r},${c}</span>
+            `;
+
+            cell.addEventListener('click', () => {
+              matrixInspect.textContent = `Cell [${letter}]: Row ${r}, Col ${c}`;
+              if (window.CyberSFX) CyberSFX.click();
+            });
+
+            matrixContainer.appendChild(cell);
+          }
+        }
+      }
+
+      function updateDigraphsPills() {
+        digraphsContainer.innerHTML = '';
+        if (digraphs.length === 0) {
+          digraphsContainer.innerHTML = '<span class="text-xs font-mono text-charcoal/50">Enter message to generate digraphs</span>';
+          return;
+        }
+
+        digraphs.forEach((pair, idx) => {
+          const pill = document.createElement('button');
+          const isCurrent = idx === currentStepIndex;
+          pill.className = `px-2.5 py-1 rounded-lg border font-mono text-xs font-bold transition ${
+            isCurrent
+              ? 'bg-charcoal text-white border-charcoal shadow-sm scale-105'
+              : 'bg-white border-charcoal/30 text-charcoal hover:bg-cream'
+          }`;
+          pill.textContent = `${pair[0]}${pair[1]}`;
+          pill.title = `Jump to pair ${idx + 1}`;
+          pill.addEventListener('click', () => {
+            currentStepIndex = idx;
+            renderCurrentStep();
+            if (window.CyberSFX) CyberSFX.click();
+          });
+          digraphsContainer.appendChild(pill);
+        });
+      }
+
+      function highlightMatrixCells(step) {
+        // Clear old highlights
+        document.querySelectorAll('.playfair-cell').forEach(el => {
+          el.classList.remove('cell-source-1', 'cell-source-2', 'cell-target', 'cell-band', 'cell-rect-perimeter');
+        });
+
+        if (!step) return;
+
+        const p1 = step.inCoords[0];
+        const p2 = step.inCoords[1];
+        const o1 = step.outCoords[0];
+        const o2 = step.outCoords[1];
+
+        // Highlight cells
+        const getCell = (r, c) => matrixContainer.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+
+        const c1 = getCell(p1.r, p1.col);
+        const c2 = getCell(p2.r, p2.col);
+        const t1 = getCell(o1.r, o1.col);
+        const t2 = getCell(o2.r, o2.col);
+
+        if (c1) c1.classList.add('cell-source-1');
+        if (c2) c2.classList.add('cell-source-2');
+        if (t1) t1.classList.add('cell-target');
+        if (t2) t2.classList.add('cell-target');
+
+        // Rule band visualizer
+        if (step.rule === 'same_row') {
+          for (let col = 0; col < 5; col++) {
+            const b = getCell(p1.r, col);
+            if (b && b !== c1 && b !== c2 && b !== t1 && b !== t2) b.classList.add('cell-band');
+          }
+        } else if (step.rule === 'same_column') {
+          for (let row = 0; row < 5; row++) {
+            const b = getCell(row, p1.col);
+            if (b && b !== c1 && b !== c2 && b !== t1 && b !== t2) b.classList.add('cell-band');
+          }
+        } else if (step.rule === 'rectangle') {
+          const minR = Math.min(p1.r, p2.r);
+          const maxR = Math.max(p1.r, p2.r);
+          const minC = Math.min(p1.col, p2.col);
+          const maxC = Math.max(p1.col, p2.col);
+          for (let row = minR; row <= maxR; row++) {
+            for (let col = minC; col <= maxC; col++) {
+              const b = getCell(row, col);
+              if (b && b !== c1 && b !== c2 && b !== t1 && b !== t2) {
+                b.classList.add('cell-rect-perimeter');
+              }
+            }
+          }
+        }
+      }
+
+      function renderCurrentStep() {
+        if (steps.length === 0) {
+          stepCounter.textContent = 'Step 0 of 0';
+          stepInPair.textContent = '— —';
+          stepOutPair.textContent = '— —';
+          stepRuleBadge.textContent = 'Awaiting Input';
+          stepRuleBadge.className = 'px-3 py-1 rounded-full border border-charcoal bg-panel font-mono text-xs font-bold text-charcoal shadow-sm';
+          stepCoordsText.textContent = 'Coords: —';
+          stepExplanationText.textContent = 'Type a message above to inspect step-by-step digraph transformations.';
+          highlightMatrixCells(null);
+          return;
+        }
+
+        if (currentStepIndex >= steps.length) currentStepIndex = steps.length - 1;
+        if (currentStepIndex < 0) currentStepIndex = 0;
+
+        const s = steps[currentStepIndex];
+        stepCounter.textContent = `Step ${currentStepIndex + 1} of ${steps.length}`;
+        stepInPair.textContent = `${s.inPair[0]} ${s.inPair[1]}`;
+        stepOutPair.textContent = `${s.outPair[0]} ${s.outPair[1]}`;
+
+        if (s.rule === 'rectangle') {
+          stepRuleBadge.textContent = 'Rectangle Rule (Swap Columns)';
+          stepRuleBadge.className = 'px-3 py-1 rounded-full border border-charcoal bg-[#FEF08A] font-mono text-xs font-bold text-charcoal shadow-sm';
+          stepExplanationText.textContent = `Form rectangle: '${s.inPair[0]}' picks opposite corner '${s.outPair[0]}' (Row ${s.outCoords[0].r}, Col ${s.outCoords[0].col}); '${s.inPair[1]}' picks opposite corner '${s.outPair[1]}' (Row ${s.outCoords[1].r}, Col ${s.outCoords[1].col}).`;
+        } else if (s.rule === 'same_row') {
+          stepRuleBadge.textContent = isDecrypt ? 'Same Row (Shift Left)' : 'Same Row (Shift Right)';
+          stepRuleBadge.className = 'px-3 py-1 rounded-full border border-charcoal bg-accent font-mono text-xs font-bold text-charcoal shadow-sm';
+          stepExplanationText.textContent = `Both letters share Row ${s.inCoords[0].r}. Shift ${isDecrypt ? 'left' : 'right'} by 1 position (with horizontal modulo 5 wrap-around).`;
+        } else {
+          stepRuleBadge.textContent = isDecrypt ? 'Same Column (Shift Up)' : 'Same Column (Shift Down)';
+          stepRuleBadge.className = 'px-3 py-1 rounded-full border border-charcoal bg-[#A3E635] font-mono text-xs font-bold text-charcoal shadow-sm';
+          stepExplanationText.textContent = `Both letters share Column ${s.inCoords[0].col}. Shift ${isDecrypt ? 'up' : 'down'} by 1 position (with vertical modulo 5 wrap-around).`;
+        }
+
+        stepCoordsText.textContent = `Coords: (${s.inCoords[0].r},${s.inCoords[0].col}) & (${s.inCoords[1].r},${s.inCoords[1].col}) → (${s.outCoords[0].r},${s.outCoords[0].col}) & (${s.outCoords[1].r},${s.outCoords[1].col})`;
+
+        highlightMatrixCells(s);
+        updateDigraphsPills();
+      }
+
+      function processCipher() {
+        const kw = keywordInput.value.trim() || 'MONARCHY';
+        matrix = generateMatrix(kw);
+        renderMatrix();
+
+        const rawText = textInput.value;
+        inputCount.textContent = rawText.length;
+
+        activeFiller = fillerSelect.value || 'X';
+        activeFillerLabel.textContent = activeFiller;
+        activePadLabel.textContent = activeFiller;
+
+        if (!rawText.trim()) {
+          digraphs = [];
+          steps = [];
+          textOutput.textContent = '—';
+          outputSpaced.textContent = '—';
+          renderCurrentStep();
+          return;
+        }
+
+        if (isDecrypt) {
+          // In decrypt mode, clean to pairs
+          const clean = rawText.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+          const pairList = [];
+          for (let i = 0; i < clean.length; i += 2) {
+            if (i + 1 < clean.length) pairList.push([clean[i], clean[i + 1]]);
+            else pairList.push([clean[i], activeFiller]);
+          }
+          digraphs = pairList;
+        } else {
+          digraphs = prepareText(rawText, activeFiller);
+        }
+
+        steps = [];
+        const outList = [];
+        for (const pair of digraphs) {
+          const s = transformPair(pair[0], pair[1], matrix, isDecrypt);
+          steps.push(s);
+          outList.push(s.outPair[0] + s.outPair[1]);
+        }
+
+        const outStr = outList.join('');
+        textOutput.textContent = outStr || '—';
+        outputSpaced.textContent = outList.join(' ') || '—';
+
+        if (currentStepIndex >= steps.length) currentStepIndex = 0;
+        renderCurrentStep();
+      }
+
+      // ── Event Handlers ────────────────────────────────────────────────────
+      keywordInput.addEventListener('input', () => {
+        processCipher();
+        if (window.CyberSFX) CyberSFX.bubblePop();
+      });
+
+      fillerSelect.addEventListener('change', () => {
+        processCipher();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      textInput.addEventListener('input', () => {
+        processCipher();
+        if (window.CyberSFX) CyberSFX.bubblePop();
+      });
+
+      function setDirection(dec) {
+        isDecrypt = dec;
+        if (dec) {
+          btnDirectionDecrypt.className = 'px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+          btnDirectionEncrypt.className = 'px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+          inputHeading.textContent = 'CIPHERTEXT (INPUT)';
+          outputHeading.textContent = 'DECRYPTED PLAINTEXT (OUTPUT)';
+        } else {
+          btnDirectionEncrypt.className = 'px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+          btnDirectionDecrypt.className = 'px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+          inputHeading.textContent = 'PLAINTEXT (INPUT)';
+          outputHeading.textContent = 'CIPHERTEXT (OUTPUT)';
+        }
+        processCipher();
+        if (window.CyberSFX) CyberSFX.click();
+      }
+
+      btnDirectionEncrypt.addEventListener('click', () => setDirection(false));
+      btnDirectionDecrypt.addEventListener('click', () => setDirection(true));
+
+      btnClear.addEventListener('click', () => {
+        textInput.value = '';
+        processCipher();
+        textInput.focus();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnSwap.addEventListener('click', () => {
+        const out = textOutput.textContent.trim();
+        if (out && out !== '—') {
+          textInput.value = out;
+          setDirection(!isDecrypt);
+        }
+      });
+
+      btnSample.addEventListener('click', () => {
+        textInput.value = SAMPLES[sampleIdx % SAMPLES.length];
+        sampleIdx++;
+        setDirection(false);
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnCopy.addEventListener('click', async () => {
+        const text = textOutput.textContent.trim();
+        if (!text || text === '—') return;
+        try {
+          await navigator.clipboard.writeText(text);
+          copyToast.style.opacity = '1';
+          setTimeout(() => { copyToast.style.opacity = '0'; }, 1600);
+          if (window.CyberSFX) CyberSFX.copy();
+        } catch (e) {
+          const el = document.createElement('textarea');
+          el.value = text;
+          document.body.appendChild(el);
+          el.select();
+          document.execCommand('copy');
+          document.body.removeChild(el);
+          copyToast.style.opacity = '1';
+          setTimeout(() => { copyToast.style.opacity = '0'; }, 1600);
+          if (window.CyberSFX) CyberSFX.copy();
+        }
+      });
+
+      resetBtn.addEventListener('click', () => {
+        keywordInput.value = "MONARCHY";
+        textInput.value = "BALLOON";
+        setDirection(false);
+        fillerSelect.value = "X";
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnRandKey.addEventListener('click', () => {
+        const keys = ["KEYWORD", "CIPHER", "DISCRETE", "TRIANGLE", "LABORATORY", "HARMONY", "ENIGMA", "PHOENIX"];
+        keywordInput.value = keys[Math.floor(Math.random() * keys.length)];
+        processCipher();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      document.querySelectorAll('.preset-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          keywordInput.value = btn.dataset.key;
+          processCipher();
+          if (window.CyberSFX) CyberSFX.click();
+        });
+      });
+
+      // Stepper Controls
+      stepFirstBtn.addEventListener('click', () => {
+        currentStepIndex = 0;
+        renderCurrentStep();
+        if (window.CyberSFX) CyberSFX.shift();
+      });
+      stepPrevBtn.addEventListener('click', () => {
+        if (currentStepIndex > 0) currentStepIndex--;
+        renderCurrentStep();
+        if (window.CyberSFX) CyberSFX.shift();
+      });
+      stepNextBtn.addEventListener('click', () => {
+        if (currentStepIndex < steps.length - 1) currentStepIndex++;
+        renderCurrentStep();
+        if (window.CyberSFX) CyberSFX.shift();
+      });
+      stepLastBtn.addEventListener('click', () => {
+        currentStepIndex = Math.max(0, steps.length - 1);
+        renderCurrentStep();
+        if (window.CyberSFX) CyberSFX.shift();
+      });
+
+      stepPlayBtn.addEventListener('click', () => {
+        if (isPlaying) {
+          clearInterval(playInterval);
+          isPlaying = false;
+          stepPlayBtn.textContent = '▶ Play';
+        } else {
+          if (steps.length === 0) return;
+          isPlaying = true;
+          stepPlayBtn.textContent = '⏸ Pause';
+          playInterval = setInterval(() => {
+            if (currentStepIndex < steps.length - 1) {
+              currentStepIndex++;
+              renderCurrentStep();
+              if (window.CyberSFX) CyberSFX.shift();
+            } else {
+              clearInterval(playInterval);
+              isPlaying = false;
+              stepPlayBtn.textContent = '▶ Play';
+            }
+          }, 1100);
+        }
+      });
+
+      // Learning Mode Toggle
+      btnModeStudio.addEventListener('click', () => {
+        learningPanel.classList.add('hidden');
+        btnModeStudio.className = 'px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+        btnModeLearning.className = 'px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnModeLearning.addEventListener('click', () => {
+        learningPanel.classList.remove('hidden');
+        btnModeLearning.className = 'px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+        btnModeStudio.className = 'px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+        generateNewChallenge();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnCloseLearning.addEventListener('click', () => {
+        btnModeStudio.click();
+      });
+
+      // Practice challenge generator
+      let currentChallengePair = ['B', 'A'];
+      let currentChallengeAnswer = 'IB';
+
+      function generateNewChallenge() {
+        const letters = matrix.flat();
+        const l1 = letters[Math.floor(Math.random() * letters.length)];
+        let l2 = letters[Math.floor(Math.random() * letters.length)];
+        while (l2 === l1) l2 = letters[Math.floor(Math.random() * letters.length)];
+
+        currentChallengePair = [l1, l2];
+        const res = transformPair(l1, l2, matrix, false);
+        currentChallengeAnswer = res.outPair.join('');
+
+        challengePairDisplay.textContent = `${l1} ${l2}`;
+        challengeInput.value = '';
+        challengeFeedback.textContent = '';
+      }
+
+      btnNewChallenge.addEventListener('click', () => {
+        generateNewChallenge();
+        if (window.CyberSFX) CyberSFX.click();
+      });
+
+      btnCheckChallenge.addEventListener('click', () => {
+        const userAns = challengeInput.value.trim().toUpperCase();
+        if (userAns === currentChallengeAnswer) {
+          challengeFeedback.textContent = `✓ Correct! ${currentChallengePair.join('')} → ${currentChallengeAnswer}`;
+          challengeFeedback.className = 'text-xs font-mono font-bold text-emerald-700';
+          if (window.CyberSFX) CyberSFX.success();
+        } else {
+          challengeFeedback.textContent = `✕ Not quite! Expected: ${currentChallengeAnswer}`;
+          challengeFeedback.className = 'text-xs font-mono font-bold text-red-600';
+          if (window.CyberSFX) CyberSFX.click();
+        }
+      });
+
+      challengeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') btnCheckChallenge.click();
+      });
+
+      // Initial Launch
+      window.addEventListener('DOMContentLoaded', () => {
+        textInput.value = "BALLOON";
+        processCipher();
+      });
+    })();
+    </script>
+    <script src="{{ url_for('static', filename='js/interactions.js') }}"></script>
+</body>
+</html>
