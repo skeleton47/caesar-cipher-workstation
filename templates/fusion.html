@@ -53,9 +53,8 @@
         }
         .pipeline-card:hover {
           transform: translateY(-2px);
-          box-shadow: 3px 3px 0px #181818;
+          box-shadow: 2px 2px 0px #181818;
         }
-        /* Custom toggle switch */
         .neo-toggle input:checked ~ .toggle-bg {
           background-color: #181818;
         }
@@ -102,200 +101,209 @@
             </div>
         </header>
 
-        <!-- 2. TITLE AREA & HEADER CONTROLS -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-1">
+        <!-- 2. TITLE AREA -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
             <div class="flex flex-col gap-1">
-                <div class="flex items-center gap-2.5 flex-wrap">
-                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Cipher Fusion</h1>
-                    <span class="px-2.5 py-0.5 rounded-md bg-accent text-[11px] font-mono font-bold text-charcoal border border-charcoal shadow-brutal-sm">Cascade Engine</span>
-                </div>
-                <p class="text-xs sm:text-sm text-charcoal/70">Sequential 4-stage classical encryption with automated reverse decryption</p>
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Cipher Fusion Studio</h1>
             </div>
             
-            <!-- Header Controls: Mode Switch & Actions -->
-            <div class="flex items-center gap-2 flex-wrap self-start md:self-auto">
-                <!-- Mode Switch Capsule -->
-                <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1">
-                    <button id="mode-classic-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm bg-charcoal text-white">
-                        Classic
-                    </button>
-                    <button id="mode-reversible-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold transition hover:bg-black/5 text-charcoal flex items-center gap-1.5">
-                        <span>Reversible Package</span>
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    </button>
-                </div>
-
-                <!-- Example Keys -->
-                <button id="btn-example-keys" class="px-3 py-1.5 rounded-xl border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Generate proven valid keys for all 4 ciphers">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-                    <span>Keys</span>
+            <!-- Output Mode Switch: Classic vs Reversible Package -->
+            <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1 self-start sm:self-auto">
+                <button id="mode-classic-btn" class="px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm">
+                    Classic Mode
                 </button>
-
-                <!-- Reset Pipeline -->
-                <button id="btn-reset-pipeline" class="px-3 py-1.5 rounded-xl border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Restore default pipeline order">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    <span>Reset</span>
+                <button id="mode-reversible-btn" class="px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition flex items-center gap-1.5">
+                    <span>Reversible Package</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                 </button>
             </div>
         </div>
 
-        <!-- 3. COMPACT ACADEMIC NOTICE STRIP -->
-        <div class="px-4 py-2.5 bg-cream-light border border-charcoal/20 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
-            <div class="flex items-center gap-2.5 text-charcoal/80">
-                <span class="w-4 h-4 rounded-full bg-accent border border-charcoal flex items-center justify-center font-bold text-[10px] shrink-0">i</span>
-                <span class="font-mono text-xs"><strong class="text-charcoal font-bold">Academic Notice:</strong> Classical cascade demonstrates multi-stage cipher composition for laboratory analysis.</span>
-            </div>
-            <div class="flex items-center gap-2 shrink-0 font-mono text-[11px] text-charcoal/70">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span id="pipeline-status-text">4 of 4 Ciphers Active</span>
-            </div>
-        </div>
-
-        <!-- 4. CORE WORKSPACE GRID: 2 BALANCED COLUMNS -->
+        <!-- 3. MAIN WORKSPACE / BENTO GRID (5 Cols Left : 7 Cols Right) -->
         <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            <!-- LEFT COLUMN: Input & Pipeline Configurator (5 cols) -->
+            <!-- ==========================================
+                 LEFT COLUMN: Pipeline Sequence & Stage Keys
+                 ========================================== -->
             <section class="lg:col-span-5 flex flex-col gap-5">
                 
-                <!-- CARD 1: Message Input & Direction -->
-                <div class="border-2 border-charcoal rounded-2xl bg-panel p-5 shadow-brutal-sm flex flex-col gap-4">
-                    <div class="flex items-center justify-between">
-                        <!-- Direction Toggle -->
-                        <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-sm gap-1">
-                            <button id="dir-encrypt-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm bg-charcoal text-white flex items-center gap-1.5">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                                <span>Encrypt (Forward)</span>
-                            </button>
-                            <button id="dir-decrypt-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold transition hover:bg-black/5 text-charcoal flex items-center gap-1.5">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
-                                <span>Decrypt (Reverse)</span>
-                            </button>
-                        </div>
-                        <span class="text-xs font-mono font-bold text-charcoal/60" id="input-char-count">11 chars</span>
-                    </div>
-
-                    <!-- Input Textarea -->
-                    <div class="flex flex-col gap-1.5">
-                        <label id="input-label" class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">Plaintext Message</label>
-                        <textarea id="fusion-input-text" rows="3" class="w-full bg-[#fcfbfa] border-2 border-charcoal/25 rounded-xl p-3 font-mono text-xs text-charcoal resize-none focus:outline-none focus:border-charcoal focus:ring-1 focus:ring-charcoal transition" placeholder="Enter message to cascade through ciphers...">HELLO WORLD</textarea>
-                    </div>
-
-                    <!-- Input Controls -->
-                    <div class="flex items-center justify-between gap-2 flex-wrap text-xs pt-1">
-                        <div class="flex items-center gap-1.5">
-                            <button id="btn-sample-1" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-[11px] font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm">Sample 1</button>
-                            <button id="btn-sample-2" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-[11px] font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm">Sample 2</button>
-                            <button id="btn-swap-text" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-[11px] font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1" title="Swap output into input">
-                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
-                                <span>Swap</span>
-                            </button>
-                        </div>
-                        <button id="btn-clear-input" class="px-2.5 py-1 rounded-lg border border-charcoal/20 bg-cream-light hover:bg-red-50 text-[11px] font-mono text-red-600 font-bold transition active:scale-95">Clear</button>
-                    </div>
-                </div>
-
-                <!-- CARD 2: Configurable 4-Stage Pipeline List -->
-                <div class="border-2 border-charcoal rounded-2xl bg-panel p-5 shadow-brutal-sm flex flex-col gap-4">
-                    <div class="flex items-center justify-between pb-2 border-b border-charcoal/10">
-                        <div>
-                            <h2 class="text-sm font-bold text-charcoal">Configurable Pipeline Stages</h2>
-                            <p class="text-[11px] text-charcoal/60">Reorder with arrows; executes top-to-bottom</p>
+                <!-- Card 1: 4-Stage Pipeline Configuration -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-4">
+                    <div class="flex items-center justify-between flex-wrap gap-2 pb-1 border-b border-charcoal/10">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">CASCADE PIPELINE (4 STAGES)</span>
                         </div>
                         <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-accent border border-charcoal shadow-sm" id="flow-order-badge">1 → 2 → 3 → 4</span>
                     </div>
 
-                    <!-- Pipeline Stages Container (Populated via JS) -->
-                    <div class="flex flex-col gap-3" id="pipeline-stages-container"></div>
+                    <!-- Quick Pipeline Presets -->
+                    <div class="flex items-center justify-between gap-2 pt-0.5">
+                        <span class="text-[11px] font-mono text-charcoal/60">Execution: Top to Bottom</span>
+                        <div class="flex items-center gap-1.5">
+                            <button id="btn-example-keys" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-[11px] font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1">
+                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                                <span>Keys</span>
+                            </button>
+                            <button id="btn-reset-pipeline" class="px-2.5 py-1 rounded-lg border border-charcoal bg-panel hover:bg-cream text-[11px] font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
 
-                    <!-- Execute Action Button -->
-                    <button id="btn-execute-fusion" class="w-full py-3 px-4 rounded-xl bg-charcoal hover:bg-neutral-800 text-white font-mono text-xs font-bold tracking-wider uppercase transition active:scale-[0.99] flex items-center justify-center gap-2 shadow-brutal mt-1">
-                        <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        <span id="execute-btn-label">FUSE &amp; ENCRYPT PIPELINE</span>
-                    </button>
-                </div>
+                    <!-- Pipeline Stages Container (Populated dynamically) -->
+                    <div class="flex flex-col gap-2.5" id="pipeline-stages-container"></div>
+                </article>
+
+                <!-- Card 2: Intermediate Stage Telemetry -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-3">
+                    <div class="flex items-center justify-between pb-1 border-b border-charcoal/10">
+                        <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">INTERMEDIATE TELEMETRY</span>
+                        <span class="text-[11px] font-mono text-charcoal/50">Sequential Hand-off</span>
+                    </div>
+
+                    <!-- 4 Sub-cards in 2x2 Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="intermediate-telemetry-container"></div>
+                </article>
+
             </section>
 
-            <!-- RIGHT COLUMN: Output, Step Journey & Telemetry (7 cols) -->
+            <!-- ==========================================
+                 RIGHT COLUMN: Console & Step Visualizer
+                 ========================================== -->
             <section class="lg:col-span-7 flex flex-col gap-5">
                 
-                <!-- CARD 3: Final Output & Package Export -->
-                <div class="border-2 border-charcoal rounded-2xl bg-panel p-5 shadow-brutal-sm flex flex-col gap-4">
-                    <div class="flex items-center justify-between">
+                <!-- Card 3: Input & Output Console -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-4">
+                    
+                    <!-- Direction Switcher & Actions -->
+                    <div class="flex items-center justify-between flex-wrap gap-2 pb-1 border-b border-charcoal/10">
+                        <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1">
+                            <button id="dir-encrypt-btn" class="px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                <span>Encrypt (Forward)</span>
+                            </button>
+                            <button id="dir-decrypt-btn" class="px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+                                <span>Decrypt (Reverse)</span>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center gap-1.5">
+                            <button id="btn-sample-1" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">Sample 1</button>
+                            <button id="btn-sample-2" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm">Sample 2</button>
+                            <button id="btn-swap-text" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1" title="Swap input and output">
+                                <svg class="w-3.5 h-3.5 text-charcoal/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+                                <span>Swap</span>
+                            </button>
+                            <button id="btn-clear-input" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-charcoal/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <span>Clear</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Message Input Textarea -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex items-center justify-between text-xs font-mono font-semibold">
+                            <span id="input-heading-label">PLAINTEXT (INPUT)</span>
+                            <span class="text-charcoal/60"><span id="input-char-count">11</span> characters</span>
+                        </div>
+                        <textarea id="fusion-input-text" rows="3" placeholder="Enter text to process through all 4 ciphers..." class="w-full p-3.5 rounded-xl border-2 border-charcoal font-mono uppercase text-sm font-semibold tracking-wider bg-cream-light focus:bg-white transition resize-none">HELLO WORLD</textarea>
+                    </div>
+
+                    <!-- Output Area -->
+                    <div class="flex flex-col gap-1.5 pt-1">
+                        <div class="flex items-center justify-between text-xs font-mono font-semibold">
+                            <div class="flex items-center gap-2">
+                                <span id="output-heading-label">CASCADE OUTPUT</span>
+                                <span id="output-mode-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cream border border-charcoal/20">Classic</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button id="btn-copy-output" class="px-3 py-1 rounded-lg border border-charcoal bg-panel hover:bg-accent text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    <span id="copy-btn-text">Copy</span>
+                                </button>
+                                <button id="btn-copy-package" class="hidden px-3 py-1 rounded-lg border border-charcoal bg-accent hover:bg-accent-hover text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                    <span>Envelope</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="relative p-3.5 rounded-xl border-2 border-charcoal bg-cream-light flex flex-col gap-2 min-h-[72px]">
+                            <div id="final-output-box" class="font-mono text-sm sm:text-base font-bold text-charcoal tracking-widest break-all select-all">
+                                BLNDBEDRQJ
+                            </div>
+                            <div id="reversible-details-card" class="hidden pt-2 border-t border-charcoal/10 flex flex-col gap-1.5">
+                                <div class="flex items-center justify-between text-[11px] font-mono text-charcoal font-bold">
+                                    <span>Non-Secret Structural Envelope:</span>
+                                    <span class="text-emerald-700 bg-emerald-100 border border-emerald-300 px-1.5 py-0.2 rounded text-[10px]">Restoration Ready</span>
+                                </div>
+                                <textarea id="package-json-preview" rows="2" class="w-full bg-white border border-charcoal/20 rounded p-1.5 text-[10px] text-charcoal font-mono resize-none" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 4: Step-by-Step Cascade Journey Visualizer -->
+                <article class="bg-panel border-2 border-charcoal rounded-2xl p-5 sm:p-6 shadow-brutal-sm flex flex-col gap-4">
+                    <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-charcoal/10">
                         <div class="flex items-center gap-2">
-                            <h2 class="text-sm font-bold text-charcoal" id="output-title">Final Ciphertext (Pipeline Output)</h2>
-                            <span id="output-mode-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cream border border-charcoal/20">Classic</span>
+                            <span class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">STEP-BY-STEP CASCADE JOURNEY</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button id="btn-copy-output" class="px-3 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Copy result to clipboard">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                <span id="copy-btn-text">Copy</span>
+                        <!-- Step Navigation Controls -->
+                        <div class="flex items-center gap-1.5">
+                            <button id="journey-first-btn" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="First stage">
+                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
                             </button>
-                            <button id="btn-copy-package" class="hidden px-3 py-1.5 rounded-lg border border-charcoal bg-accent hover:bg-accent-hover text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Copy complete JSON package">
-                                <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                <span>Copy Envelope</span>
+                            <button id="journey-prev-btn" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Previous stage">
+                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                        </div>
-                    </div>
-
-                    <!-- Output Monospace Box -->
-                    <div class="p-4 bg-[#fcfbfa] border-2 border-charcoal/25 rounded-xl font-mono text-sm font-bold text-charcoal tracking-wider leading-relaxed break-words min-h-[72px] select-all flex items-center" id="final-output-box">
-                        BLNDBEDRQJ
-                    </div>
-
-                    <!-- Reversible Package Metadata Drawer (in reversible mode) -->
-                    <div id="reversible-details-card" class="hidden p-3.5 bg-cream-light border border-charcoal/15 rounded-xl flex flex-col gap-2 text-xs font-mono">
-                        <div class="flex items-center justify-between text-charcoal font-bold">
-                            <span class="flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                <span>Zero-Loss Package Metadata</span>
-                            </span>
-                            <span class="text-emerald-700 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded text-[10px]">Restoration Ready</span>
-                        </div>
-                        <p class="text-[11px] text-charcoal/70 leading-relaxed">Contains non-secret structural metadata (casing mask, spaces, Playfair duplicate fillers &amp; Hill padding) to guarantee 100% loss-free reverse plaintext recovery.</p>
-                        <textarea id="package-json-preview" rows="2" class="w-full bg-white border border-charcoal/20 rounded-lg p-2 text-[10px] text-charcoal/70 font-mono resize-none" readonly></textarea>
-                    </div>
-                </div>
-
-                <!-- CARD 4: Step-by-Step Encryption Journey (Visualizer) -->
-                <div class="border-2 border-charcoal rounded-2xl bg-panel p-5 shadow-brutal-sm flex flex-col gap-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-charcoal/10">
-                        <div>
-                            <h2 class="text-sm font-bold text-charcoal">Step-by-Step Encryption Journey</h2>
-                            <p class="text-[11px] text-charcoal/60">Animate sequential transformation through each cipher stage</p>
-                        </div>
-                        <!-- Stepper Controls -->
-                        <div class="flex items-center gap-1.5 bg-cream-light p-1 rounded-xl border border-charcoal/20 shadow-sm">
-                            <button id="journey-prev-btn" class="w-8 h-8 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-bold font-mono text-charcoal transition active:scale-95 flex items-center justify-center shadow-sm" title="Previous stage">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
-                            </button>
-                            <span id="journey-stage-badge" class="px-2.5 py-1 rounded-lg bg-charcoal text-white text-xs font-mono font-bold">Stage 1 of 4</span>
-                            <button id="journey-next-btn" class="w-8 h-8 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-bold font-mono text-charcoal transition active:scale-95 flex items-center justify-center shadow-sm" title="Next stage">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-                            </button>
-                            <button id="journey-play-btn" class="px-3 py-1 h-8 rounded-lg border border-charcoal bg-accent hover:bg-accent-hover text-xs font-bold font-mono text-charcoal transition active:scale-95 flex items-center gap-1.5 shadow-sm" title="Auto play animation">
-                                <svg id="journey-play-icon" class="w-3 h-3 text-charcoal fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                            <button id="journey-play-btn" class="px-3.5 py-1.5 rounded-lg border border-charcoal bg-accent hover:bg-accent-hover text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-sm flex items-center gap-1.5">
+                                <svg id="journey-play-icon" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
                                 <span id="journey-play-text">Play</span>
                             </button>
+                            <button id="journey-next-btn" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Next stage">
+                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                            <button id="journey-last-btn" class="px-2.5 py-1.5 rounded-lg border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold transition active:scale-95 shadow-sm" title="Last stage">
+                                <svg class="w-3 h-3 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Active Journey Visualizer Screen -->
-                    <div class="p-4 bg-[#f8f6f0] border-2 border-charcoal/20 rounded-xl flex flex-col gap-3" id="journey-visualizer-screen"></div>
-                </div>
-
-                <!-- CARD 5: Intermediate Outputs Telemetry Grid -->
-                <div class="border-2 border-charcoal rounded-2xl bg-panel p-5 shadow-brutal-sm flex flex-col gap-3">
-                    <div class="flex items-center justify-between pb-1">
-                        <h2 class="text-xs font-mono font-bold tracking-wider uppercase text-charcoal/70">Intermediate Stage Telemetry</h2>
-                        <span class="text-[11px] font-mono text-charcoal/50">Each stage feeds the next</span>
+                    <!-- Step Telemetry Banner -->
+                    <div class="p-3.5 rounded-xl bg-cream-light border border-charcoal flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span id="journey-stage-badge" class="px-3 py-1 rounded-md bg-charcoal text-white font-mono text-xs font-bold shadow-sm">
+                                Stage 1 of 4
+                            </span>
+                            <span id="journey-stage-name" class="font-mono text-xs font-bold text-charcoal">
+                                Caesar Cipher
+                            </span>
+                        </div>
+                        <span id="journey-rule-badge" class="px-2.5 py-1 rounded-md bg-accent text-[11px] font-mono font-bold text-charcoal border border-charcoal shadow-sm">
+                            Shift: +3 mod 26
+                        </span>
                     </div>
 
-                    <!-- 4 Compact Bento Cards for Stage Outputs -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="intermediate-telemetry-container"></div>
-                </div>
+                    <!-- Active Journey Transformation Flow Screen -->
+                    <div id="journey-visualizer-screen" class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center"></div>
+                </article>
 
             </section>
         </main>
+
+        <!-- 4. ACADEMIC FOOTER STRIP -->
+        <footer class="p-3.5 rounded-xl bg-cream-light border border-charcoal/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-charcoal/70">
+            <div class="flex items-center gap-2">
+                <span class="w-4 h-4 rounded-full bg-accent border border-charcoal flex items-center justify-center font-bold text-[10px] text-charcoal shrink-0">i</span>
+                <span>Academic Notice: Multi-stage cascade chains classical algorithms for laboratory cryptanalysis.</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span id="pipeline-status-text">4 of 4 Ciphers Active</span>
+            </div>
+        </footer>
 
     </div>
 
@@ -318,30 +326,32 @@
 
         // Elements
         const inputArea = document.getElementById('fusion-input-text');
-        const inputLabel = document.getElementById('input-label');
+        const inputHeadingLabel = document.getElementById('input-heading-label');
+        const outputHeadingLabel = document.getElementById('output-heading-label');
         const charCount = document.getElementById('input-char-count');
         const dirEncryptBtn = document.getElementById('dir-encrypt-btn');
         const dirDecryptBtn = document.getElementById('dir-decrypt-btn');
         const modeClassicBtn = document.getElementById('mode-classic-btn');
         const modeReversibleBtn = document.getElementById('mode-reversible-btn');
         const outputBox = document.getElementById('final-output-box');
-        const outputTitle = document.getElementById('output-title');
         const outputModeBadge = document.getElementById('output-mode-badge');
         const copyBtn = document.getElementById('btn-copy-output');
         const copyPackageBtn = document.getElementById('btn-copy-package');
         const copyBtnText = document.getElementById('copy-btn-text');
-        const executeBtn = document.getElementById('btn-execute-fusion');
-        const executeLabel = document.getElementById('execute-btn-label');
         const stagesContainer = document.getElementById('pipeline-stages-container');
         const flowOrderBadge = document.getElementById('flow-order-badge');
         const telemetryContainer = document.getElementById('intermediate-telemetry-container');
         const journeyScreen = document.getElementById('journey-visualizer-screen');
         const journeyStageBadge = document.getElementById('journey-stage-badge');
+        const journeyStageName = document.getElementById('journey-stage-name');
+        const journeyRuleBadge = document.getElementById('journey-rule-badge');
+        const journeyFirstBtn = document.getElementById('journey-first-btn');
         const journeyPrevBtn = document.getElementById('journey-prev-btn');
-        const journeyNextBtn = document.getElementById('journey-next-btn');
         const journeyPlayBtn = document.getElementById('journey-play-btn');
         const journeyPlayIcon = document.getElementById('journey-play-icon');
         const journeyPlayText = document.getElementById('journey-play-text');
+        const journeyNextBtn = document.getElementById('journey-next-btn');
+        const journeyLastBtn = document.getElementById('journey-last-btn');
         const btnExampleKeys = document.getElementById('btn-example-keys');
         const btnResetPipeline = document.getElementById('btn-reset-pipeline');
         const fusionResetBtn = document.getElementById('fusion-reset-btn');
@@ -370,7 +380,7 @@
         // SVG Icons
         const svgArrowUp = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>`;
         const svgArrowDown = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>`;
-        const svgCopy = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>`;
+        const svgCopy = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>`;
 
         // Render Pipeline Stage Cards
         function renderPipelineUI() {
@@ -381,47 +391,44 @@
 
           currentPipeline.forEach((stage, idx) => {
             const card = document.createElement('div');
-            card.className = `pipeline-card p-3.5 rounded-xl border-2 transition-all flex flex-col gap-2.5 z-10 ${stage.enabled ? 'bg-cream-light border-charcoal/25 shadow-sm' : 'bg-neutral-100 border-charcoal/15 opacity-60'}`;
+            card.className = `pipeline-card p-3 rounded-xl border-2 transition-all flex flex-col gap-2 z-10 ${stage.enabled ? 'bg-cream-light border-charcoal/25 shadow-sm' : 'bg-neutral-100 border-charcoal/15 opacity-60'}`;
 
-            // Key Controls HTML per cipher type
+            // Key Controls per cipher
             let keyControlHtml = '';
             if (stage.id === 'caesar') {
               keyControlHtml = `
-                <div class="flex items-center justify-between gap-3 mt-1 pt-1.5 border-t border-charcoal/10">
-                  <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-mono font-bold text-charcoal/70">Shift Offset:</span>
-                    <span class="px-2 py-0.5 rounded bg-white border border-charcoal/20 font-mono text-xs font-black text-charcoal">ROT-${String(stage.key.shift).padStart(2, '0')}</span>
+                <div class="flex items-center justify-between gap-2 pt-1 border-t border-charcoal/10">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[11px] font-mono font-bold text-charcoal/70">Offset:</span>
+                    <span class="px-2 py-0.5 rounded bg-white border border-charcoal/20 font-mono text-xs font-bold text-charcoal">ROT-${String(stage.key.shift).padStart(2, '0')}</span>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <input type="range" min="0" max="25" value="${stage.key.shift}" class="w-24 sm:w-32 accent-charcoal cursor-pointer" data-stage="${idx}" data-key="shift-range">
-                  </div>
+                  <input type="range" min="0" max="25" value="${stage.key.shift}" class="w-24 sm:w-28 accent-charcoal cursor-pointer" data-stage="${idx}" data-key="shift-range">
                 </div>
               `;
             } else if (stage.id === 'vigenere') {
               keyControlHtml = `
-                <div class="flex items-center justify-between gap-2 mt-1 pt-1.5 border-t border-charcoal/10">
-                  <div class="flex items-center gap-2">
+                <div class="flex items-center justify-between gap-2 pt-1 border-t border-charcoal/10">
+                  <div class="flex items-center gap-1.5">
                     <span class="text-[11px] font-mono font-bold text-charcoal/70">Keyword:</span>
-                    <input type="text" value="${stage.key.keyword}" maxlength="15" class="px-2.5 py-1 rounded-lg border-2 border-charcoal/25 bg-white font-mono text-xs font-bold uppercase w-32 focus:border-charcoal focus:outline-none" data-stage="${idx}" data-key="keyword">
+                    <input type="text" value="${stage.key.keyword}" maxlength="15" class="px-2 py-0.5 rounded border border-charcoal/25 bg-white font-mono text-xs font-bold uppercase w-28 focus:border-charcoal focus:outline-none" data-stage="${idx}" data-key="keyword">
                   </div>
                   <span class="text-[10px] font-mono text-charcoal/50">${stage.key.keyword.length} letters</span>
                 </div>
               `;
             } else if (stage.id === 'playfair') {
               keyControlHtml = `
-                <div class="flex items-center justify-between gap-2 mt-1 pt-1.5 border-t border-charcoal/10 flex-wrap">
-                  <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-mono font-bold text-charcoal/70">Keyword:</span>
-                    <input type="text" value="${stage.key.keyword}" maxlength="15" class="px-2.5 py-1 rounded-lg border-2 border-charcoal/25 bg-white font-mono text-xs font-bold uppercase w-28 focus:border-charcoal focus:outline-none" data-stage="${idx}" data-key="keyword">
-                  </div>
+                <div class="flex items-center justify-between gap-2 pt-1 border-t border-charcoal/10 flex-wrap">
                   <div class="flex items-center gap-1.5">
+                    <span class="text-[11px] font-mono font-bold text-charcoal/70">Keyword:</span>
+                    <input type="text" value="${stage.key.keyword}" maxlength="15" class="px-2 py-0.5 rounded border border-charcoal/25 bg-white font-mono text-xs font-bold uppercase w-24 focus:border-charcoal focus:outline-none" data-stage="${idx}" data-key="keyword">
+                  </div>
+                  <div class="flex items-center gap-1">
                     <span class="text-[11px] font-mono font-bold text-charcoal/70">Filler:</span>
-                    <select class="px-2 py-1 rounded-lg border-2 border-charcoal/25 bg-white font-mono text-xs font-bold focus:border-charcoal focus:outline-none cursor-pointer" data-stage="${idx}" data-key="filler">
+                    <select class="px-1.5 py-0.5 rounded border border-charcoal/25 bg-white font-mono text-xs font-bold focus:border-charcoal focus:outline-none cursor-pointer" data-stage="${idx}" data-key="filler">
                       <option value="X" ${stage.key.filler === 'X' ? 'selected' : ''}>X</option>
                       <option value="Q" ${stage.key.filler === 'Q' ? 'selected' : ''}>Q</option>
                       <option value="Z" ${stage.key.filler === 'Z' ? 'selected' : ''}>Z</option>
                     </select>
-                    <span class="text-[10px] font-mono text-charcoal/50 bg-white border border-charcoal/15 px-1.5 py-0.5 rounded">I/J</span>
                   </div>
                 </div>
               `;
@@ -429,31 +436,31 @@
               const dim = stage.key.dimension || 2;
               const inv = CipherFusion.computeMatrixInverse(stage.key.matrix);
               const invBadge = inv.isValid 
-                ? `<span class="text-[10px] text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-md font-mono font-bold">det=${inv.diag.modDet} (Invertible)</span>`
-                : `<span class="text-[10px] text-red-800 bg-red-100 border border-red-300 px-2 py-0.5 rounded-md font-mono font-bold" title="${inv.diag.errorReason}">Invalid det=${inv.diag.modDet}</span>`;
+                ? `<span class="text-[9px] text-emerald-800 bg-emerald-100 border border-emerald-300 px-1.5 py-0.2 rounded font-mono font-bold">det=${inv.diag.modDet} (Invertible)</span>`
+                : `<span class="text-[9px] text-red-800 bg-red-100 border border-red-300 px-1.5 py-0.2 rounded font-mono font-bold" title="${inv.diag.errorReason}">Invalid det=${inv.diag.modDet}</span>`;
 
               let matrixInputs = '';
               for (let r = 0; r < dim; r++) {
                 matrixInputs += '<div class="flex items-center gap-1">';
                 for (let c = 0; c < dim; c++) {
-                  matrixInputs += `<input type="number" min="0" max="25" value="${stage.key.matrix[r][c]}" class="w-9 h-7 text-center rounded border-2 border-charcoal/25 bg-white font-mono text-xs font-bold focus:border-charcoal focus:outline-none" data-stage="${idx}" data-matrix-r="${r}" data-matrix-c="${c}">`;
+                  matrixInputs += `<input type="number" min="0" max="25" value="${stage.key.matrix[r][c]}" class="w-8 h-6 text-center rounded border border-charcoal/25 bg-white font-mono text-xs font-bold focus:border-charcoal focus:outline-none" data-stage="${idx}" data-matrix-r="${r}" data-matrix-c="${c}">`;
                 }
                 matrixInputs += '</div>';
               }
 
               keyControlHtml = `
-                <div class="flex flex-col gap-2 mt-1 pt-1.5 border-t border-charcoal/10">
+                <div class="flex flex-col gap-1.5 pt-1 border-t border-charcoal/10">
                   <div class="flex items-center justify-between flex-wrap gap-1">
                     <div class="flex items-center gap-1">
-                      <span class="text-[11px] font-mono font-bold text-charcoal/70 mr-1">Matrix:</span>
-                      <button class="px-2 py-0.5 rounded border border-charcoal/30 text-[10px] font-mono font-bold transition ${dim === 2 ? 'bg-charcoal text-white' : 'bg-white hover:bg-cream text-charcoal'}" data-stage="${idx}" data-action="set-dim-2">2×2</button>
-                      <button class="px-2 py-0.5 rounded border border-charcoal/30 text-[10px] font-mono font-bold transition ${dim === 3 ? 'bg-charcoal text-white' : 'bg-white hover:bg-cream text-charcoal'}" data-stage="${idx}" data-action="set-dim-3">3×3</button>
+                      <span class="text-[11px] font-mono font-bold text-charcoal/70">Matrix:</span>
+                      <button class="px-1.5 py-0.2 rounded border border-charcoal/30 text-[10px] font-mono font-bold transition ${dim === 2 ? 'bg-charcoal text-white' : 'bg-white text-charcoal'}" data-stage="${idx}" data-action="set-dim-2">2×2</button>
+                      <button class="px-1.5 py-0.2 rounded border border-charcoal/30 text-[10px] font-mono font-bold transition ${dim === 3 ? 'bg-charcoal text-white' : 'bg-white text-charcoal'}" data-stage="${idx}" data-action="set-dim-3">3×3</button>
                     </div>
                     <button class="text-[10px] font-mono font-bold text-charcoal/70 hover:text-charcoal underline" data-stage="${idx}" data-action="rand-hill">Randomize</button>
                   </div>
-                  <div class="flex items-center gap-3">
-                    <div class="flex flex-col gap-1">${matrixInputs}</div>
-                    <div class="flex flex-col gap-1">${invBadge}</div>
+                  <div class="flex items-center gap-2">
+                    <div class="flex flex-col gap-0.5">${matrixInputs}</div>
+                    <div class="flex flex-col gap-0.5">${invBadge}</div>
                   </div>
                 </div>
               `;
@@ -462,10 +469,10 @@
             card.innerHTML = `
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <span class="w-6 h-6 rounded-full bg-charcoal text-white font-mono text-xs font-bold flex items-center justify-center shadow-sm">${idx + 1}</span>
+                  <span class="w-5 h-5 rounded-full bg-charcoal text-white font-mono text-[10px] font-bold flex items-center justify-center shadow-sm">${idx + 1}</span>
                   <span class="font-mono text-xs font-bold text-charcoal">${stage.name}</span>
                 </div>
-                <div class="flex items-center gap-1.5">
+                <div class="flex items-center gap-1">
                   <button class="w-6 h-6 rounded-md border border-charcoal/20 bg-white hover:bg-cream text-charcoal flex items-center justify-center transition disabled:opacity-20 active:scale-95" data-action="move-up" data-stage="${idx}" ${idx === 0 ? 'disabled' : ''} title="Move earlier in pipeline">${svgArrowUp}</button>
                   <button class="w-6 h-6 rounded-md border border-charcoal/20 bg-white hover:bg-cream text-charcoal flex items-center justify-center transition disabled:opacity-20 active:scale-95" data-action="move-down" data-stage="${idx}" ${idx === currentPipeline.length - 1 ? 'disabled' : ''} title="Move later in pipeline">${svgArrowDown}</button>
                   <label class="neo-toggle relative inline-flex items-center cursor-pointer ml-1">
@@ -482,7 +489,7 @@
           });
         }
 
-        // Attach event listener for dynamic stage controls
+        // Attach event listeners for pipeline stage configurator
         stagesContainer.addEventListener('click', (e) => {
           const btn = e.target.closest('button');
           if (!btn) return;
@@ -557,7 +564,7 @@
         // Run Cascade Execution
         function runExecution() {
           const text = inputArea.value;
-          charCount.textContent = `${text.length} chars`;
+          charCount.textContent = `${text.length}`;
 
           let result;
           if (currentDirection === 'encrypt') {
@@ -603,17 +610,17 @@
 
           stages.forEach((st, idx) => {
             const sub = document.createElement('div');
-            sub.className = "p-3 bg-[#f8f6f0] border-2 border-charcoal/15 rounded-xl flex flex-col gap-1.5 shadow-sm";
+            sub.className = "p-2.5 bg-[#f8f6f0] border-2 border-charcoal/15 rounded-xl flex flex-col gap-1 shadow-sm";
             sub.innerHTML = `
               <div class="flex items-center justify-between text-[11px] font-mono">
                 <div class="flex items-center gap-1.5">
                   <span class="w-4 h-4 rounded-full bg-accent border border-charcoal text-[10px] font-bold flex items-center justify-center">${idx + 1}</span>
-                  <span class="font-bold text-charcoal">${st.name}</span>
+                  <span class="font-bold text-charcoal truncate max-w-[120px]">${st.name}</span>
                 </div>
-                <button class="text-charcoal/60 hover:text-charcoal copy-sub-btn p-1 rounded hover:bg-black/5" data-text="${st.output}" title="Copy intermediate output">${svgCopy}</button>
+                <button class="text-charcoal/60 hover:text-charcoal copy-sub-btn p-0.5 rounded hover:bg-black/5" data-text="${st.output}" title="Copy">${svgCopy}</button>
               </div>
-              <div class="font-mono text-xs font-black text-charcoal tracking-wide break-all p-1.5 bg-white border border-charcoal/15 rounded-lg">${st.output}</div>
-              <div class="text-[10px] text-charcoal/65 font-mono leading-tight">${st.explanation}</div>
+              <div class="font-mono text-xs font-black text-charcoal tracking-wide break-all p-1 bg-white border border-charcoal/15 rounded">${st.output}</div>
+              <div class="text-[10px] text-charcoal/60 font-mono truncate">${st.explanation}</div>
             `;
             telemetryContainer.appendChild(sub);
           });
@@ -632,7 +639,7 @@
         // Render Step-by-Step Encryption Journey Screen
         function renderJourneyStep(stages, stepIndex) {
           if (!stages || stages.length === 0) {
-            journeyScreen.innerHTML = '<div class="text-center font-mono text-xs text-charcoal/50 py-4">Execute pipeline to inspect step journey.</div>';
+            journeyScreen.innerHTML = '<div class="col-span-3 text-center font-mono text-xs text-charcoal/50 py-4">Execute pipeline to inspect step journey.</div>';
             return;
           }
 
@@ -641,37 +648,39 @@
 
           const st = stages[activeJourneyStep];
           journeyStageBadge.textContent = `Stage ${activeJourneyStep + 1} of ${stages.length}`;
+          journeyStageName.textContent = st.name;
+          journeyRuleBadge.textContent = st.explanation;
 
           journeyScreen.innerHTML = `
-            <div class="flex items-center justify-between pb-2 border-b border-charcoal/10 text-xs font-mono">
-              <span class="font-bold text-charcoal flex items-center gap-2">
-                <span class="w-5 h-5 rounded-full bg-accent border border-charcoal flex items-center justify-center font-bold text-[11px]">${activeJourneyStep + 1}</span>
-                <span class="text-sm font-black">${st.name}</span>
-              </span>
-              <span class="text-charcoal/60">Input: <strong class="text-charcoal">${st.input.length} chars</strong></span>
+            <!-- Input block -->
+            <div class="p-3.5 rounded-xl border-2 border-charcoal/20 bg-white flex flex-col gap-1 shadow-sm">
+              <span class="text-[10px] font-mono font-bold text-charcoal/50 uppercase">Input Block</span>
+              <div class="font-mono text-sm font-black text-charcoal tracking-widest break-all">${st.input}</div>
             </div>
-
-            <!-- Transformation Flow Row -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center py-2">
-              <div class="p-3 bg-white border-2 border-charcoal/20 rounded-xl flex flex-col gap-1 shadow-sm">
-                <span class="text-[10px] font-mono text-charcoal/50 uppercase font-bold">Input String</span>
-                <span class="font-mono text-xs font-black text-charcoal break-all tracking-wider">${st.input}</span>
+            <!-- Middle Arrow -->
+            <div class="flex flex-col items-center justify-center text-center p-2">
+              <div class="w-8 h-8 rounded-full bg-accent border-2 border-charcoal flex items-center justify-center font-bold text-charcoal shadow-sm mb-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </div>
-              <div class="flex flex-col items-center justify-center text-center p-2">
-                <div class="w-8 h-8 rounded-full bg-accent border border-charcoal flex items-center justify-center font-bold text-charcoal shadow-sm mb-1.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                </div>
-                <span class="text-[11px] font-mono font-bold text-charcoal px-2 py-0.5 rounded bg-cream border border-charcoal/15">${st.explanation}</span>
-              </div>
-              <div class="p-3 bg-white border-2 border-charcoal/20 rounded-xl flex flex-col gap-1 shadow-sm">
-                <span class="text-[10px] font-mono text-charcoal/50 uppercase font-bold">Stage Output</span>
-                <span class="font-mono text-xs font-black text-charcoal break-all tracking-wider">${st.output}</span>
-              </div>
+              <span class="text-[11px] font-mono font-bold text-charcoal px-2 py-0.5 rounded bg-cream border border-charcoal/15">${st.explanation}</span>
+            </div>
+            <!-- Output block -->
+            <div class="p-3.5 rounded-xl border-2 border-charcoal/20 bg-white flex flex-col gap-1 shadow-sm">
+              <span class="text-[10px] font-mono font-bold text-charcoal/50 uppercase">Stage Output</span>
+              <div class="font-mono text-sm font-black text-charcoal tracking-widest break-all">${st.output}</div>
             </div>
           `;
         }
 
         // Stepper Navigation
+        journeyFirstBtn.addEventListener('click', () => {
+          if (lastResult && lastResult.stages) {
+            activeJourneyStep = 0;
+            renderJourneyStep(lastResult.stages, activeJourneyStep);
+            if (window.CyberSFX) CyberSFX.click();
+          }
+        });
+
         journeyPrevBtn.addEventListener('click', () => {
           if (lastResult && lastResult.stages) {
             activeJourneyStep = (activeJourneyStep - 1 + lastResult.stages.length) % lastResult.stages.length;
@@ -683,6 +692,14 @@
         journeyNextBtn.addEventListener('click', () => {
           if (lastResult && lastResult.stages) {
             activeJourneyStep = (activeJourneyStep + 1) % lastResult.stages.length;
+            renderJourneyStep(lastResult.stages, activeJourneyStep);
+            if (window.CyberSFX) CyberSFX.click();
+          }
+        });
+
+        journeyLastBtn.addEventListener('click', () => {
+          if (lastResult && lastResult.stages) {
+            activeJourneyStep = lastResult.stages.length - 1;
             renderJourneyStep(lastResult.stages, activeJourneyStep);
             if (window.CyberSFX) CyberSFX.click();
           }
@@ -709,22 +726,20 @@
         // Direction Switcher
         dirEncryptBtn.addEventListener('click', () => {
           currentDirection = 'encrypt';
-          dirEncryptBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm bg-charcoal text-white flex items-center gap-1.5";
-          dirDecryptBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition hover:bg-black/5 text-charcoal flex items-center gap-1.5";
-          inputLabel.textContent = "Plaintext Message";
-          outputTitle.textContent = "Final Ciphertext (Pipeline Output)";
-          executeLabel.textContent = "FUSE & ENCRYPT PIPELINE";
+          dirEncryptBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm bg-charcoal text-white flex items-center gap-1.5";
+          dirDecryptBtn.className = "px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition flex items-center gap-1.5";
+          inputHeadingLabel.textContent = "PLAINTEXT (INPUT)";
+          outputHeadingLabel.textContent = "CASCADE OUTPUT";
           runExecution();
           if (window.CyberSFX) CyberSFX.click();
         });
 
         dirDecryptBtn.addEventListener('click', () => {
           currentDirection = 'decrypt';
-          dirDecryptBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm bg-charcoal text-white flex items-center gap-1.5";
-          dirEncryptBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition hover:bg-black/5 text-charcoal flex items-center gap-1.5";
-          inputLabel.textContent = "Ciphertext Message";
-          outputTitle.textContent = "Decrypted Plaintext (Reverse Output)";
-          executeLabel.textContent = "REVERSE DECRYPT PIPELINE";
+          dirDecryptBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm bg-charcoal text-white flex items-center gap-1.5";
+          dirEncryptBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition hover:bg-black/5 text-charcoal flex items-center gap-1.5";
+          inputHeadingLabel.textContent = "CIPHERTEXT (INPUT)";
+          outputHeadingLabel.textContent = "DECRYPTED OUTPUT";
           runExecution();
           if (window.CyberSFX) CyberSFX.click();
         });
@@ -732,8 +747,8 @@
         // Mode Switcher
         modeClassicBtn.addEventListener('click', () => {
           currentMode = 'classic';
-          modeClassicBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm bg-charcoal text-white";
-          modeReversibleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition hover:bg-black/5 text-charcoal flex items-center gap-1.5";
+          modeClassicBtn.className = "px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm";
+          modeReversibleBtn.className = "px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition flex items-center gap-1.5";
           outputModeBadge.textContent = "Classic";
           runExecution();
           if (window.CyberSFX) CyberSFX.click();
@@ -741,8 +756,8 @@
 
         modeReversibleBtn.addEventListener('click', () => {
           currentMode = 'reversible';
-          modeReversibleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm bg-charcoal text-white flex items-center gap-1.5";
-          modeClassicBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition hover:bg-black/5 text-charcoal";
+          modeReversibleBtn.className = "px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5";
+          modeClassicBtn.className = "px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition";
           outputModeBadge.textContent = "Reversible Envelope";
           runExecution();
           if (window.CyberSFX) CyberSFX.click();
@@ -801,11 +816,6 @@
           if (window.CyberSFX) CyberSFX.click();
         });
 
-        executeBtn.addEventListener('click', () => {
-          runExecution();
-          if (window.CyberSFX) CyberSFX.success();
-        });
-
         copyBtn.addEventListener('click', () => {
           navigator.clipboard.writeText(outputBox.textContent.trim());
           copyBtnText.textContent = "Copied!";
@@ -816,8 +826,8 @@
         copyPackageBtn.addEventListener('click', () => {
           if (lastResult && lastResult.packageEnvelope) {
             navigator.clipboard.writeText(JSON.stringify(lastResult.packageEnvelope, null, 2));
-            copyPackageBtn.textContent = "Envelope Copied!";
-            setTimeout(() => { copyPackageBtn.textContent = "Copy Envelope"; }, 2000);
+            copyPackageBtn.textContent = "Copied!";
+            setTimeout(() => { copyPackageBtn.textContent = "Envelope"; }, 2000);
             if (window.CyberSFX) CyberSFX.click();
           }
         });
