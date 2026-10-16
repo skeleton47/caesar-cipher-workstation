@@ -8,6 +8,7 @@ import string
 import math
 import crypto_playfair
 import crypto_hill
+import crypto_fusion
 
 app = Flask(__name__)
 
@@ -116,6 +117,12 @@ def playfair_page():
 @app.route('/hill.html')
 def hill_page():
     return render_template('hill.html', active_tab='hill')
+
+
+@app.route('/fusion')
+@app.route('/fusion.html')
+def fusion_page():
+    return render_template('fusion.html', active_tab='fusion')
 
 
 @app.route('/frequency')
@@ -267,6 +274,43 @@ def api_hill_decrypt():
     pad_char = data.get('pad_char', 'X')
     result = crypto_hill.hill_transform(text, matrix, decrypt=True, pad_char=pad_char)
     return jsonify(result)
+
+
+# ─── Cipher Fusion APIs ─────────────────────────────────────────────────────
+@app.route('/api/fusion/encrypt', methods=['POST'])
+def api_fusion_encrypt():
+    data = request.get_json(force=True)
+    text = data.get('text', '')
+    pipeline = data.get('pipeline', None)
+    mode = data.get('mode', 'classic')
+    result = crypto_fusion.fusion_encrypt(text, pipeline=pipeline, mode=mode)
+    return jsonify(result)
+
+
+@app.route('/api/fusion/decrypt', methods=['POST'])
+def api_fusion_decrypt():
+    data = request.get_json(force=True)
+    ciphertext = data.get('ciphertext', '')
+    pipeline = data.get('pipeline', None)
+    mode = data.get('mode', 'classic')
+    metadata = data.get('metadata', None)
+    result = crypto_fusion.fusion_decrypt(ciphertext, pipeline=pipeline, mode=mode, package_metadata=metadata)
+    return jsonify(result)
+
+
+@app.route('/api/fusion/validate', methods=['POST'])
+def api_fusion_validate():
+    data = request.get_json(force=True)
+    pipeline = data.get('pipeline', [])
+    result = crypto_fusion.validate_pipeline(pipeline)
+    return jsonify(result)
+
+
+@app.route('/api/fusion/example-keys', methods=['GET'])
+def api_fusion_example_keys():
+    return jsonify({
+        'pipeline': crypto_fusion.get_default_pipeline_config()
+    })
 
 
 # ─── Run ────────────────────────────────────────────────────────────────────
