@@ -284,44 +284,56 @@
   }
 
   // ─── Hill Primitives ────────────────────────────────────────────────────────
-  function det2x2(m) {
-    return m[0][0] * m[1][1] - m[0][1] * m[1][0];
-  }
-
-  function det3x3(m) {
-    const c0 = m[1][1] * m[2][2] - m[1][2] * m[2][1];
-    const c1 = m[1][0] * m[2][2] - m[1][2] * m[2][0];
-    const c2 = m[1][0] * m[2][1] - m[1][1] * m[2][0];
-    return m[0][0] * c0 - m[0][1] * c1 + m[0][2] * c2;
+  function minorSubmatrix(m, r, c) {
+    const sub = [];
+    for (let i = 0; i < m.length; i++) {
+      if (i === r) continue;
+      const row = [];
+      for (let j = 0; j < m[i].length; j++) {
+        if (j === c) continue;
+        row.push(m[i][j]);
+      }
+      sub.push(row);
+    }
+    return sub;
   }
 
   function calcDet(m) {
-    return m.length === 2 ? det2x2(m) : det3x3(m);
+    const n = m.length;
+    if (n === 1) return m[0][0];
+    if (n === 2) return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+    if (n === 3) {
+      const c0 = m[1][1] * m[2][2] - m[1][2] * m[2][1];
+      const c1 = m[1][0] * m[2][2] - m[1][2] * m[2][0];
+      const c2 = m[1][0] * m[2][1] - m[1][1] * m[2][0];
+      return m[0][0] * c0 - m[0][1] * c1 + m[0][2] * c2;
+    }
+    let total = 0;
+    for (let j = 0; j < n; j++) {
+      const sign = (j % 2 === 0) ? 1 : -1;
+      const sub = minorSubmatrix(m, 0, j);
+      total += sign * m[0][j] * calcDet(sub);
+    }
+    return total;
   }
 
-  function adjugate2x2(m) {
-    return [
-      [((m[1][1] % 26) + 26) % 26, ((-m[0][1] % 26) + 26) % 26],
-      [((-m[1][0] % 26) + 26) % 26, ((m[0][0] % 26) + 26) % 26]
-    ];
-  }
+  function adjugateMatrix(m) {
+    const n = m.length;
+    if (n === 2) {
+      return [
+        [((m[1][1] % 26) + 26) % 26, ((-m[0][1] % 26) + 26) % 26],
+        [((-m[1][0] % 26) + 26) % 26, ((m[0][0] % 26) + 26) % 26]
+      ];
+    }
+    const adj = [];
+    for (let i = 0; i < n; i++) adj.push(new Array(n).fill(0));
 
-  function adjugate3x3(m) {
-    const adj = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-    for (let r = 0; r < 3; r++) {
-      for (let c = 0; c < 3; c++) {
-        const minor = [];
-        for (let i = 0; i < 3; i++) {
-          if (i === r) continue;
-          const row = [];
-          for (let j = 0; j < 3; j++) {
-            if (j === c) continue;
-            row.push(m[i][j]);
-          }
-          minor.push(row);
-        }
-        const detMinor = det2x2(minor);
-        const cofactor = Math.pow(-1, r + c) * detMinor;
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        const sub = minorSubmatrix(m, r, c);
+        const detSub = calcDet(sub);
+        const sign = ((r + c) % 2 === 0) ? 1 : -1;
+        const cofactor = sign * detSub;
         adj[c][r] = ((cofactor % 26) + 26) % 26; // transpose
       }
     }
@@ -349,12 +361,12 @@
       return { isValid: false, inverse: null, diag: diag };
     }
 
-    const adj = n === 2 ? adjugate2x2(m) : adjugate3x3(m);
+    const adj = adjugateMatrix(m);
     const inv = [];
     for (let r = 0; r < n; r++) {
       const row = [];
       for (let c = 0; c < n; c++) {
-        row.push((detInv * adj[r][c]) % 26);
+        row.push(((detInv * adj[r][c]) % 26 + 26) % 26);
       }
       inv.push(row);
     }
@@ -546,8 +558,8 @@
         if (!kw) errors.push(`Stage ${idx + 1} (Playfair): Keyword must contain at least one letter.`);
       } else if (id === 'hill') {
         const mat = key.matrix;
-        if (!mat || !Array.isArray(mat) || (mat.length !== 2 && mat.length !== 3)) {
-          errors.push(`Stage ${idx + 1} (Hill): Matrix must be 2×2 or 3×3.`);
+        if (!mat || !Array.isArray(mat) || mat.length < 2 || mat.some(r => !Array.isArray(r) || r.length !== mat.length)) {
+          errors.push(`Stage ${idx + 1} (Hill): Matrix must be a square matrix (at least 2×2).`);
         } else {
           const inv = computeMatrixInverse(mat);
           if (!inv.isValid) {

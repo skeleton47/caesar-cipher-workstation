@@ -440,10 +440,11 @@
                 : `<span class="text-[9px] text-red-800 bg-red-100 border border-red-300 px-1.5 py-0.2 rounded font-mono font-bold" title="${inv.diag.errorReason}">Invalid det=${inv.diag.modDet}</span>`;
 
               let matrixInputs = '';
+              const inputSizeClass = dim >= 4 ? 'w-6 h-6 text-[10px]' : 'w-8 h-6 text-xs';
               for (let r = 0; r < dim; r++) {
                 matrixInputs += '<div class="flex items-center gap-1">';
                 for (let c = 0; c < dim; c++) {
-                  matrixInputs += `<input type="number" min="0" max="25" value="${stage.key.matrix[r][c]}" class="w-8 h-6 text-center rounded border border-charcoal/25 bg-white font-mono text-xs font-bold focus:border-charcoal focus:outline-none" data-stage="${idx}" data-matrix-r="${r}" data-matrix-c="${c}">`;
+                  matrixInputs += `<input type="number" min="0" max="25" value="${stage.key.matrix[r][c]}" class="${inputSizeClass} text-center rounded border border-charcoal/25 bg-white font-mono font-bold focus:border-charcoal focus:outline-none" data-stage="${idx}" data-matrix-r="${r}" data-matrix-c="${c}">`;
                 }
                 matrixInputs += '</div>';
               }
@@ -451,14 +452,16 @@
               keyControlHtml = `
                 <div class="flex flex-col gap-1.5 pt-1 border-t border-charcoal/10">
                   <div class="flex items-center justify-between flex-wrap gap-1">
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center gap-1 flex-wrap">
                       <span class="text-[11px] font-mono font-bold text-charcoal/70">Matrix:</span>
                       <button class="px-1.5 py-0.2 rounded border border-charcoal/30 text-[10px] font-mono font-bold transition ${dim === 2 ? 'bg-charcoal text-white' : 'bg-white text-charcoal'}" data-stage="${idx}" data-action="set-dim-2">2×2</button>
                       <button class="px-1.5 py-0.2 rounded border border-charcoal/30 text-[10px] font-mono font-bold transition ${dim === 3 ? 'bg-charcoal text-white' : 'bg-white text-charcoal'}" data-stage="${idx}" data-action="set-dim-3">3×3</button>
+                      <button class="px-1.5 py-0.2 rounded border border-charcoal/30 text-[10px] font-mono font-bold transition ${dim === 4 ? 'bg-charcoal text-white' : 'bg-white text-charcoal'}" data-stage="${idx}" data-action="set-dim-4">4×4</button>
+                      <button class="px-1.5 py-0.2 rounded border border-charcoal/30 text-[10px] font-mono font-bold transition ${dim === 5 ? 'bg-charcoal text-white' : 'bg-white text-charcoal'}" data-stage="${idx}" data-action="set-dim-5">5×5</button>
                     </div>
                     <button class="text-[10px] font-mono font-bold text-charcoal/70 hover:text-charcoal underline" data-stage="${idx}" data-action="rand-hill">Randomize</button>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 flex-wrap">
                     <div class="flex flex-col gap-0.5">${matrixInputs}</div>
                     <div class="flex flex-col gap-0.5">${invBadge}</div>
                   </div>
@@ -525,6 +528,18 @@
           } else if (action === 'set-dim-3') {
             currentPipeline[stageIdx].key.dimension = 3;
             currentPipeline[stageIdx].key.matrix = [[6, 24, 1], [13, 16, 10], [20, 17, 15]];
+            renderPipelineUI();
+            runExecution();
+            if (window.CyberSFX) CyberSFX.click();
+          } else if (action === 'set-dim-4') {
+            currentPipeline[stageIdx].key.dimension = 4;
+            currentPipeline[stageIdx].key.matrix = [[7, 4, 6, 5], [9, 4, 6, 2], [8, 3, 7, 9], [2, 9, 8, 6]];
+            renderPipelineUI();
+            runExecution();
+            if (window.CyberSFX) CyberSFX.click();
+          } else if (action === 'set-dim-5') {
+            currentPipeline[stageIdx].key.dimension = 5;
+            currentPipeline[stageIdx].key.matrix = [[1, 2, 4, 3, 1], [2, 9, 8, 7, 8], [3, 5, 4, 3, 4], [6, 7, 1, 3, 1], [8, 3, 2, 8, 2]];
             renderPipelineUI();
             runExecution();
             if (window.CyberSFX) CyberSFX.click();

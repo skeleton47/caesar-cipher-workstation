@@ -667,6 +667,7 @@
             cell.className = `${cellClass} flex items-center justify-center font-mono font-bold border border-charcoal/30 rounded bg-cream-light text-charcoal`;
             cell.textContent = inv[r][c];
             inverseMatrixDisplay.appendChild(cell);
+          }
         }
       }
 
@@ -839,6 +840,18 @@
         dimension = dim;
         matrixDimBadge.textContent = `Dim: ${dim}×${dim}`;
         if (customDimLabel) customDimLabel.textContent = `N=${dim}`;
+
+        if (isPlaying) {
+          clearInterval(playInterval);
+          isPlaying = false;
+          if (stepPlayBtn) {
+            stepPlayBtn.innerHTML = `
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+              <span>Play</span>
+            `;
+          }
+        }
+        currentStepIndex = 0;
 
         // Update dimension pill styles
         [2, 3, 4, 5].forEach(d => {
