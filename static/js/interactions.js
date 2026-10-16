@@ -60,18 +60,19 @@
     return 'CAESAR CIPHER STUDIO';
   }
 
+  const isGithubPages = window.location.hostname.endsWith('github.io');
+  const isFileProtocol = window.location.protocol === 'file:';
+
   function resolveTargetUrl(href) {
     if (!href) return 'index.html';
-    if (window.location.protocol === 'file:') {
-      const clean = href.toLowerCase();
-      if (clean.includes('vigenere')) return 'vigenere.html';
-      if (clean.includes('playfair')) return 'playfair.html';
-      if (clean.includes('hill')) return 'hill.html';
-      if (clean.includes('fusion')) return 'fusion.html';
-      if (clean.includes('frequency')) return 'frequency.html';
-      if (clean.includes('about')) return 'about.html';
-      return 'index.html';
-    }
+    const clean = href.toLowerCase();
+    if (clean.includes('vigenere')) return 'vigenere.html';
+    if (clean.includes('playfair')) return 'playfair.html';
+    if (clean.includes('hill')) return 'hill.html';
+    if (clean.includes('fusion')) return 'fusion.html';
+    if (clean.includes('frequency')) return 'frequency.html';
+    if (clean.includes('about')) return 'about.html';
+    if (clean === '/' || clean.includes('caesar') || clean.includes('index')) return 'index.html';
     return href;
   }
 
@@ -113,15 +114,16 @@
   }
 
   function setupNavigationTransitions() {
-    // If running under file: protocol, normalize all nav tabs immediately
-    if (window.location.protocol === 'file:') {
-      document.querySelectorAll('a[href]').forEach(a => {
-        const h = a.getAttribute('href');
-        if (h && (h.startsWith('/') || h === '' || !h.includes('.html'))) {
-          a.setAttribute('href', resolveTargetUrl(h));
+    // Normalize all nav tabs and internal links immediately
+    document.querySelectorAll('a[href]').forEach(a => {
+      const h = a.getAttribute('href');
+      if (h && !h.startsWith('http') && !h.startsWith('#') && !h.startsWith('mailto:') && !h.startsWith('javascript:')) {
+        const resolved = resolveTargetUrl(h);
+        if (resolved !== h && (h.startsWith('/') || isFileProtocol || isGithubPages)) {
+          a.setAttribute('href', resolved);
         }
-      });
-    }
+      }
+    });
 
     // Intercept clicks on navbar links and studio tabs
     document.addEventListener('click', (e) => {
@@ -129,20 +131,21 @@
       if (!link) return;
 
       const href = link.getAttribute('href');
-      if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+      if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:')) return;
       if (link.getAttribute('target') === '_blank') return;
 
       // Check if it's an internal studio route
+      const clean = href.toLowerCase();
       const isInternalStudio =
-        href === '/' ||
-        href.includes('index.html') ||
-        href.includes('caesar') ||
-        href.includes('vigenere') ||
-        href.includes('playfair') ||
-        href.includes('hill') ||
-        href.includes('fusion') ||
-        href.includes('frequency') ||
-        href.includes('about');
+        clean === '/' ||
+        clean.includes('index') ||
+        clean.includes('caesar') ||
+        clean.includes('vigenere') ||
+        clean.includes('playfair') ||
+        clean.includes('hill') ||
+        clean.includes('fusion') ||
+        clean.includes('frequency') ||
+        clean.includes('about');
 
       if (isInternalStudio) {
         // If clicking currently active studio tab, do not trigger transition reload
