@@ -92,14 +92,25 @@
                 <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Hill Cipher Lab</h1>
             </div>
             
-            <!-- Dimension Selector Tabs (2x2 vs 3x3) -->
-            <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1 self-start sm:self-auto">
-                <button id="btn-dim-2" class="px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm">
-                    2×2 Matrix
+            <!-- Dimension Selector Tabs (2x2, 3x3, 4x4, 5x5 + Dynamic Stepper) -->
+            <div class="flex items-center bg-cream-light p-1 rounded-xl border border-charcoal shadow-brutal-sm gap-1 self-start sm:self-auto flex-wrap">
+                <button id="btn-dim-2" class="px-3 sm:px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm">
+                    2×2
                 </button>
-                <button id="btn-dim-3" class="px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
-                    3×3 Matrix
+                <button id="btn-dim-3" class="px-3 sm:px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
+                    3×3
                 </button>
+                <button id="btn-dim-4" class="px-3 sm:px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
+                    4×4
+                </button>
+                <button id="btn-dim-5" class="px-3 sm:px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition">
+                    5×5
+                </button>
+                <div class="flex items-center pl-1 border-l border-charcoal/20 gap-0.5">
+                    <button id="btn-dim-dec" class="w-6 h-6 rounded flex items-center justify-center font-mono font-bold text-xs text-charcoal hover:bg-black/10 transition" title="Decrease dimension">−</button>
+                    <span id="custom-dim-label" class="font-mono text-[11px] font-bold px-1 text-charcoal/70">N=2</span>
+                    <button id="btn-dim-inc" class="w-6 h-6 rounded flex items-center justify-center font-mono font-bold text-xs text-charcoal hover:bg-black/10 transition" title="Increase dimension">+</button>
+                </div>
             </div>
         </div>
 
@@ -370,15 +381,24 @@
       let isPlaying = false;
       let playInterval = null;
 
-      // Presets
-      const PRESETS_2X2 = {
-        p1: [[3, 3], [2, 5]], // det=9, detInv=3
-        p2: [[5, 17], [8, 3]] // det=3, detInv=9
-      };
-
-      const PRESETS_3X3 = {
-        p1: [[6, 24, 1], [13, 16, 10], [20, 17, 15]], // det=25, detInv=25
-        p2: [[1, 2, 3], [0, 1, 4], [5, 6, 0]]
+      // Presets for dimensions 2, 3, 4, 5
+      const PRESETS = {
+        2: {
+          p1: [[3, 3], [2, 5]], // det=9, detInv=3
+          p2: [[5, 17], [8, 3]] // det=3, detInv=9
+        },
+        3: {
+          p1: [[6, 24, 1], [13, 16, 10], [20, 17, 15]], // det=25, detInv=25
+          p2: [[1, 2, 3], [0, 1, 4], [5, 6, 0]]
+        },
+        4: {
+          p1: [[7, 4, 6, 5], [9, 4, 6, 2], [8, 3, 7, 9], [2, 9, 8, 6]], // det=1, detInv=1
+          p2: [[9, 6, 5, 7], [5, 3, 3, 6], [9, 9, 2, 8], [4, 7, 2, 2]]  // det=5, detInv=21
+        },
+        5: {
+          p1: [[1, 2, 4, 3, 1], [2, 9, 8, 7, 8], [3, 5, 4, 3, 4], [6, 7, 1, 3, 1], [8, 3, 2, 8, 2]], // det=1, detInv=1
+          p2: [[5, 3, 1, 9, 1], [4, 1, 9, 8, 2], [7, 5, 8, 9, 7], [7, 1, 7, 5, 2], [5, 1, 3, 8, 3]]  // det=7, detInv=15
+        }
       };
 
       // Sample messages
@@ -394,6 +414,11 @@
       // DOM Elements
       const btnDim2 = document.getElementById('btn-dim-2');
       const btnDim3 = document.getElementById('btn-dim-3');
+      const btnDim4 = document.getElementById('btn-dim-4');
+      const btnDim5 = document.getElementById('btn-dim-5');
+      const btnDimDec = document.getElementById('btn-dim-dec');
+      const btnDimInc = document.getElementById('btn-dim-inc');
+      const customDimLabel = document.getElementById('custom-dim-label');
       const matrixDimBadge = document.getElementById('matrix-dim-badge');
       const matrixInputsContainer = document.getElementById('matrix-inputs-container');
       const btnGenInvertible = document.getElementById('btn-gen-invertible');
@@ -467,45 +492,59 @@
         return a;
       }
 
-      function det2x2(m) {
-        return m[0][0] * m[1][1] - m[0][1] * m[1][0];
-      }
-
-      function det3x3(m) {
-        const c0 = m[1][1] * m[2][2] - m[1][2] * m[2][1];
-        const c1 = m[1][0] * m[2][2] - m[1][2] * m[2][0];
-        const c2 = m[1][0] * m[2][1] - m[1][1] * m[2][0];
-        return m[0][0] * c0 - m[0][1] * c1 + m[0][2] * c2;
+      function minorSubmatrix(m, r, c) {
+        const sub = [];
+        for (let i = 0; i < m.length; i++) {
+          if (i === r) continue;
+          const row = [];
+          for (let j = 0; j < m[i].length; j++) {
+            if (j === c) continue;
+            row.push(m[i][j]);
+          }
+          sub.push(row);
+        }
+        return sub;
       }
 
       function calcDet(m) {
-        return m.length === 2 ? det2x2(m) : det3x3(m);
+        const n = m.length;
+        if (n === 1) return m[0][0];
+        if (n === 2) return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+        if (n === 3) {
+          const c0 = m[1][1] * m[2][2] - m[1][2] * m[2][1];
+          const c1 = m[1][0] * m[2][2] - m[1][2] * m[2][0];
+          const c2 = m[1][0] * m[2][1] - m[1][1] * m[2][0];
+          return m[0][0] * c0 - m[0][1] * c1 + m[0][2] * c2;
+        }
+        // Universal cofactor expansion along row 0
+        let total = 0;
+        for (let j = 0; j < n; j++) {
+          const sign = (j % 2 === 0) ? 1 : -1;
+          const sub = minorSubmatrix(m, 0, j);
+          total += sign * m[0][j] * calcDet(sub);
+        }
+        return total;
       }
 
-      function adjugate2x2(m) {
-        return [
-          [((m[1][1] % 26) + 26) % 26, ((-m[0][1] % 26) + 26) % 26],
-          [((-m[1][0] % 26) + 26) % 26, ((m[0][0] % 26) + 26) % 26]
-        ];
-      }
+      function adjugateMatrix(m) {
+        const n = m.length;
+        if (n === 2) {
+          return [
+            [((m[1][1] % 26) + 26) % 26, ((-m[0][1] % 26) + 26) % 26],
+            [((-m[1][0] % 26) + 26) % 26, ((m[0][0] % 26) + 26) % 26]
+          ];
+        }
+        const adj = [];
+        for (let i = 0; i < n; i++) adj.push(new Array(n).fill(0));
 
-      function adjugate3x3(m) {
-        const adj = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-        for (let r = 0; r < 3; r++) {
-          for (let c = 0; c < 3; c++) {
-            const minor = [];
-            for (let i = 0; i < 3; i++) {
-              if (i === r) continue;
-              const row = [];
-              for (let j = 0; j < 3; j++) {
-                if (j === c) continue;
-                row.push(m[i][j]);
-              }
-              minor.push(row);
-            }
-            const detMinor = det2x2(minor);
-            const cofactor = Math.pow(-1, r + c) * detMinor;
-            adj[c][r] = ((cofactor % 26) + 26) % 26; // transpose
+        for (let r = 0; r < n; r++) {
+          for (let c = 0; c < n; c++) {
+            const sub = minorSubmatrix(m, r, c);
+            const detSub = calcDet(sub);
+            const sign = ((r + c) % 2 === 0) ? 1 : -1;
+            const cofactor = sign * detSub;
+            // Adjugate is the transpose of the cofactor matrix: adj[c][r] = cofactor
+            adj[c][r] = ((cofactor % 26) + 26) % 26;
           }
         }
         return adj;
@@ -533,7 +572,7 @@
           };
         }
 
-        const adj = (n === 2) ? adjugate2x2(m) : adjugate3x3(m);
+        const adj = adjugateMatrix(m);
         const inv = [];
         for (let r = 0; r < n; r++) {
           const row = [];
@@ -555,7 +594,9 @@
       }
 
       function generateInvertibleKey(n) {
-        while (true) {
+        let attempts = 0;
+        while (attempts < 5000) {
+          attempts++;
           const candidate = [];
           for (let r = 0; r < n; r++) {
             const row = [];
@@ -567,6 +608,14 @@
           const det = ((calcDet(candidate) % 26) + 26) % 26;
           if (gcd(det, 26) === 1) return candidate;
         }
+        // Fallback identity matrix
+        const id = [];
+        for (let r = 0; r < n; r++) {
+          const row = [];
+          for (let c = 0; c < n; c++) row.push(r === c ? 1 : 0);
+          id.push(row);
+        }
+        return id;
       }
 
       // ── UI Renderers ───────────────────────────────────────────────────────
@@ -574,16 +623,21 @@
         matrixInputsContainer.innerHTML = '';
         matrixInputsContainer.style.gridTemplateColumns = `repeat(${dimension}, minmax(0, 1fr))`;
 
+        let cellClass = 'w-12 h-12 text-base';
+        if (dimension === 3) cellClass = 'w-11 h-11 text-sm';
+        else if (dimension === 4) cellClass = 'w-9 h-9 sm:w-10 sm:h-10 text-xs sm:text-sm';
+        else if (dimension >= 5) cellClass = 'w-7 h-7 sm:w-8 sm:h-8 text-[11px] sm:text-xs p-0';
+
         for (let r = 0; r < dimension; r++) {
           for (let c = 0; c < dimension; c++) {
             const inp = document.createElement('input');
             inp.type = 'number';
             inp.min = '0';
             inp.max = '25';
-            inp.value = keyMatrix[r][c];
+            inp.value = (keyMatrix[r] && keyMatrix[r][c] !== undefined) ? keyMatrix[r][c] : 0;
             inp.dataset.r = r;
             inp.dataset.c = c;
-            inp.className = 'w-12 h-12 text-center border-2 border-charcoal rounded-lg font-mono text-base font-bold bg-white focus:bg-accent matrix-spin-none transition';
+            inp.className = `${cellClass} text-center border-2 border-charcoal rounded-lg font-mono font-bold bg-white focus:bg-accent matrix-spin-none transition`;
 
             inp.addEventListener('input', () => {
               const val = parseInt(inp.value, 10);
@@ -602,13 +656,17 @@
         if (!inv) return;
         inverseMatrixDisplay.style.gridTemplateColumns = `repeat(${dimension}, minmax(0, 1fr))`;
 
+        let cellClass = 'w-10 h-10 text-sm';
+        if (dimension === 3) cellClass = 'w-9 h-9 text-xs';
+        else if (dimension === 4) cellClass = 'w-7 h-7 sm:w-8 sm:h-8 text-[11px]';
+        else if (dimension >= 5) cellClass = 'w-6 h-6 sm:w-7 sm:h-7 text-[10px] p-0';
+
         for (let r = 0; r < dimension; r++) {
           for (let c = 0; c < dimension; c++) {
             const cell = document.createElement('div');
-            cell.className = 'w-10 h-10 flex items-center justify-center font-mono text-sm font-bold border border-charcoal/30 rounded bg-cream-light text-charcoal';
+            cell.className = `${cellClass} flex items-center justify-center font-mono font-bold border border-charcoal/30 rounded bg-cream-light text-charcoal`;
             cell.textContent = inv[r][c];
             inverseMatrixDisplay.appendChild(cell);
-          }
         }
       }
 
@@ -777,24 +835,41 @@
 
       // ── Event Handlers ────────────────────────────────────────────────────
       function setDimension(dim) {
+        dim = Math.max(2, Math.min(6, dim));
         dimension = dim;
         matrixDimBadge.textContent = `Dim: ${dim}×${dim}`;
-        if (dim === 2) {
-          btnDim2.className = 'px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
-          btnDim3.className = 'px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
-          keyMatrix = PRESETS_2X2.p1.map(r => [...r]);
+        if (customDimLabel) customDimLabel.textContent = `N=${dim}`;
+
+        // Update dimension pill styles
+        [2, 3, 4, 5].forEach(d => {
+          const btn = document.getElementById(`btn-dim-${d}`);
+          if (btn) {
+            if (d === dim) {
+              btn.className = 'px-3 sm:px-3.5 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
+            } else {
+              btn.className = 'px-3 sm:px-3.5 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
+            }
+          }
+        });
+
+        // Set preset if available, else generate
+        if (PRESETS[dim]) {
+          keyMatrix = PRESETS[dim].p1.map(r => [...r]);
         } else {
-          btnDim3.className = 'px-4 py-1.5 rounded-lg bg-charcoal text-white text-xs font-bold transition shadow-sm';
-          btnDim2.className = 'px-4 py-1.5 rounded-lg text-charcoal hover:bg-black/5 text-xs font-bold transition';
-          keyMatrix = PRESETS_3X3.p1.map(r => [...r]);
+          keyMatrix = generateInvertibleKey(dim);
         }
+
         renderMatrixInputs();
         processCipher();
         if (window.CyberSFX) CyberSFX.click();
       }
 
-      btnDim2.addEventListener('click', () => setDimension(2));
-      btnDim3.addEventListener('click', () => setDimension(3));
+      if (btnDim2) btnDim2.addEventListener('click', () => setDimension(2));
+      if (btnDim3) btnDim3.addEventListener('click', () => setDimension(3));
+      if (btnDim4) btnDim4.addEventListener('click', () => setDimension(4));
+      if (btnDim5) btnDim5.addEventListener('click', () => setDimension(5));
+      if (btnDimDec) btnDimDec.addEventListener('click', () => setDimension(dimension - 1));
+      if (btnDimInc) btnDimInc.addEventListener('click', () => setDimension(dimension + 1));
 
       btnGenInvertible.addEventListener('click', () => {
         keyMatrix = generateInvertibleKey(dimension);
@@ -808,14 +883,22 @@
       });
 
       btnPresetKey1.addEventListener('click', () => {
-        keyMatrix = (dimension === 2 ? PRESETS_2X2.p1 : PRESETS_3X3.p1).map(r => [...r]);
+        if (PRESETS[dimension]) {
+          keyMatrix = PRESETS[dimension].p1.map(r => [...r]);
+        } else {
+          keyMatrix = generateInvertibleKey(dimension);
+        }
         renderMatrixInputs();
         processCipher();
         if (window.CyberSFX) CyberSFX.click();
       });
 
       btnPresetKey2.addEventListener('click', () => {
-        keyMatrix = (dimension === 2 ? PRESETS_2X2.p2 : PRESETS_3X3.p2).map(r => [...r]);
+        if (PRESETS[dimension]) {
+          keyMatrix = PRESETS[dimension].p2.map(r => [...r]);
+        } else {
+          keyMatrix = generateInvertibleKey(dimension);
+        }
         renderMatrixInputs();
         processCipher();
         if (window.CyberSFX) CyberSFX.click();

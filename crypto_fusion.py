@@ -326,8 +326,8 @@ def validate_pipeline(pipeline: List[Dict[str, Any]]) -> Dict[str, Any]:
 
         elif stage_id == "hill":
             matrix = key.get("matrix")
-            if not matrix or not isinstance(matrix, list) or len(matrix) not in (2, 3):
-                errors.append(f"Stage {idx+1} (Hill): Matrix must be 2x2 or 3x3.")
+            if not matrix or not isinstance(matrix, list) or len(matrix) < 2 or any(len(r) != len(matrix) for r in matrix):
+                errors.append(f"Stage {idx+1} (Hill): Matrix must be a square matrix (at least 2x2).")
             else:
                 is_valid, inv, diag = crypto_hill.matrix_inverse_mod26(matrix)
                 if not is_valid:

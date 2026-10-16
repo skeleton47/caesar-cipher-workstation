@@ -151,6 +151,46 @@ class TestHillCipher(unittest.TestCase):
         self.assertEqual(pad_count, 1)
         self.assertEqual(blocks, ["CA", "TX"])
 
+    def test_4x4_invertibility_and_roundtrip(self):
+        # Invertible 4x4 matrix
+        key_4x4 = [[7, 4, 6, 5], [9, 4, 6, 2], [8, 3, 7, 9], [2, 9, 8, 6]]
+        is_valid, inv_mat, diag = matrix_inverse_mod26(key_4x4)
+        self.assertTrue(is_valid)
+        self.assertTrue(diag["identity_verified"])
+
+        plaintext = "TOPSECRETMSG"
+        enc = hill_transform(plaintext, key_4x4, decrypt=False)
+        self.assertTrue(enc["success"])
+        dec = hill_transform(enc["result"], key_4x4, decrypt=True)
+        self.assertTrue(dec["success"])
+        self.assertEqual(dec["result"], plaintext)
+
+    def test_5x5_invertibility_and_roundtrip(self):
+        # Invertible 5x5 matrix
+        key_5x5 = [[1, 2, 4, 3, 1], [2, 9, 8, 7, 8], [3, 5, 4, 3, 4], [6, 7, 1, 3, 1], [8, 3, 2, 8, 2]]
+        is_valid, inv_mat, diag = matrix_inverse_mod26(key_5x5)
+        self.assertTrue(is_valid)
+        self.assertTrue(diag["identity_verified"])
+
+        plaintext = "ATTACKATDAWN"  # 12 chars -> padded to 15 chars (3 blocks of 5)
+        enc = hill_transform(plaintext, key_5x5, decrypt=False, pad_char="X")
+        self.assertTrue(enc["success"])
+        self.assertEqual(len(enc["result"]), 15)
+
+        dec = hill_transform(enc["result"], key_5x5, decrypt=True)
+        self.assertTrue(dec["success"])
+        self.assertEqual(dec["result"], "ATTACKATDAWNXXX")
+
+    def test_arbitrary_nxn_generation(self):
+        # Test random generation for dimensions 2, 3, 4, 5
+        for dim in [2, 3, 4, 5]:
+            mat = generate_invertible_matrix(dim)
+            self.assertEqual(len(mat), dim)
+            self.assertEqual(len(mat[0]), dim)
+            is_valid, _, diag = matrix_inverse_mod26(mat)
+            self.assertTrue(is_valid)
+            self.assertTrue(diag["identity_verified"])
+
 
 if __name__ == "__main__":
     unittest.main()

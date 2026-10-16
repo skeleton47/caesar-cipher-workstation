@@ -32,6 +32,11 @@ def mod_inverse(a: int, m: int = 26) -> Optional[int]:
     return (x % m + m) % m
 
 
+def minor_submatrix(matrix: List[List[int]], r: int, c: int) -> List[List[int]]:
+    """Return the minor submatrix by removing row r and column c."""
+    return [row[:c] + row[c + 1:] for i, row in enumerate(matrix) if i != r]
+
+
 def determinant_2x2(matrix: List[List[int]]) -> int:
     """Compute determinant of a 2x2 matrix."""
     return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
@@ -47,20 +52,31 @@ def determinant_3x3(matrix: List[List[int]]) -> int:
 
 
 def determinant(matrix: List[List[int]]) -> int:
-    """Compute determinant for supported sizes (2 or 3)."""
+    """Compute exact integer determinant for any square N x N matrix."""
     n = len(matrix)
+    if n == 0:
+        return 1
+    if any(len(row) != n for row in matrix):
+        raise ValueError("Matrix must be square.")
+    if n == 1:
+        return matrix[0][0]
     if n == 2:
         return determinant_2x2(matrix)
-    elif n == 3:
+    if n == 3:
         return determinant_3x3(matrix)
-    else:
-        raise ValueError(f"Unsupported matrix dimension: {n}x{n}. Supported: 2x2, 3x3.")
+
+    # Recursive cofactor expansion along row 0 for general N x N
+    total = 0
+    for j in range(n):
+        sign = 1 if j % 2 == 0 else -1
+        sub = minor_submatrix(matrix, 0, j)
+        total += sign * matrix[0][j] * determinant(sub)
+    return total
 
 
 def adjugate_2x2(matrix: List[List[int]]) -> List[List[int]]:
     """Compute adjugate of 2x2 matrix modulo 26."""
     m = matrix
-    # [ [ d, -b ], [ -c, a ] ]
     return [
         [m[1][1] % 26, (-m[0][1]) % 26],
         [(-m[1][0]) % 26, m[0][0] % 26]
@@ -69,26 +85,32 @@ def adjugate_2x2(matrix: List[List[int]]) -> List[List[int]]:
 
 def adjugate_3x3(matrix: List[List[int]]) -> List[List[int]]:
     """Compute classical adjoint (transpose of cofactor matrix) for 3x3 matrix modulo 26."""
-    m = matrix
-    adj = [[0] * 3 for _ in range(3)]
-    for r in range(3):
-        for c in range(3):
-            # Minor submatrix 2x2
-            minor = []
-            for i in range(3):
-                if i == r:
-                    continue
-                row = []
-                for j in range(3):
-                    if j == c:
-                        continue
-                    row.append(m[i][j])
-                minor.append(row)
-            det_minor = determinant_2x2(minor)
-            cofactor = ((-1) ** (r + c)) * det_minor
-            # Adjugate is transpose of cofactors: adj[c][r] = cofactor
+    return adjugate_nxn(matrix)
+
+
+def adjugate_nxn(matrix: List[List[int]]) -> List[List[int]]:
+    """Compute classical adjoint (transpose of cofactor matrix) for general N x N matrix modulo 26."""
+    n = len(matrix)
+    if n == 2:
+        return adjugate_2x2(matrix)
+    adj = [[0] * n for _ in range(n)]
+    for r in range(n):
+        for c in range(n):
+            minor = minor_submatrix(matrix, r, c)
+            det_minor = determinant(minor)
+            sign = 1 if (r + c) % 2 == 0 else -1
+            cofactor = sign * det_minor
+            # Adjugate is the transpose of the cofactor matrix: adj[c][r] = cofactor
             adj[c][r] = cofactor % 26
     return adj
+
+
+def adjugate(matrix: List[List[int]]) -> List[List[int]]:
+    """Universal adjugate modulo 26 for any N x N matrix."""
+    n = len(matrix)
+    if n == 2:
+        return adjugate_2x2(matrix)
+    return adjugate_nxn(matrix)
 
 
 def matrix_inverse_mod26(matrix: List[List[int]]) -> Tuple[bool, Optional[List[List[int]]], Dict[str, Any]]:
@@ -97,6 +119,9 @@ def matrix_inverse_mod26(matrix: List[List[int]]) -> Tuple[bool, Optional[List[L
     Returns: (is_valid, inverse_matrix, diagnostics_dict)
     """
     n = len(matrix)
+    if n < 1 or any(len(row) != n for row in matrix):
+        return False, None, {"error_reason": "Matrix must be a non-empty square matrix."}
+
     det_raw = determinant(matrix)
     det_mod26 = det_raw % 26
     gcd_val = math.gcd(det_mod26, 26)
@@ -122,14 +147,8 @@ def matrix_inverse_mod26(matrix: List[List[int]]) -> Tuple[bool, Optional[List[L
         diag["error_reason"] = " ".join(reasons)
         return False, None, diag
 
-    # Compute adjugate
-    if n == 2:
-        adj = adjugate_2x2(matrix)
-    elif n == 3:
-        adj = adjugate_3x3(matrix)
-    else:
-        return False, None, {"error_reason": "Unsupported matrix dimension."}
-
+    # Compute universal adjugate
+    adj = adjugate(matrix)
     diag["adjugate"] = adj
 
     # Inverse = (det_inv * adj) mod 26
