@@ -60,8 +60,26 @@
     return 'CAESAR CIPHER STUDIO';
   }
 
+  function resolveTargetUrl(href) {
+    if (!href) return 'index.html';
+    if (window.location.protocol === 'file:') {
+      const clean = href.toLowerCase();
+      if (clean.includes('vigenere')) return 'vigenere.html';
+      if (clean.includes('playfair')) return 'playfair.html';
+      if (clean.includes('hill')) return 'hill.html';
+      if (clean.includes('fusion')) return 'fusion.html';
+      if (clean.includes('frequency')) return 'frequency.html';
+      if (clean.includes('about')) return 'about.html';
+      return 'index.html';
+    }
+    return href;
+  }
+
   function triggerStudioTransition(targetUrl) {
-    if (!curtainEl) return;
+    if (!curtainEl) {
+      window.location.href = resolveTargetUrl(targetUrl);
+      return;
+    }
 
     const studioName = getStudioNameFromUrl(targetUrl);
     if (curtainTitleEl) curtainTitleEl.textContent = `LOADING ${studioName}...`;
@@ -90,11 +108,21 @@
     }
 
     setTimeout(() => {
-      window.location.href = targetUrl;
+      window.location.href = resolveTargetUrl(targetUrl);
     }, 220);
   }
 
   function setupNavigationTransitions() {
+    // If running under file: protocol, normalize all nav tabs immediately
+    if (window.location.protocol === 'file:') {
+      document.querySelectorAll('a[href]').forEach(a => {
+        const h = a.getAttribute('href');
+        if (h && (h.startsWith('/') || h === '' || !h.includes('.html'))) {
+          a.setAttribute('href', resolveTargetUrl(h));
+        }
+      });
+    }
+
     // Intercept clicks on navbar links and studio tabs
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a');

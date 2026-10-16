@@ -382,6 +382,31 @@ document.addEventListener('DOMContentLoaded', () => {
         return str.split('').map(c => shiftChar(c, shift)).join('');
     }
 
+    function crackCaesarLocal(text) {
+        const clean = text.toUpperCase().replace(/[^A-Z]/g, '');
+        if (!clean) return { shift: 3, text: text, results: [] };
+        
+        const counts = {};
+        for (let i = 0; i < clean.length; i++) counts[clean[i]] = (counts[clean[i]] || 0) + 1;
+        
+        const results = [];
+        for (let s = 1; s <= 25; s++) {
+            let chiSq = 0;
+            for (let i = 0; i < 26; i++) {
+                const cChar = String.fromCharCode(65 + i);
+                const pChar = String.fromCharCode(65 + ((i - s + 26) % 26));
+                const obs = counts[cChar] || 0;
+                const exp = (ENGLISH_FREQ[pChar] / 100) * clean.length;
+                chiSq += ((obs - exp) ** 2) / Math.max(exp, 0.05);
+            }
+            const dec = caesarLocal(text, -s);
+            const score = Math.max(0, +(1000 / (1 + chiSq)).toFixed(2));
+            results.push({ shift: s, text: dec, score: score, chiSq });
+        }
+        results.sort((a, b) => b.score - a.score);
+        return { shift: results[0].shift, text: results[0].text, results };
+    }
+
     // ─── API Processing Engine (Flask Endpoints) ─────────────────────────────
     async function triggerProcessing(reveal = true) {
         const text = msgInput ? msgInput.value.trim() : '';
@@ -456,16 +481,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (window.CyberSFX) CyberSFX.success();
             }
         } catch (err) {
-            // Local mathematical fallback
+            // Local mathematical fallback (100% offline capability)
             if (currentMode === 'encrypt') {
                 if (resultOutput) resultOutput.textContent = caesarLocal(text, shift);
                 if (streamStatusBadge) streamStatusBadge.textContent = 'ENCRYPTED';
             } else if (currentMode === 'decrypt') {
                 if (resultOutput) resultOutput.textContent = caesarLocal(text, -shift);
                 if (streamStatusBadge) streamStatusBadge.textContent = 'DECRYPTED';
-            } else {
-                if (resultOutput) resultOutput.textContent = caesarLocal(text, -shift);
-                if (streamStatusBadge) streamStatusBadge.textContent = 'LOCAL_FALLBACK';
+            } else if (currentMode === 'crack') {
+                const localCrack = crackCaesarLocal(text);
+                if (resultOutput) {
+                    resultOutput.textContent = `[SHIFT ${localCrack.shift}] ${localCrack.text}`;
+                }
+                if (streamStatusBadge) {
+                    streamStatusBadge.textContent = `KEY K=${localCrack.shift} CRACKED`;
+                }
+                setShift(localCrack.shift);
+                if (crackCandidatesList && localCrack.results.length > 0) {
+                    crackCandidatesList.innerHTML = '';
+                    localCrack.results.slice(0, 5).forEach((cand, idx) => {
+                        const item = document.createElement('div');
+                        item.className = `crack-candidate-item ${idx === 0 ? 'top-match' : ''}`;
+                        item.innerHTML = `
+                            <div class="cand-meta">
+                                <span class="cand-key">[ROT-${String(cand.shift).padStart(2, '0')}]</span>
+                                <span class="cand-score">CONF: ${cand.score}</span>
+                            </div>
+                            <div class="cand-text">${cand.text.substring(0, 48)}${cand.text.length > 48 ? '...' : ''}</div>
+                        `;
+                        item.addEventListener('click', () => {
+                            setShift(cand.shift);
+                            if (resultOutput) resultOutput.textContent = `[SHIFT ${cand.shift}] ${cand.text}`;
+                            if (window.CyberSFX) CyberSFX.click();
+                        });
+                        crackCandidatesList.appendChild(item);
+                    });
+                }
             }
 
             if (reveal) {

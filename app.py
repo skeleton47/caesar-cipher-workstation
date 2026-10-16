@@ -314,8 +314,42 @@ def api_fusion_example_keys():
     })
 
 
+def find_available_port(preferred_port: int = 5000, max_tries: int = 50) -> int:
+    """Find a guaranteed available port to avoid [WinError 10048] address in use crashes."""
+    import socket
+    for p in range(preferred_port, preferred_port + max_tries):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            try:
+                s.bind(('0.0.0.0', p))
+                return p
+            except OSError:
+                continue
+    return preferred_port
+
+
 # ─── Run ────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
-    print("\n  [*] Cipher Studio Suite (Warm Bento Edition) running!")
-    print("  [>] Open http://localhost:5000 in your browser\n")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    import os
+    import webbrowser
+    import threading
+
+    port = find_available_port(5000)
+    print("\n" + "=" * 65)
+    print("  [*] CIPHER STUDIO SUITE // WARM BENTO BRUTALISM")
+    print(f"  [>] Local Server Active:   http://localhost:{port}")
+    print(f"  [>] Network Access:        http://127.0.0.1:{port}")
+    print("=" * 65 + "\n")
+
+    # Automatically launch browser on initial execution (ignoring Flask reloader child)
+    if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
+        def _launch_browser():
+            import time
+            time.sleep(1.2)
+            try:
+                webbrowser.open(f"http://localhost:{port}")
+            except Exception:
+                pass
+        threading.Thread(target=_launch_browser, daemon=True).start()
+
+    app.run(debug=True, host='0.0.0.0', port=port)
+
