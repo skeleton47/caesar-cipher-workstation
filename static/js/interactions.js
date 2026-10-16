@@ -51,6 +51,7 @@
 
   function getStudioNameFromUrl(href) {
     const clean = href.toLowerCase();
+    if (clean.includes('fusion')) return 'CIPHER FUSION CASCADE ENGINE';
     if (clean.includes('playfair')) return 'PLAYFAIR CIPHER STUDIO';
     if (clean.includes('hill')) return 'HILL CIPHER LAB';
     if (clean.includes('vigenere')) return 'VIGENÈRE CIPHER STUDIO';
@@ -111,6 +112,7 @@
         href.includes('vigenere') ||
         href.includes('playfair') ||
         href.includes('hill') ||
+        href.includes('fusion') ||
         href.includes('frequency') ||
         href.includes('about');
 
