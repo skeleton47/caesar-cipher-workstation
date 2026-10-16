@@ -19,23 +19,37 @@
           theme: {
             extend: {
               colors: {
-                "primary": "#1A1A1A",
+                charcoal: '#181818',
+                paper: '#FCF9F4',
+                panel: '#FFFFFF',
+                accent: '#D8EE48',
+                'accent-hover': '#CBE037',
+                cream: '#F4F1EA',
+                'cream-light': '#F7F5EE',
+                'subtle-border': '#E4E0D6',
+                // Backward-compatibility aliases
+                "primary": "#181818",
                 "on-primary": "#FFFFFF",
                 "background": "#FCF9F4",
                 "surface": "#FFFFFF",
-                "surface-container": "#F0EDE4",
-                "surface-container-low": "#F6F3EE",
+                "surface-container": "#F4F1EA",
+                "surface-container-low": "#F7F5EE",
                 "surface-container-lowest": "#FFFFFF",
-                "surface-container-high": "#EBE8E0",
-                "on-surface": "#1A1A1A",
+                "surface-container-high": "#E4E0D6",
+                "on-surface": "#181818",
                 "on-surface-variant": "#57564F",
-                "secondary-container": "#D9F99D",
-                "on-secondary-fixed": "#191E00",
-                "outline": "#1A1A1A"
+                "secondary-container": "#D8EE48",
+                "on-secondary-fixed": "#181818",
+                "outline": "#181818"
               },
               fontFamily: {
-                sans: ["Plus Jakarta Sans", "sans-serif"],
-                mono: ["JetBrains Mono", "monospace"]
+                sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+                mono: ['"JetBrains Mono"', 'monospace']
+              },
+              boxShadow: {
+                'brutal-sm': '2px 2px 0px #181818',
+                'brutal': '3px 3px 0px #181818',
+                'brutal-lg': '4px 4px 0px #181818'
               }
             }
           }
@@ -44,55 +58,55 @@
     <style>
         body {
           background-color: #F6F3EE;
-          color: #1A1A1A;
+          color: #181818;
           font-family: 'Plus Jakarta Sans', sans-serif;
           -webkit-font-smoothing: antialiased;
         }
         .neo-border {
-          border: 1.5px solid #1A1A1A;
+          border: 2px solid #181818;
         }
         .neo-shadow {
-          box-shadow: 2px 2px 0px #1A1A1A;
+          box-shadow: 3px 3px 0px #181818;
         }
         .neo-shadow-sm {
-          box-shadow: 1px 1px 0px #1A1A1A;
+          box-shadow: 2px 2px 0px #181818;
         }
         .neo-shadow-md {
-          box-shadow: 3px 3px 0px #1A1A1A;
+          box-shadow: 4px 4px 0px #181818;
         }
     </style>
 </head>
-<body class="min-h-screen py-6 sm:py-10 px-4 sm:px-6 md:px-8 flex justify-center items-center selection:bg-secondary-container selection:text-on-secondary-fixed">
+<body class="min-h-screen py-6 sm:py-10 px-4 sm:px-6 md:px-8 flex justify-center items-center selection:bg-accent selection:text-charcoal">
     <!-- Main Bento Container Shell -->
-    <div class="w-full max-w-5xl bg-background border-2 border-primary rounded-[2rem] p-6 sm:p-9 shadow-neo-md flex flex-col gap-8">
+    <div class="w-full max-w-5xl bg-paper border-2 border-charcoal rounded-[2rem] p-6 sm:p-9 shadow-brutal-lg flex flex-col gap-8">
         
         <!-- 1. HEADER / NAVIGATION -->
-        <header class="relative flex items-center justify-between pb-6 border-b border-primary/15">
+        <header class="relative flex items-center justify-between pb-6 border-b border-charcoal/15">
             <!-- Left brand identifier -->
             <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-secondary-container border border-primary"></span>
-                <span class="font-mono text-xs font-extrabold tracking-wider text-primary uppercase hidden sm:inline">CIPHER STUDIO</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-accent border border-charcoal"></span>
+                <span class="font-mono text-xs font-extrabold tracking-wider text-charcoal uppercase hidden sm:inline">CIPHER STUDIO</span>
             </div>
             
-            <!-- Centered Nav Capsule -->
-            <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-surface-container-low p-1 rounded-full neo-border neo-shadow-sm gap-0.5 sm:gap-1 flex-nowrap whitespace-nowrap overflow-x-auto max-w-full">
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer shrink-0 whitespace-nowrap" href="index.html">Caesar</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold bg-primary text-white neo-shadow-sm cursor-default active-studio shrink-0 whitespace-nowrap" href="vigenere.html">Vigenère</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer shrink-0 whitespace-nowrap" href="playfair.html">Playfair</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer shrink-0 whitespace-nowrap" href="hill.html">Hill</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer shrink-0 whitespace-nowrap" href="fusion.html">Fusion</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer shrink-0 whitespace-nowrap" href="frequency.html">Frequency</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors cursor-pointer shrink-0 whitespace-nowrap" href="about.html">Specs</a>
+            <!-- Centered Capsule Navigation Bar -->
+            <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-charcoal shadow-brutal-sm gap-0.5 sm:gap-1 flex-nowrap whitespace-nowrap overflow-x-auto max-w-full">
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="index.html">Caesar</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-charcoal text-white text-xs font-bold tracking-wide transition shadow-sm cursor-default active-studio shrink-0 whitespace-nowrap" href="vigenere.html">Vigenère</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="playfair.html">Playfair</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="hill.html">Hill</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="fusion.html">Fusion</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="frequency.html">Frequency</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="about.html">Specs</a>
             </nav>
             
             <!-- Right Header Actions (SFX & Reset) -->
             <div class="flex items-center gap-2 ml-auto sm:ml-0">
-                <button id="sfx-toggle-btn" class="px-3 py-1.5 rounded-full bg-surface hover:bg-surface-container neo-border font-mono text-xs font-bold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 shrink-0 whitespace-nowrap" title="Toggle audio feedback">
+                <button id="sfx-toggle-btn" class="px-3 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Toggle audio feedback">
                     <span id="sfx-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
                     <span id="sfx-label">SFX</span>
                 </button>
-                <button class="px-4 py-1.5 rounded-full bg-surface hover:bg-surface-container neo-border font-mono text-xs font-bold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 shrink-0 whitespace-nowrap" id="nav-reset-btn" title="Reset workspace">
-                    <span class="material-symbols-outlined text-[15px]">refresh</span>
+                <button class="px-4 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" id="nav-reset-btn" title="Reset workspace">
+                    <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                     <span>Reset</span>
                 </button>
             </div>
@@ -100,7 +114,11 @@
 
         <!-- 2. TITLE AREA -->
         <div class="flex flex-col gap-1 pb-1">
-            <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-primary">Vigenère Cipher</h1>
+            <div class="flex items-center gap-2">
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Vigenère Cipher</h1>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-accent/40 text-charcoal border border-charcoal/30">Polyalphabetic</span>
+            </div>
+            <p class="text-xs sm:text-sm text-charcoal/70">Repeating key stream substitution with Tabula Recta visualization</p>
         </div>
 
         <!-- 3. WORKSPACE GRID: 2 COLUMNS -->
@@ -112,7 +130,7 @@
                 <div class="bg-surface rounded-2xl neo-border p-5 sm:p-6 neo-shadow flex flex-col gap-4">
                     <div class="flex items-center justify-between pb-3 border-b-[1.5px] border-primary/10">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary text-[20px]">key</span>
+                            <svg class="w-4 h-4 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
                             <h2 class="text-base font-bold text-primary">Secret Keyword</h2>
                         </div>
                         <span class="px-2.5 py-0.5 rounded-md bg-surface-container-low neo-border font-mono text-xs font-semibold text-primary whitespace-nowrap" id="key-len-badge">5 chars</span>
@@ -122,7 +140,7 @@
                         <div class="relative">
                             <input class="w-full uppercase font-mono text-base font-bold tracking-widest px-3.5 py-2.5 pr-10 rounded-xl bg-surface-container-low neo-border focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-primary" id="cipher-key" maxlength="20" placeholder="ENTER KEYWORD" type="text" value="LEMON"/>
                             <button class="absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary p-1.5 flex items-center justify-center transition-colors" id="clear-key-btn" title="Clear keyword">
-                                <span class="material-symbols-outlined text-[17px]">close</span>
+                                <svg class="w-3.5 h-3.5 text-charcoal/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
                         </div>
                     </div>
@@ -153,7 +171,7 @@
                 <div class="bg-surface rounded-2xl neo-border p-5 sm:p-6 neo-shadow flex flex-col gap-3.5">
                     <div class="flex items-center justify-between pb-3 border-b-[1.5px] border-primary/10">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary text-[20px]">grid_4x4</span>
+                            <svg class="w-4 h-4 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M6 4v16M12 4v16M18 4v16"></path></svg>
                             <h3 class="text-base font-bold text-primary">Tabula Recta Quick-Lookup</h3>
                         </div>
                         <span class="font-mono text-[11px] px-2.5 py-0.5 rounded-md bg-surface-container-low neo-border font-semibold">C = (P + K) % 26</span>
@@ -190,7 +208,7 @@
                     <!-- Card Header with Toggle -->
                     <div class="flex items-center justify-between pb-3.5 border-b-[1.5px] border-primary">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary text-[20px]">terminal</span>
+                            <svg class="w-4 h-4 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             <h2 class="text-base font-bold text-primary">Cryptor Engine</h2>
                         </div>
                         <div class="inline-flex p-1 rounded-full bg-surface-container-low neo-border neo-shadow-sm">
@@ -212,7 +230,7 @@
                     <div class="flex flex-col gap-2 p-3.5 rounded-xl bg-surface-container-low neo-border">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary text-[17px]">view_timeline</span>
+                                <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
                                 <span class="font-mono text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant">Keystream Alignment</span>
                             </div>
                             <span class="font-mono text-[10px] text-on-surface-variant font-medium">Live Character Map</span>
@@ -224,7 +242,7 @@
                     <!-- Transition Badge -->
                     <div class="flex items-center justify-center -my-1">
                         <div class="px-4 py-1.5 rounded-full bg-surface-container-low neo-border font-mono text-[11px] text-on-surface flex items-center gap-2 neo-shadow-sm" id="transform-badge">
-                            <span class="material-symbols-outlined text-[16px] text-primary" id="transform-icon">arrow_downward</span>
+                            <span id="transform-icon" class="inline-flex items-center"><svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg></span>
                             <span class="font-bold tracking-tight" id="transform-text">Encryption Shift (+K mod 26)</span>
                         </div>
                     </div>
@@ -235,7 +253,7 @@
                             <div class="flex items-center gap-2">
                                 <span class="font-mono text-xs text-emerald-700 font-bold hidden" id="copy-status">Copied!</span>
                                 <button class="px-3.5 py-1.5 rounded-lg bg-surface hover:bg-secondary-container neo-border font-mono text-xs font-semibold text-primary transition-all flex items-center gap-1.5 active:translate-x-0.5 active:translate-y-0.5 neo-shadow-sm whitespace-nowrap" id="copy-btn">
-                                    <span class="material-symbols-outlined text-[15px]">content_copy</span>
+                                    <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                     <span>Copy</span>
                                 </button>
                             </div>
@@ -258,7 +276,7 @@
                             <button class="px-4 py-2 rounded-xl bg-surface hover:bg-surface-container-low neo-border font-mono text-xs font-bold text-primary transition-all neo-shadow-sm active:translate-x-0.5 active:translate-y-0.5 whitespace-nowrap" id="sample-btn">Sample</button>
                             <button class="px-5 py-2 rounded-xl bg-primary hover:bg-neutral-800 text-white neo-border font-mono text-xs font-bold neo-shadow-sm transition-all active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 whitespace-nowrap" id="execute-btn">
                                 <span>Execute</span>
-                                <span class="material-symbols-outlined text-[15px]">bolt</span>
+                                <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
                             </button>
                         </div>
                     </div>
@@ -268,7 +286,7 @@
                 <div class="bg-surface rounded-2xl neo-border p-5 sm:p-6 neo-shadow flex flex-col gap-3.5">
                     <div class="flex items-center justify-between pb-3 border-b-[1.5px] border-primary/10">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary text-[20px]">troubleshoot</span>
+                            <svg class="w-4 h-4 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                             <h3 class="text-base font-bold text-primary">Key Stream Analysis</h3>
                         </div>
                         <span class="px-3 py-1 rounded-full bg-secondary-container neo-border font-mono text-xs font-bold text-on-secondary-fixed whitespace-nowrap">Factor Detection</span>
@@ -294,6 +312,17 @@
             </section>
         </main>
 
+        <!-- 5. FOOTER STATUS BAR -->
+        <footer class="pt-4 border-t border-charcoal/15 flex flex-col sm:flex-row items-center justify-between text-xs text-charcoal/60 gap-2">
+            <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent border border-charcoal"></span>
+                <span>Polyalphabetic Substitution: Multiple Caesar shifts combined via repeating key stream.</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>Tabula Recta Active</span>
+            </div>
+        </footer>
     </div>
 
     <!-- Web Audio Synthesizer (Bubble Pop Typing SFX) -->
@@ -531,12 +560,15 @@
           keyInput.focus();
         });
 
+        const svgDown = '<svg class="w-3.5 h-3.5 text-charcoal inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>';
+        const svgUp = '<svg class="w-3.5 h-3.5 text-charcoal inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>';
+
         btnModeEncrypt.addEventListener('click', () => {
           mode = 'encrypt';
           btnModeEncrypt.className = 'px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all bg-primary text-white neo-shadow-sm';
           btnModeDecrypt.className = 'px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all text-on-surface-variant hover:text-primary';
           transformText.textContent = 'Encryption Shift (+K mod 26)';
-          transformIcon.textContent = 'arrow_downward';
+          transformIcon.innerHTML = svgDown;
           inputLabel.textContent = 'Plaintext Message (Input)';
           outputLabel.textContent = 'Ciphertext Result (Output)';
           if (window.CyberSFX) CyberSFX.click();
@@ -548,7 +580,7 @@
           btnModeDecrypt.className = 'px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all bg-primary text-white neo-shadow-sm';
           btnModeEncrypt.className = 'px-4 py-1.5 rounded-full font-mono text-xs font-bold transition-all text-on-surface-variant hover:text-primary';
           transformText.textContent = 'Decryption Shift (-K mod 26)';
-          transformIcon.textContent = 'arrow_upward';
+          transformIcon.innerHTML = svgUp;
           inputLabel.textContent = 'Ciphertext Message (Input)';
           outputLabel.textContent = 'Plaintext Result (Output)';
           if (window.CyberSFX) CyberSFX.click();

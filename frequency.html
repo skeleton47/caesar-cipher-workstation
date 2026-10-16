@@ -63,35 +63,35 @@
 </head>
 <body class="min-h-screen py-6 sm:py-10 px-4 sm:px-6 md:px-8 flex justify-center items-center selection:bg-accent selection:text-charcoal">
     <!-- Main Bento Container Shell -->
-    <div class="w-full max-w-5xl bg-paper border-2 border-black rounded-[2rem] p-6 sm:p-9 shadow-brutal-lg flex flex-col gap-7">
+    <div class="w-full max-w-5xl bg-paper border-2 border-charcoal rounded-[2rem] p-6 sm:p-9 shadow-brutal-lg flex flex-col gap-7">
         
         <!-- 1. HEADER / NAVIGATION -->
-        <header class="relative flex items-center justify-between pb-6 border-b border-black/15">
+        <header class="relative flex items-center justify-between pb-6 border-b border-charcoal/15">
             <!-- Left brand identifier -->
             <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-accent border border-black"></span>
-                <span class="font-mono text-xs font-extrabold tracking-wider text-black uppercase hidden sm:inline">CIPHER STUDIO</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-accent border border-charcoal"></span>
+                <span class="font-mono text-xs font-extrabold tracking-wider text-charcoal uppercase hidden sm:inline">CIPHER STUDIO</span>
             </div>
             
             <!-- Centered Capsule Navigation Bar -->
-            <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-black shadow-brutal-sm gap-0.5 sm:gap-1 flex-nowrap whitespace-nowrap overflow-x-auto max-w-full">
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-black hover:bg-black/5 text-xs font-semibold tracking-wide transition cursor-pointer shrink-0 whitespace-nowrap" href="index.html">Caesar</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-black hover:bg-black/5 text-xs font-semibold tracking-wide transition cursor-pointer shrink-0 whitespace-nowrap" href="vigenere.html">Vigenère</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-black hover:bg-black/5 text-xs font-semibold tracking-wide transition cursor-pointer shrink-0 whitespace-nowrap" href="playfair.html">Playfair</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-black hover:bg-black/5 text-xs font-semibold tracking-wide transition cursor-pointer shrink-0 whitespace-nowrap" href="hill.html">Hill</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-black hover:bg-black/5 text-xs font-semibold tracking-wide transition cursor-pointer shrink-0 whitespace-nowrap" href="fusion.html">Fusion</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-black text-white text-xs font-semibold tracking-wide transition shadow-sm cursor-default active-studio shrink-0 whitespace-nowrap" href="frequency.html">Frequency</a>
-                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-black hover:bg-black/5 text-xs font-semibold tracking-wide transition cursor-pointer shrink-0 whitespace-nowrap" href="about.html">Specs</a>
+            <nav class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center bg-cream-light p-1 rounded-full border border-charcoal shadow-brutal-sm gap-0.5 sm:gap-1 flex-nowrap whitespace-nowrap overflow-x-auto max-w-full">
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="index.html">Caesar</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="vigenere.html">Vigenère</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="playfair.html">Playfair</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="hill.html">Hill</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="fusion.html">Fusion</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-charcoal text-white text-xs font-bold tracking-wide transition shadow-sm cursor-default active-studio shrink-0 whitespace-nowrap" href="frequency.html">Frequency</a>
+                <a class="nav-tab px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-charcoal hover:bg-black/5 text-xs font-bold tracking-wide transition shrink-0 whitespace-nowrap" href="about.html">Specs</a>
             </nav>
             
             <!-- Right Header Actions (SFX & Reset) -->
             <div class="flex items-center gap-2 ml-auto sm:ml-0">
-                <button id="sfx-toggle-btn" class="px-3 py-1.5 rounded-full border border-black bg-white hover:bg-cream text-xs font-mono font-bold text-black transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Toggle audio feedback">
+                <button id="sfx-toggle-btn" class="px-3 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-mono font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" title="Toggle audio feedback">
                     <span id="sfx-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
                     <span id="sfx-label">SFX</span>
                 </button>
-                <button class="px-4 py-1.5 rounded-full border border-black bg-white hover:bg-cream text-xs font-bold text-black transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" id="reset-all-btn" title="Reset workspace">
-                    <svg class="w-3.5 h-3.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                <button class="px-4 py-1.5 rounded-full border border-charcoal bg-panel hover:bg-cream text-xs font-bold text-charcoal transition active:scale-95 shadow-brutal-sm flex items-center gap-1.5" id="reset-all-btn" title="Reset workspace">
+                    <svg class="w-3.5 h-3.5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                     <span>Reset</span>
                 </button>
             </div>
@@ -99,7 +99,8 @@
 
         <!-- 2. TITLE AREA -->
         <div class="flex flex-col gap-1 pb-1">
-            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-black">Frequency Analysis</h1>
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-charcoal">Frequency Analysis</h1>
+            <p class="text-xs sm:text-sm text-charcoal/70">Letter distribution cryptanalysis against standard English ETAOIN SHRDLU baseline</p>
         </div>
 
         <!-- 3. MAIN WORKSPACE / BENTO GRID -->
@@ -292,6 +293,17 @@
             </div>
         </main>
 
+        <!-- 5. FOOTER STATUS BAR -->
+        <footer class="pt-4 border-t border-charcoal/15 flex flex-col sm:flex-row items-center justify-between text-xs text-charcoal/60 gap-2">
+            <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent border border-charcoal"></span>
+                <span>Cryptanalysis Metric: Monogram frequency distribution compared against Oxford English corpus.</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>26 Monograms Analyzed</span>
+            </div>
+        </footer>
     </div>
 
     <!-- Web Audio Synthesizer (Bubble Pop Typing SFX) -->

@@ -297,35 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Smooth page curtain fade-in on load
-    if (curtain) {
-        curtain.classList.add('opening');
-        setTimeout(() => {
-            curtain.classList.remove('opening');
-            curtain.classList.add('idle');
-        }, 280);
-    }
 
-    // Intercept navigation links for smooth cyber transition
-    document.querySelectorAll('.nav-item, a[href^="/"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const targetUrl = link.getAttribute('href');
-            if (!targetUrl || targetUrl.startsWith('#') || targetUrl.startsWith('javascript:')) return;
-            if (link.getAttribute('target') === '_blank') return;
-
-            e.preventDefault();
-            CyberSFX.transition();
-
-            if (curtain) {
-                curtain.classList.remove('idle');
-                curtain.classList.add('closing');
-            }
-
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 220);
-        });
-    });
 
     // Bubble pop sound on keyboard input
     document.addEventListener('keydown', (e) => {

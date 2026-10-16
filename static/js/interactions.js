@@ -117,6 +117,12 @@
         href.includes('about');
 
       if (isInternalStudio) {
+        // If clicking currently active studio tab, do not trigger transition reload
+        if (link.classList.contains('active-studio') || link.classList.contains('active') || link.getAttribute('aria-current') === 'page') {
+          e.preventDefault();
+          return;
+        }
+
         // Prevent default harsh reload
         e.preventDefault();
         triggerStudioTransition(href);
