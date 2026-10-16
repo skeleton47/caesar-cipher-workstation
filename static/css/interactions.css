@@ -303,17 +303,32 @@ nav .nav-tab:hover:not(.active-studio) {
   border-color: #181818;
 }
 
-/* Hide number input spinners in Hill matrix */
-input[type="number"].matrix-spin-none::-webkit-inner-spin-button,
-input[type="number"].matrix-spin-none::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type="number"].matrix-spin-none {
-  -moz-appearance: textfield;
+/* Universal Matrix input cell resets (prevents Tailwind forms padding from clipping numbers) */
+input[type="number"].matrix-spin-none,
+input[type="number"].fusion-matrix-cell,
+.matrix-spin-none,
+.fusion-matrix-cell {
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: center !important;
+  line-height: normal !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: textfield !important;
+  appearance: none !important;
   min-width: 0 !important;
   box-sizing: border-box !important;
+  color: #181818 !important;
 }
+
+input[type="number"].matrix-spin-none::-webkit-inner-spin-button,
+input[type="number"].matrix-spin-none::-webkit-outer-spin-button,
+input[type="number"].fusion-matrix-cell::-webkit-inner-spin-button,
+input[type="number"].fusion-matrix-cell::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  display: none !important;
+  margin: 0 !important;
+}
+
 
 .hill-matrix-grid {
   display: inline-grid;

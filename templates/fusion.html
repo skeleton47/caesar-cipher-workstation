@@ -436,15 +436,16 @@
               const dim = stage.key.dimension || 2;
               const inv = CipherFusion.computeMatrixInverse(stage.key.matrix);
               const invBadge = inv.isValid 
-                ? `<span class="text-[9px] text-emerald-800 bg-emerald-100 border border-emerald-300 px-1.5 py-0.2 rounded font-mono font-bold">det=${inv.diag.modDet} (Invertible)</span>`
-                : `<span class="text-[9px] text-red-800 bg-red-100 border border-red-300 px-1.5 py-0.2 rounded font-mono font-bold" title="${inv.diag.errorReason}">Invalid det=${inv.diag.modDet}</span>`;
+                ? `<span class="text-[9px] text-emerald-800 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded font-mono font-bold">det=${inv.diag.modDet} (Invertible)</span>`
+                : `<span class="text-[9px] text-red-800 bg-red-100 border border-red-300 px-1.5 py-0.5 rounded font-mono font-bold" title="${inv.diag.errorReason}">Invalid det=${inv.diag.modDet}</span>`;
 
               let matrixInputs = '';
-              const inputSizeClass = dim >= 4 ? 'w-6 h-6 text-[10px]' : 'w-8 h-6 text-xs';
+              const inputSizeClass = dim >= 4 ? 'w-7 h-7 sm:w-8 sm:h-8 text-[11px]' : dim === 3 ? 'w-8 h-8 sm:w-9 sm:h-8 text-xs' : 'w-9 h-8 sm:w-10 sm:h-8 text-xs';
               for (let r = 0; r < dim; r++) {
                 matrixInputs += '<div class="flex items-center gap-1">';
                 for (let c = 0; c < dim; c++) {
-                  matrixInputs += `<input type="number" min="0" max="25" value="${stage.key.matrix[r][c]}" class="${inputSizeClass} text-center rounded border border-charcoal/25 bg-white font-mono font-bold focus:border-charcoal focus:outline-none" data-stage="${idx}" data-matrix-r="${r}" data-matrix-c="${c}">`;
+                  const cellVal = (stage.key.matrix && stage.key.matrix[r] && stage.key.matrix[r][c] !== undefined) ? stage.key.matrix[r][c] : 0;
+                  matrixInputs += `<input type="number" min="0" max="25" value="${cellVal}" style="padding:0 !important; text-align:center !important; line-height:normal !important; -webkit-appearance:none !important; -moz-appearance:textfield !important;" class="${inputSizeClass} p-0 m-0 text-center rounded border border-charcoal/30 bg-white font-mono font-bold text-charcoal focus:border-charcoal focus:bg-accent/20 focus:outline-none fusion-matrix-cell matrix-spin-none" data-stage="${idx}" data-matrix-r="${r}" data-matrix-c="${c}">`;
                 }
                 matrixInputs += '</div>';
               }
@@ -462,8 +463,8 @@
                     <button class="text-[10px] font-mono font-bold text-charcoal/70 hover:text-charcoal underline" data-stage="${idx}" data-action="rand-hill">Randomize</button>
                   </div>
                   <div class="flex items-center gap-2 flex-wrap">
-                    <div class="flex flex-col gap-0.5">${matrixInputs}</div>
-                    <div class="flex flex-col gap-0.5">${invBadge}</div>
+                    <div class="flex flex-col gap-1">${matrixInputs}</div>
+                    <div class="flex flex-col gap-0.5" id="hill-inv-badge-container-${idx}">${invBadge}</div>
                   </div>
                 </div>
               `;
@@ -565,14 +566,35 @@
           } else if (el.dataset.matrixR !== undefined) {
             const r = parseInt(el.dataset.matrixR, 10);
             const c = parseInt(el.dataset.matrixC, 10);
-            stage.key.matrix[r][c] = (parseInt(el.value, 10) || 0) % 26;
-            renderPipelineUI();
+            const rawVal = parseInt(el.value, 10);
+            stage.key.matrix[r][c] = isNaN(rawVal) ? 0 : ((rawVal % 26) + 26) % 26;
+            
+            // Update the invertibility badge in place without re-rendering inputs (which would destroy input focus)
+            const badgeContainer = document.getElementById(`hill-inv-badge-container-${stageIdx}`);
+            if (badgeContainer) {
+              const inv = CipherFusion.computeMatrixInverse(stage.key.matrix);
+              badgeContainer.innerHTML = inv.isValid 
+                ? `<span id="hill-inv-badge-${stageIdx}" class="text-[9px] text-emerald-800 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded font-mono font-bold">det=${inv.diag.modDet} (Invertible)</span>`
+                : `<span id="hill-inv-badge-${stageIdx}" class="text-[9px] text-red-800 bg-red-100 border border-red-300 px-1.5 py-0.5 rounded font-mono font-bold" title="${inv.diag.errorReason}">Invalid det=${inv.diag.modDet}</span>`;
+            }
             runExecution();
           } else if (el.dataset.action === 'toggle-enable') {
             stage.enabled = el.checked;
             renderPipelineUI();
             runExecution();
             if (window.CyberSFX) CyberSFX.click();
+          }
+        });
+
+        stagesContainer.addEventListener('change', (e) => {
+          const el = e.target;
+          if (el.dataset.matrixR !== undefined) {
+            const stageIdx = parseInt(el.dataset.stage, 10);
+            if (!isNaN(stageIdx) && currentPipeline[stageIdx] && currentPipeline[stageIdx].key.matrix) {
+              const r = parseInt(el.dataset.matrixR, 10);
+              const c = parseInt(el.dataset.matrixC, 10);
+              el.value = currentPipeline[stageIdx].key.matrix[r][c];
+            }
           }
         });
 

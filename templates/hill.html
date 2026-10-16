@@ -634,9 +634,9 @@
         matrixInputsContainer.innerHTML = '';
         matrixInputsContainer.style.gridTemplateColumns = `repeat(${dimension}, minmax(0, 1fr))`;
 
-        let cellClass = 'w-12 h-12 text-base';
-        if (dimension === 3) cellClass = 'w-11 h-11 text-sm';
-        else if (dimension === 4) cellClass = 'w-9 h-9 sm:w-10 sm:h-10 text-xs sm:text-sm';
+        let cellClass = 'w-12 h-12 text-base p-0';
+        if (dimension === 3) cellClass = 'w-11 h-11 text-sm p-0';
+        else if (dimension === 4) cellClass = 'w-9 h-9 sm:w-10 sm:h-10 text-xs sm:text-sm p-0';
         else if (dimension >= 5) cellClass = 'w-7 h-7 sm:w-8 sm:h-8 text-[11px] sm:text-xs p-0';
 
         for (let r = 0; r < dimension; r++) {
@@ -648,6 +648,7 @@
             inp.value = (keyMatrix[r] && keyMatrix[r][c] !== undefined) ? keyMatrix[r][c] : 0;
             inp.dataset.r = r;
             inp.dataset.c = c;
+            inp.style.cssText = 'padding: 0 !important; text-align: center !important; line-height: normal !important; -webkit-appearance: none !important; -moz-appearance: textfield !important;';
             inp.className = `${cellClass} text-center border-2 border-charcoal rounded-lg font-mono font-bold bg-white focus:bg-accent matrix-spin-none transition`;
 
             inp.addEventListener('input', () => {
